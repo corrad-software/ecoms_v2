@@ -7,6 +7,8 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "@nuxt/fonts",
     "@formkit/nuxt",
+    "@pinia/nuxt",
+    "@pinia-plugin-persistedstate/nuxt",
   ],
   tailwindcss: {
     cssPath: ["~/assets/css/tailwind.css", { injectPosition: 0 }],

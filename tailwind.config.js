@@ -27,6 +27,9 @@ module.exports = {
         ring: "rgb(var(--ring), <alpha-value>)",
         background: "rgb(var(--background), <alpha-value>)",
         foreground: "rgb(var(--foreground), <alpha-value>)",
+        sidebar: "rgb(var(--sidebar-background), <alpha-value>)",
+        header: "rgb(var(--header-background), <alpha-value>)",
+        content: "rgb(var(--content-background), <alpha-value>)",
         primary: {
           DEFAULT: "rgb(var(--primary), <alpha-value>)",
           foreground: "rgb(var(--primary-foreground), <alpha-value>)",

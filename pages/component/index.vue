@@ -161,6 +161,12 @@ const categories = [
     description: "Form controls and inputs",
     sections: ["Form Examples"],
   },
+  {
+    id: "avatars",
+    title: "Avatars",
+    description: "Avatar components for user profile pictures and initials.",
+    sections: ["Avatar Examples"],
+  },
 ];
 
 const isOpen = ref(false);
@@ -1751,6 +1757,34 @@ const showErrorToast = () => {
                   </div>
                 </FormKit>
               </div>
+            </div>
+          </section>
+        </template>
+
+        <!-- Avatar Section -->
+        <template v-if="activeTab === 'avatars'">
+          <section class="rounded-lg border border-input p-6">
+            <h2 class="text-2xl font-bold mb-2">{{ sections[5].title }}</h2>
+            <p class="text-muted-foreground mb-6">
+              {{ sections[5].description }}
+            </p>
+            <div class="flex space-x-4">
+              <Avatar src="https://github.com/octocat.png" alt="User One" />
+              <Avatar src="https://github.com/defunkt.png" alt="User Two" />
+              <Avatar src="https://github.com/mojombo.png" alt="User Three" />
+              <Avatar fallback="JD" alt="John Doe" />
+            </div>
+
+            <!-- Avatar Group Example -->
+            <div class="mt-8">
+              <h3 class="text-xl font-semibold mb-4">Avatar Group</h3>
+              <AvatarGroup :max="3">
+                <Avatar src="https://github.com/octocat.png" alt="User One" />
+                <Avatar src="https://github.com/defunkt.png" alt="User Two" />
+                <Avatar src="https://github.com/mojombo.png" alt="User Three" />
+                <Avatar src="https://github.com/pjhyett.png" alt="User Four" />
+                <Avatar src="https://github.com/wycats.png" alt="User Five" />
+              </AvatarGroup>
             </div>
           </section>
         </template>

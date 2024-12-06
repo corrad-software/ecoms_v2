@@ -25,6 +25,8 @@
   "devDependencies": {
     "@iconify-json/ph": "^1.2.1",
     "@nuxtjs/tailwindcss": "^6.12.2",
+    "@pinia-plugin-persistedstate/nuxt": "^1.2.1",
+    "@pinia/nuxt": "^0.5.0",
     "sass": "^1.81.0"
   }
 }

@@ -1,10 +1,13 @@
 <script setup>
-defineProps({
+const props = defineProps({
   isMinimized: {
     type: Boolean,
     default: false,
   },
 });
+
+const layoutStore = useLayoutStore();
+const isRTL = computed(() => layoutStore.isRTL);
 
 defineEmits(["toggle"]);
 
@@ -14,19 +17,27 @@ const unreadCount = 2;
 <template>
   <header
     class="sticky top-0 h-14 bg-background border-b px-3 flex items-center gap-3 z-50"
+    :class="[isRTL ? 'flex-row-reverse' : 'flex-row']"
   >
     <!-- Left side -->
     <button
       @click="$emit('toggle')"
-      class="p-1.5 hover:bg-accent rounded-lg flex items-center justify-center"
+      :class="[
+        'p-1.5 hover:bg-accent rounded-lg flex items-center justify-center',
+        isRTL ? 'order-last' : 'order-first',
+      ]"
     >
       <Icon name="mdi:menu" class="w-4 h-4" />
     </button>
 
     <!-- Right side -->
-    <div class="flex items-center gap-2 ml-auto">
+    <div
+      class="flex items-center gap-2"
+      :class="[isRTL ? 'mr-auto' : 'ml-auto']"
+    >
       <!-- Theme Switcher -->
       <ThemeSwitcher />
+
       <!-- Notification -->
       <Dropdown>
         <DropdownTrigger class="relative">
@@ -36,7 +47,10 @@ const unreadCount = 2;
             <Icon name="mdi:bell" class="w-4 h-4" />
             <span
               v-if="unreadCount"
-              class="absolute top-0.5 right-0.5 w-3.5 h-3.5 bg-danger rounded-full text-[10px] text-danger-foreground flex items-center justify-center"
+              :class="[
+                'absolute top-0.5 w-3.5 h-3.5 bg-danger rounded-full text-[10px] text-danger-foreground flex items-center justify-center',
+                isRTL ? 'left-0.5' : 'right-0.5',
+              ]"
             >
               {{ unreadCount }}
             </span>

@@ -47,7 +47,7 @@ const variantClasses = {
 };
 
 const textVariantClasses = {
-  default: "!text-[rgb(var(--primary-foreground))]",
+  default: "!text-primary-foreground",
   success: "!text-[rgb(var(--success-foreground))]",
   info: "!text-[rgb(var(--info-foreground))]",
   warning: "!text-[rgb(var(--warning-foreground))]",

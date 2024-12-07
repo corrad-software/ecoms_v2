@@ -56,7 +56,10 @@ const borderRadiusExamples = [
     <ThemeSwitcher />
 
     <div class="max-w-6xl mx-auto space-y-12">
-      <Button @click="navigateTo('/component')">Component Showcase</Button>
+      <div class="flex gap-4">
+        <Button @click="navigateTo('/component')">Component Showcase</Button>
+        <Button @click="navigateTo('/login')">Login</Button>
+      </div>
 
       <!-- Header -->
       <div>
@@ -81,7 +84,7 @@ const borderRadiusExamples = [
                 class="flex items-center gap-4"
               >
                 <div
-                  class="h-16 w-16 rounded-md border border-input"
+                  class="h-16 w-16 rounded-md border"
                   :class="
                     variant === 'DEFAULT'
                       ? `bg-${color}`
@@ -109,7 +112,7 @@ const borderRadiusExamples = [
               class="flex items-center gap-4"
             >
               <div
-                class="h-16 w-16 rounded-md border border-input"
+                class="h-16 w-16 rounded-md border"
                 :class="`bg-${surface}`"
               ></div>
               <div>

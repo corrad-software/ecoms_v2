@@ -13,7 +13,7 @@ const inputClassifications = {
     outer: "relative",
     input: `
       flex h-10 w-full rounded-md 
-      border border-input 
+      border border-border 
       bg-background px-3 py-2 text-sm 
       text-foreground
       ring-offset-background 
@@ -65,7 +65,7 @@ const inputClassifications = {
     digit: `
       flex h-10 w-10 
       rounded-[var(--radius)]
-      border border-input 
+      border border-border 
       bg-background text-center text-sm 
       ring-offset-background 
       focus:outline-0	focus:outline-transparent
@@ -88,7 +88,7 @@ const inputClassifications = {
     input: `
       flex h-10 w-full 
       rounded-[var(--radius)]
-      border border-input 
+      border border-border 
       bg-background text-sm 
       ring-offset-background 
       file:h-full
@@ -202,7 +202,7 @@ const inputClassifications = {
     outer: "relative",
     input: `
       h-10 w-full rounded-md 
-      border border-input 
+      border border-border 
       bg-background px-3 py-2 text-sm 
       text-foreground
       ring-offset-background 
@@ -224,7 +224,7 @@ const inputClassifications = {
     outer: "relative",
     input: `
       group flex min-h-10 w-full flex-wrap items-center gap-1.5 
-      rounded-md border border-input bg-background px-2
+      rounded-md border border-border bg-background px-2
       text-sm ring-offset-background 
       focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-0 shadow
     `
@@ -328,12 +328,12 @@ export default {
   checkbox: {
     ...inputClassifications.box,
     input:
-      "h-4 w-4 rounded-[calc(var(--radius)-2px)] border-input bg-background cursor-pointer checked:bg-primary focus:ring-1 focus:ring-offset-0 focus:ring-primary focus:checked:bg-primary hover:bg-transparent hover:checked:bg-primary",
+      "h-4 w-4 rounded-[calc(var(--radius)-2px)] border-border bg-background cursor-pointer checked:bg-primary focus:ring-1 focus:ring-offset-0 focus:ring-primary focus:checked:bg-primary hover:bg-transparent hover:checked:bg-primary",
   },
   radio: {
     ...inputClassifications.box,
     input:
-      "h-4 w-4 rounded-full border-input bg-background cursor-pointer checked:bg-primary focus:ring-1 focus:ring-offset-0 focus:ring-primary focus:checked:bg-primary hover:bg-transparent hover:checked:bg-primary",
+      "h-4 w-4 rounded-full border-border bg-background cursor-pointer checked:bg-primary focus:ring-1 focus:ring-offset-0 focus:ring-primary focus:checked:bg-primary hover:bg-transparent hover:checked:bg-primary",
   },
 
   // Special inputs

@@ -276,7 +276,7 @@ const showErrorToast = () => {
 
       <!-- Tab Navigation -->
       <div class="mb-8">
-        <div class="border-b border-input">
+        <div class="border-b ">
           <nav class="flex flex-wrap gap-4" aria-label="Component categories">
             <button
               v-for="category in categories"
@@ -300,7 +300,7 @@ const showErrorToast = () => {
         <!-- Buttons Section -->
         <template v-if="activeTab === 'buttons'">
           <!-- Buttons Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[0].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[0].description }}
@@ -323,7 +323,7 @@ const showErrorToast = () => {
         <!-- Feedback Section -->
         <template v-if="activeTab === 'feedback'">
           <!-- Alerts Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[1].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[1].description }}
@@ -363,7 +363,7 @@ const showErrorToast = () => {
           </section>
 
           <!-- Progress Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[15].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[15].description }}
@@ -416,7 +416,7 @@ const showErrorToast = () => {
           </section>
 
           <!-- Badge Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[6].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[6].description }}
@@ -450,7 +450,7 @@ const showErrorToast = () => {
           </section>
 
           <!-- Skeleton Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[19].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[19].description }}
@@ -491,7 +491,7 @@ const showErrorToast = () => {
               <!-- Table Skeleton -->
               <div class="space-y-2">
                 <h3 class="text-sm font-medium">Table with Skeleton</h3>
-                <div class="rounded-md border border-input">
+                <div class="rounded-md border ">
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -576,7 +576,7 @@ const showErrorToast = () => {
           </section>
 
           <!-- Toast Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[22].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[22].description }}
@@ -596,7 +596,7 @@ const showErrorToast = () => {
         <!-- Navigation Section -->
         <template v-if="activeTab === 'navigation'">
           <!-- Breadcrumb Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[7].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[7].description }}
@@ -610,7 +610,7 @@ const showErrorToast = () => {
             </Breadcrumb>
           </section>
           <!-- Dropdown Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[12].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[12].description }}
@@ -665,7 +665,7 @@ const showErrorToast = () => {
         <!-- Layout Section -->
         <template v-if="activeTab === 'layout'">
           <!-- Card Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[4].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[4].description }}
@@ -688,7 +688,7 @@ const showErrorToast = () => {
           </section>
 
           <!-- Separator Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[17].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[17].description }}
@@ -737,7 +737,7 @@ const showErrorToast = () => {
           </section>
 
           <!-- Scroll Area Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[16].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[16].description }}
@@ -748,7 +748,7 @@ const showErrorToast = () => {
               <div class="space-y-2">
                 <h3 class="text-sm font-medium">Basic Scroll Area</h3>
                 <ScrollArea
-                  class="h-[200px] w-full rounded-md border border-input"
+                  class="h-[200px] w-full rounded-md border "
                 >
                   <div class="p-4">
                     <h4 class="mb-4 text-sm font-medium leading-none">Tags</h4>
@@ -766,7 +766,7 @@ const showErrorToast = () => {
                 <h3 class="text-sm font-medium">Horizontal Scroll</h3>
                 <ScrollArea
                   orientation="horizontal"
-                  class="h-[120px] w-full rounded-md border border-input"
+                  class="h-[120px] w-full rounded-md border "
                 >
                   <div class="flex p-4">
                     <div
@@ -792,7 +792,7 @@ const showErrorToast = () => {
         <!-- Overlay Section -->
         <template v-if="activeTab === 'overlay'">
           <!-- Modal Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[3].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[3].description }}
@@ -825,7 +825,7 @@ const showErrorToast = () => {
           </section>
 
           <!-- Popover Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[14].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[14].description }}
@@ -854,7 +854,7 @@ const showErrorToast = () => {
                         <input
                           id="width"
                           type="number"
-                          class="col-span-2 h-8 rounded-md border border-input bg-transparent px-3"
+                          class="col-span-2 h-8 rounded-md border bg-transparent px-3"
                         />
                       </div>
                       <div class="grid grid-cols-3 items-center gap-4">
@@ -862,7 +862,7 @@ const showErrorToast = () => {
                         <input
                           id="height"
                           type="number"
-                          class="col-span-2 h-8 rounded-md border border-input bg-transparent px-3"
+                          class="col-span-2 h-8 rounded-md border bg-transparent px-3"
                         />
                       </div>
                     </div>
@@ -891,7 +891,7 @@ const showErrorToast = () => {
           </section>
 
           <!-- Hover Card Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[13].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[13].description }}
@@ -940,13 +940,13 @@ const showErrorToast = () => {
           </section>
 
           <!-- Context Menu Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[9].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[9].description }}
             </p>
             <ContextMenu>
-              <div class="border border-input rounded p-4">
+              <div class="border rounded p-4">
                 Right click anywhere in this box
               </div>
 
@@ -972,7 +972,7 @@ const showErrorToast = () => {
           </section>
 
           <!-- Tooltip Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[23].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[23].description }}
@@ -1032,7 +1032,7 @@ const showErrorToast = () => {
         <!-- Data Display Section -->
         <template v-if="activeTab === 'data'">
           <!-- Table Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[10].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[10].description }}
@@ -1067,7 +1067,7 @@ const showErrorToast = () => {
           </section>
 
           <!-- DataTable Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[11].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[11].description }}
@@ -1088,7 +1088,7 @@ const showErrorToast = () => {
           </section>
 
           <!-- Tabs Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[21].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[21].description }}
@@ -1328,7 +1328,7 @@ const showErrorToast = () => {
           </section>
 
           <!-- Carousel Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[8].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[8].description }}
@@ -1359,7 +1359,7 @@ const showErrorToast = () => {
           </section>
 
           <!-- Stepper Section -->
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[20].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[20].description }}
@@ -1500,7 +1500,7 @@ const showErrorToast = () => {
 
         <!-- Forms Section -->
         <template v-if="activeTab === 'forms'">
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[18].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[18].description }}
@@ -1763,7 +1763,7 @@ const showErrorToast = () => {
 
         <!-- Avatar Section -->
         <template v-if="activeTab === 'avatars'">
-          <section class="rounded-lg border border-input p-6">
+          <section class="rounded-lg border p-6">
             <h2 class="text-2xl font-bold mb-2">{{ sections[5].title }}</h2>
             <p class="text-muted-foreground mb-6">
               {{ sections[5].description }}

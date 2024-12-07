@@ -42,31 +42,20 @@ onMounted(() => {
     <div class="mb-6 flex flex-wrap gap-4">
       <!-- Search -->
       <div class="flex-1 min-w-[200px]">
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="Search..."
-          class="px-4 py-2 border border-input rounded-lg w-full bg-background text-foreground"
-        />
+        <FormKit v-model="searchQuery" type="text" placeholder="Search..." />
       </div>
 
       <!-- Right Controls -->
       <div class="flex items-center gap-4 ml-auto">
         <div class="flex items-center gap-2">
           <span class="text-sm text-muted-foreground">Show:</span>
-          <select
+          <FormKit
             v-model.number="itemsPerPage"
-            class="px-2 py-1 border border-input rounded-lg bg-background text-foreground appearance-none pr-8 relative"
+            type="select"
+            :options="itemsPerPageOptions"
             @change="setItemsPerPage($event.target.value)"
-          >
-            <option
-              v-for="option in itemsPerPageOptions"
-              :key="option"
-              :value="option"
-            >
-              {{ option }}
-            </option>
-          </select>
+            :classes="{ input: 'w-20' }"
+          />
         </div>
 
         <Button variant="outline" size="sm" @click="showFilters = !showFilters">
@@ -94,12 +83,9 @@ onMounted(() => {
             :key="column.key"
             class="flex flex-col gap-1.5"
           >
-            <label class="text-sm text-muted-foreground">
-              Filter {{ column.label }}
-            </label>
-            <input
+            <FormKit
               type="text"
-              class="px-3 py-1.5 border border-input rounded-lg text-sm"
+              :label="'Filter ' + column.label"
               v-model="columnFilters[column.key]"
               @input="setColumnFilter(column.key, columnFilters[column.key])"
             />
@@ -109,7 +95,7 @@ onMounted(() => {
     </Transition>
 
     <!-- Table with Horizontal Scroll -->
-    <div class="border border-input rounded-lg overflow-hidden">
+    <div class="border rounded-lg overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead>
@@ -145,7 +131,7 @@ onMounted(() => {
             <tr
               v-for="row in paginatedData"
               :key="row.id"
-              class="hover:bg-muted/30 border-input"
+              class="hover:bg-muted/30"
             >
               <td
                 v-for="column in columns"
@@ -210,5 +196,9 @@ onMounted(() => {
   td {
     @apply align-middle;
   }
+}
+
+.formkit-outer {
+  @apply mb-0;
 }
 </style>

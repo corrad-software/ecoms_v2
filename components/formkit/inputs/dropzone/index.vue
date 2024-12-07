@@ -178,12 +178,11 @@ watch(
     />
 
     <!-- Upload Area -->
-    <div class="flex flex-col items-center justify-center gap-4 p-4 border border-input border-dashed rounded-lg cursor-pointer">
+    <div
+      class="flex flex-col items-center justify-center gap-4 p-4 border border-dashed rounded-lg cursor-pointer"
+    >
       <div class="rounded-full bg-muted p-4">
-        <Icon
-          name="ph:upload-simple"
-          class="h-6 w-6 text-muted-foreground"
-        />
+        <Icon name="ph:upload-simple" class="h-6 w-6 text-muted-foreground" />
       </div>
       <div class="text-center space-y-2">
         <div class="space-y-1">
@@ -202,10 +201,7 @@ watch(
     </div>
 
     <!-- File Preview -->
-    <div 
-      v-if="currentFiles.length > 0" 
-      class="border-t border-border mt-4 pt-4"
-    >
+    <div v-if="currentFiles.length > 0" class="border-t mt-4 pt-4">
       <div class="space-y-2">
         <div
           v-for="file in currentFiles"
@@ -213,7 +209,10 @@ watch(
           class="flex items-center justify-between rounded-md bg-muted/50 px-3 py-2"
         >
           <div class="flex items-center gap-2 min-w-0">
-            <Icon name="ph:file-text" class="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+            <Icon
+              name="ph:file-text"
+              class="h-4 w-4 flex-shrink-0 text-muted-foreground"
+            />
             <div class="min-w-0 flex-1">
               <p class="text-sm truncate">{{ file.name }}</p>
               <p class="text-xs text-muted-foreground">
@@ -227,9 +226,9 @@ watch(
             @click.stop="removeFile(file)"
             aria-label="Remove file"
           >
-            <Icon 
-              name="ph:x" 
-              class="h-4 w-4 text-muted-foreground hover:text-foreground" 
+            <Icon
+              name="ph:x"
+              class="h-4 w-4 text-muted-foreground hover:text-foreground"
             />
           </button>
         </div>

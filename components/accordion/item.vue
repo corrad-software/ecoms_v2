@@ -14,7 +14,7 @@ provide("accordionValue", props.value);
 </script>
 
 <template>
-  <div class="border-input">
+  <div class="">
     <slot />
   </div>
 </template>

@@ -1,20 +1,20 @@
 <script setup>
-import { toasts } from '~/composables/useToast'
-import { TransitionGroup } from 'vue'
+import { toasts } from "~/composables/useToast";
+import { TransitionGroup } from "vue";
 
 const props = defineProps({
   position: {
     type: String,
-    default: 'bottom-right',
+    default: "bottom-right",
   },
-})
+});
 
 const positionClasses = {
-  'top-left': 'top-0 left-0',
-  'top-right': 'top-0 right-0',
-  'bottom-left': 'bottom-0 left-0',
-  'bottom-right': 'bottom-0 right-0',
-}
+  "top-left": "top-0 left-0",
+  "top-right": "top-0 right-0",
+  "bottom-left": "bottom-0 left-0",
+  "bottom-right": "bottom-0 right-0",
+};
 </script>
 
 <template>
@@ -35,7 +35,7 @@ const positionClasses = {
       <div
         v-for="toast in toasts"
         :key="toast.id"
-        class="group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border border-border p-6 pr-8 shadow-lg transition-all"
+        class="group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all"
         :class="{
           'bg-background text-foreground': toast.type === 'default',
           'bg-danger text-danger-foreground': toast.type === 'error',
@@ -67,4 +67,4 @@ const positionClasses = {
       </div>
     </TransitionGroup>
   </div>
-</template> 
+</template>

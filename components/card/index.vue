@@ -11,7 +11,7 @@ const props = defineProps({
   },
 });
 
-const baseClasses = "rounded-lg border border-input";
+const baseClasses = "rounded-lg border ";
 
 const variantClasses = {
   default: "bg-card text-card-foreground",

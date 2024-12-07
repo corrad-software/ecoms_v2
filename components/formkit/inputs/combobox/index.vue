@@ -33,11 +33,13 @@ const debouncedSearch = (query) => {
 const filteredOptions = computed(() => {
   const query = searchQuery.value.toLowerCase();
   if (!query) {
-    return options.value.filter(option => !selectedItems.value.includes(option));
+    return options.value.filter(
+      (option) => !selectedItems.value.includes(option)
+    );
   }
   return options.value.filter(
-    option => 
-      !selectedItems.value.includes(option) && 
+    (option) =>
+      !selectedItems.value.includes(option) &&
       option.label.toLowerCase().includes(query)
   );
 });
@@ -53,7 +55,7 @@ const selectOption = (option) => {
 // Handle option removal
 const removeOption = (optionToRemove) => {
   selectedItems.value = selectedItems.value.filter(
-    option => option !== optionToRemove
+    (option) => option !== optionToRemove
   );
   props.context.node.input(selectedItems.value);
 };
@@ -66,24 +68,28 @@ const handleFocus = () => {
 // Handle input blur
 const handleBlur = (event) => {
   // Check if the related target is within the component
-  if (!event.relatedTarget?.closest('.formkit-combobox')) {
+  if (!event.relatedTarget?.closest(".formkit-combobox")) {
     isOpen.value = false;
   }
 };
 
 // Handle keyboard navigation
 const handleKeydown = (event) => {
-  if (event.key === 'Escape') {
+  if (event.key === "Escape") {
     isOpen.value = false;
-  } else if (event.key === 'Backspace' && !searchQuery.value && selectedItems.value.length > 0) {
+  } else if (
+    event.key === "Backspace" &&
+    !searchQuery.value &&
+    selectedItems.value.length > 0
+  ) {
     removeOption(selectedItems.value[selectedItems.value.length - 1]);
   }
 };
 
 // Initialize value from context
 if (props.context.value) {
-  selectedItems.value = Array.isArray(props.context.value) 
-    ? props.context.value 
+  selectedItems.value = Array.isArray(props.context.value)
+    ? props.context.value
     : [props.context.value];
 }
 </script>
@@ -94,7 +100,9 @@ if (props.context.value) {
     <div
       :class="[
         context.classes.input,
-        context.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-text hover:border-input/80',
+        context.disabled
+          ? 'cursor-not-allowed opacity-50'
+          : 'cursor-text hover:/80',
       ]"
       @click="handleFocus"
     >
@@ -111,10 +119,7 @@ if (props.context.value) {
           @click.stop="removeOption(item)"
           :disabled="context.disabled"
         >
-          <Icon
-            name="ph:x"
-            :class="context.classes.removeIcon"
-          />
+          <Icon name="ph:x" :class="context.classes.removeIcon" />
         </button>
       </span>
 
@@ -125,7 +130,7 @@ if (props.context.value) {
           :class="context.classes.searchInput"
           :placeholder="selectedItems.length === 0 ? context.placeholder : ''"
           :value="searchQuery"
-          @input="e => debouncedSearch(e.target.value)"
+          @input="(e) => debouncedSearch(e.target.value)"
           @focus="handleFocus"
           @blur="handleBlur"
           @keydown="handleKeydown"
@@ -159,4 +164,4 @@ if (props.context.value) {
       </div>
     </div>
   </div>
-</template> 
+</template>

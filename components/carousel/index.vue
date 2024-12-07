@@ -64,7 +64,7 @@ const options = computed(() => ({
 }
 
 :deep(.splide__arrow svg) {
-  @apply fill-[rgb(var(--primary))] transition-transform duration-300;
+  @apply fill-primary transition-transform duration-300;
   @apply h-4 w-4;
 }
 

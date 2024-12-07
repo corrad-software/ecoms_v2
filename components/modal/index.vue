@@ -53,7 +53,7 @@ provide("closeModal", close);
         >
           <div class="w-full max-w-lg">
             <div
-              class="relative rounded-lg border bg-background p-6 shadow-lg border-input"
+              class="relative rounded-lg border bg-background p-6 shadow-lg"
               @click.stop
             >
               <slot />

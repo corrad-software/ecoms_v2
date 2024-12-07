@@ -47,7 +47,7 @@ const handleOverlayClick = () => {
     <!-- Overlay for mobile -->
     <div
       v-if="isOpen"
-      class="fixed inset-0 bg-foreground/50 z-40 md:hidden"
+      class="fixed inset-0 bg-background/70 z-40 md:hidden"
       @click="handleOverlayClick"
     ></div>
 
@@ -60,12 +60,15 @@ const handleOverlayClick = () => {
     />
 
     <!-- Main Content -->
-    <div :class="mainContentClasses">
+    <div
+      :class="mainContentClasses"
+      class="transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)]"
+    >
       <!-- Header -->
-      <AdminHeader 
-        :is-minimized="isMinimized" 
+      <AdminHeader
+        :is-minimized="isMinimized"
         class="bg-header"
-        @toggle="toggleSidebar" 
+        @toggle="toggleSidebar"
       />
 
       <!-- Page Content -->

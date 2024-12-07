@@ -1,21 +1,21 @@
 <script setup>
-import { inject, computed } from 'vue';
+import { inject, computed } from "vue";
 
-defineOptions({ name: 'StepperIndicator' });
+defineOptions({ name: "StepperIndicator" });
 
 const props = defineProps({
   step: {
     type: Number,
-    required: true
-  }
+    required: true,
+  },
 });
 
-const { currentStep } = inject('stepper');
+const { currentStep } = inject("stepper");
 
 const status = computed(() => {
-  if (currentStep.value === props.step) return 'current';
-  if (currentStep.value > props.step) return 'complete';
-  return 'pending';
+  if (currentStep.value === props.step) return "current";
+  if (currentStep.value > props.step) return "complete";
+  return "pending";
 });
 </script>
 
@@ -23,11 +23,12 @@ const status = computed(() => {
   <div
     :class="[
       'flex h-8 w-8 items-center justify-center rounded-full border-2 transition-colors',
-      status === 'complete' && 'bg-primary border-primary text-primary-foreground',
+      status === 'complete' &&
+        'bg-primary border-primary text-primary-foreground',
       status === 'current' && 'border-primary text-primary',
-      status === 'pending' && 'border-input text-muted-foreground'
+      status === 'pending' && ' text-muted-foreground',
     ]"
   >
     <slot />
   </div>
-</template> 
+</template>

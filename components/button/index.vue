@@ -4,9 +4,16 @@ const props = defineProps({
     type: String,
     default: "primary",
     validator: (value) =>
-      ["primary", "secondary", "info", "success", "warning", "danger", "outline", "ghost"].includes(
-        value
-      ),
+      [
+        "primary",
+        "secondary",
+        "info",
+        "success",
+        "warning",
+        "danger",
+        "outline",
+        "ghost",
+      ].includes(value),
   },
   size: {
     type: String,
@@ -26,29 +33,22 @@ const props = defineProps({
 
 const baseClasses = `
   inline-flex items-center justify-center rounded-md text-sm font-medium
-  ring-offset-[rgb(var(--background))] transition-colors
+  ring-offset-background transition-colors
   focus-visible:outline-none focus-visible:ring-1
-  focus-visible:ring-[rgb(var(--ring))] focus-visible:ring-offset-0
-  disabled:pointer-events-none disabled:opacity-50 border-[var(--radius)]
+  focus-visible:ring-ring focus-visible:ring-offset-0
+  disabled:pointer-events-none disabled:opacity-50
 `;
 
 const variantClasses = {
-  primary:
-    "bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] hover:bg-[rgba(var(--primary),0.9)]",
-  secondary:
-    "bg-[rgb(var(--secondary))] text-[rgb(var(--secondary-foreground))] hover:bg-[rgba(var(--secondary),0.9)]",
-  info:
-    "bg-[rgb(var(--info))] text-[rgb(var(--info-foreground))] hover:bg-[rgba(var(--info),0.9)]",
-  success:
-    "bg-[rgb(var(--success))] text-[rgb(var(--success-foreground))] hover:bg-[rgba(var(--success),0.9)]",
-  warning:
-    "bg-[rgb(var(--warning))] text-[rgb(var(--warning-foreground))] hover:bg-[rgba(var(--warning),0.9)]",
-  danger:
-    "bg-[rgb(var(--danger))] text-[rgb(var(--danger-foreground))] hover:bg-[rgba(var(--danger),0.9)]",
+  primary: "bg-primary text-primary-foreground hover:bg-primary/90",
+  secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/90",
+  info: "bg-info text-info-foreground hover:bg-info/90",
+  success: "bg-success text-success-foreground hover:bg-success/90",
+  warning: "bg-warning text-warning-foreground hover:bg-warning/90",
+  danger: "bg-danger text-danger-foreground hover:bg-danger/90",
   outline:
-    "border border-input bg-background hover:bg-[rgb(var(--accent))] hover:text-[rgb(var(--accent-foreground))]",
-  ghost:
-    "hover:bg-[rgb(var(--accent))] hover:text-[rgb(var(--accent-foreground))]",
+    "border border-border bg-background hover:bg-accent hover:text-accent-foreground",
+  ghost: "hover:bg-accent hover:text-accent-foreground",
 };
 
 const sizeClasses = {

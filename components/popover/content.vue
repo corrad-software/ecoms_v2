@@ -1,18 +1,18 @@
 <script setup>
-import { inject, ref, computed } from 'vue';
+import { inject, ref, computed } from "vue";
 
-defineOptions({ name: 'PopoverContent' });
+defineOptions({ name: "PopoverContent" });
 
 const props = defineProps({
   side: {
     type: String,
-    default: 'bottom',
-    validator: (value) => ['top', 'right', 'bottom', 'left'].includes(value),
+    default: "bottom",
+    validator: (value) => ["top", "right", "bottom", "left"].includes(value),
   },
   align: {
     type: String,
-    default: 'center',
-    validator: (value) => ['start', 'center', 'end'].includes(value),
+    default: "center",
+    validator: (value) => ["start", "center", "end"].includes(value),
   },
   sideOffset: {
     type: Number,
@@ -24,7 +24,7 @@ const props = defineProps({
   },
 });
 
-const { isOpen, position, triggerRef } = inject('popover');
+const { isOpen, position, triggerRef } = inject("popover");
 const contentRef = ref(null);
 
 const adjustedPosition = computed(() => {
@@ -47,50 +47,74 @@ const adjustedPosition = computed(() => {
   const spaceRight = windowWidth - triggerRect.right;
 
   // Automatically switch sides if there's not enough space
-  if (adjustedSide === 'bottom' && spaceBelow < contentRect.height && spaceAbove > spaceBelow) {
-    adjustedSide = 'top';
-  } else if (adjustedSide === 'top' && spaceAbove < contentRect.height && spaceBelow > spaceAbove) {
-    adjustedSide = 'bottom';
-  } else if (adjustedSide === 'right' && spaceRight < contentRect.width && spaceLeft > spaceRight) {
-    adjustedSide = 'left';
-  } else if (adjustedSide === 'left' && spaceLeft < contentRect.width && spaceRight > spaceLeft) {
-    adjustedSide = 'right';
+  if (
+    adjustedSide === "bottom" &&
+    spaceBelow < contentRect.height &&
+    spaceAbove > spaceBelow
+  ) {
+    adjustedSide = "top";
+  } else if (
+    adjustedSide === "top" &&
+    spaceAbove < contentRect.height &&
+    spaceBelow > spaceAbove
+  ) {
+    adjustedSide = "bottom";
+  } else if (
+    adjustedSide === "right" &&
+    spaceRight < contentRect.width &&
+    spaceLeft > spaceRight
+  ) {
+    adjustedSide = "left";
+  } else if (
+    adjustedSide === "left" &&
+    spaceLeft < contentRect.width &&
+    spaceRight > spaceLeft
+  ) {
+    adjustedSide = "right";
   }
 
   // Position based on adjusted side
   switch (adjustedSide) {
-    case 'top':
+    case "top":
       y = triggerRect.top - contentRect.height - props.sideOffset;
       break;
-    case 'right':
+    case "right":
       x = triggerRect.right + props.sideOffset;
       break;
-    case 'bottom':
+    case "bottom":
       y = triggerRect.bottom + props.sideOffset;
       break;
-    case 'left':
+    case "left":
       x = triggerRect.left - contentRect.width - props.sideOffset;
       break;
   }
 
   // Adjust alignment
   switch (props.align) {
-    case 'start':
-      if (adjustedSide === 'top' || adjustedSide === 'bottom') {
+    case "start":
+      if (adjustedSide === "top" || adjustedSide === "bottom") {
         x = triggerRect.left + props.alignOffset;
       } else {
         y = triggerRect.top + props.alignOffset;
       }
       break;
-    case 'center':
-      if (adjustedSide === 'top' || adjustedSide === 'bottom') {
-        x = triggerRect.left + (triggerRect.width / 2) - (contentRect.width / 2) + props.alignOffset;
+    case "center":
+      if (adjustedSide === "top" || adjustedSide === "bottom") {
+        x =
+          triggerRect.left +
+          triggerRect.width / 2 -
+          contentRect.width / 2 +
+          props.alignOffset;
       } else {
-        y = triggerRect.top + (triggerRect.height / 2) - (contentRect.height / 2) + props.alignOffset;
+        y =
+          triggerRect.top +
+          triggerRect.height / 2 -
+          contentRect.height / 2 +
+          props.alignOffset;
       }
       break;
-    case 'end':
-      if (adjustedSide === 'top' || adjustedSide === 'bottom') {
+    case "end":
+      if (adjustedSide === "top" || adjustedSide === "bottom") {
         x = triggerRect.right - contentRect.width + props.alignOffset;
       } else {
         y = triggerRect.bottom - contentRect.height + props.alignOffset;
@@ -100,7 +124,7 @@ const adjustedPosition = computed(() => {
 
   // Ensure the content stays within viewport bounds with padding
   const VIEWPORT_PADDING = 8;
-  
+
   if (x + contentRect.width > windowWidth - VIEWPORT_PADDING) {
     x = windowWidth - contentRect.width - VIEWPORT_PADDING;
   }
@@ -123,7 +147,7 @@ const adjustedPosition = computed(() => {
     <div
       v-if="isOpen"
       ref="contentRef"
-      class="popover-content absolute z-50 min-w-[8rem] rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-none animate-in"
+      class="popover-content absolute z-50 min-w-[8rem] rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none animate-in"
       :class="{
         'slide-in-from-top-2': adjustedPosition.adjustedSide === 'bottom',
         'slide-in-from-right-2': adjustedPosition.adjustedSide === 'left',
@@ -212,4 +236,4 @@ const adjustedPosition = computed(() => {
     transform: translateX(0);
   }
 }
-</style> 
+</style>

@@ -23,7 +23,7 @@ const handleLogin = async (formData) => {
   <div class="min-h-screen grid md:grid-cols-2">
     <!-- Left side - Dark section with testimonial -->
     <div
-      class="hidden md:flex flex-col bg-black text-white p-6 lg:p-8 relative"
+      class="hidden md:flex flex-col bg-accent text-accent-foreground p-6 lg:p-8 relative"
     >
       <!-- Logo section -->
       <div class="flex items-center gap-2 text-base">
@@ -39,17 +39,17 @@ const handleLogin = async (formData) => {
           "This library has saved me countless hours of work and helped me
           deliver stunning designs to my clients faster than ever before."
         </blockquote>
-        <p class="text-sm text-gray-400">Sofia Davis</p>
+        <p class="text-sm text-muted-foreground">Sofia Davis</p>
       </div>
     </div>
 
     <!-- Right side - Login form -->
-    <div class="flex flex-col justify-between p-4 sm:p-6 lg:p-8">
+    <div class="flex flex-col justify-between p-4 sm:p-6 lg:p-8 bg-card">
       <!-- Top right register link -->
       <div class="text-right">
         <NuxtLink
           to="/register"
-          class="text-sm text-gray-500 hover:text-gray-800"
+          class="text-sm text-muted-foreground hover:text-foreground"
         >
           Register
         </NuxtLink>
@@ -58,7 +58,7 @@ const handleLogin = async (formData) => {
       <!-- Form section -->
       <div class="w-full max-w-sm mx-auto">
         <h1 class="text-2xl font-semibold mb-2">Welcome back</h1>
-        <p class="text-sm text-gray-500 mb-6">
+        <p class="text-sm text-muted-foreground mb-6">
           Enter your credentials to access your account
         </p>
 
@@ -96,7 +96,7 @@ const handleLogin = async (formData) => {
 
           <Button
             type="submit"
-            class="w-full bg-black text-white hover:bg-black/90 h-9"
+            class="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-9"
           >
             Sign In
           </Button>
@@ -106,7 +106,9 @@ const handleLogin = async (formData) => {
               <span class="w-full border-t"></span>
             </div>
             <div class="relative flex justify-center text-xs uppercase">
-              <span class="bg-white px-2 text-gray-400">Or continue with</span>
+              <span class="bg-card px-2 text-muted-foreground"
+                >Or continue with</span
+              >
             </div>
           </div>
 
@@ -123,9 +125,9 @@ const handleLogin = async (formData) => {
         </FormKit>
 
         <!-- Terms text -->
-        <p class="text-xs text-gray-400 mt-6">
+        <p class="text-xs text-muted-foreground mt-6">
           Don't have an account?
-          <NuxtLink to="/register" class="underline hover:text-gray-600"
+          <NuxtLink to="/register" class="underline hover:text-foreground"
             >Create an account</NuxtLink
           >
         </p>

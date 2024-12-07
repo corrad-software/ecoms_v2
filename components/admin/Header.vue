@@ -13,7 +13,7 @@ const unreadCount = 2;
 
 <template>
   <header
-    class="h-14 bg-background border-b border-input px-3 flex items-center gap-3"
+    class="sticky top-0 h-14 bg-background border-b px-3 flex items-center gap-3 z-50"
   >
     <!-- Left side -->
     <button
@@ -43,7 +43,7 @@ const unreadCount = 2;
           </button>
         </DropdownTrigger>
         <DropdownContent class="w-80">
-          <div class="px-3 py-2 border-b border-input">
+          <div class="px-3 py-2 border-b">
             <h3 class="font-semibold text-sm">Notifications</h3>
           </div>
           <div class="py-1.5">
@@ -79,7 +79,7 @@ const unreadCount = 2;
               </div>
             </DropdownItem>
           </div>
-          <div class="px-3 py-2 border-t border-input text-center">
+          <div class="px-3 py-2 border-t text-center">
             <NuxtLink
               to="/notifications"
               class="text-xs text-primary hover:text-primary/90"

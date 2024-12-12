@@ -13,13 +13,13 @@ const layoutOptions = [
     icon: 'mdi:view-split-vertical',
     preview: '/images/layouts/vertical.svg'
   },
-  { 
-    id: 'horizontal',
-    title: 'Horizontal Menu',
-    description: 'Modern horizontal top navigation',
-    icon: 'mdi:view-split-horizontal',
-    preview: '/images/layouts/horizontal.svg'
-  }
+  // { 
+  //   id: 'horizontal',
+  //   title: 'Horizontal Menu',
+  //   description: 'Modern horizontal top navigation',
+  //   icon: 'mdi:view-split-horizontal',
+  //   preview: '/images/layouts/horizontal.svg'
+  // }
 ]
 
 const directionOptions = [

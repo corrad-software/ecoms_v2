@@ -16,9 +16,8 @@ const props = defineProps({
   },
 });
 
-const { isOpen, position, triggerRef, hide } = inject("hover-card");
+const { isOpen, position, triggerRef, hide, setIsHoveringContent } = inject("hover-card");
 const contentRef = ref(null);
-let timeout;
 
 const adjustedPosition = computed(() => {
   if (!contentRef.value || !triggerRef.value) return position.value;
@@ -45,16 +44,12 @@ const adjustedPosition = computed(() => {
     y = triggerRect.top - contentRect.height - 8;
   } else if (props.side === "right") {
     x = triggerRect.right + 8;
-    // Create safe area for horizontal movement
     y = Math.min(y, triggerRect.bottom - 20);
   } else if (props.side === "left") {
     x = triggerRect.left - contentRect.width - 8;
-    // Create safe area for horizontal movement
     y = Math.min(y, triggerRect.bottom - 20);
   } else {
-    // Bottom positioning (default)
-    // Create safe area for vertical movement
-    x = x - 20; // Shift slightly to create diagonal safe path
+    x = x - 20;
   }
 
   // Adjust based on alignment
@@ -80,28 +75,13 @@ const adjustedPosition = computed(() => {
 });
 
 const handleMouseEnter = () => {
-  if (timeout) {
-    clearTimeout(timeout);
-  }
+  setIsHoveringContent(true);
 };
 
-const handleMouseLeave = (event) => {
-  // Check if we're moving to the trigger
-  if (triggerRef.value?.contains(event.relatedTarget)) {
-    return;
-  }
-
-  // Create a small delay before hiding
-  timeout = setTimeout(() => {
-    hide();
-  }, 100);
+const handleMouseLeave = () => {
+  setIsHoveringContent(false);
 };
 
-onBeforeUnmount(() => {
-  if (timeout) {
-    clearTimeout(timeout);
-  }
-});
 </script>
 
 <template>

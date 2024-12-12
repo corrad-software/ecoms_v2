@@ -11,7 +11,7 @@
           <!-- Logo -->
           <NuxtLink to="/" class="flex items-center gap-2 text-foreground">
             <div class="p-0.5">⌘</div>
-            Acme Inc
+            Corrad
           </NuxtLink>
 
           <!-- Login link -->
@@ -47,7 +47,7 @@
           </h2>
           <p class="text-muted-foreground mb-4">
             Permission is granted to temporarily download one copy of the
-            materials (information or software) on Acme Inc's Website for
+            materials (information or software) on Corrad's Website for
             personal, non-commercial transitory viewing only.
           </p>
 
@@ -55,7 +55,7 @@
             3. Disclaimer
           </h2>
           <p class="text-muted-foreground mb-4">
-            All the materials on Acme Inc's Website are provided "as is". Acme
+            All the materials on Corrad's Website are provided "as is". Acme
             Inc makes no warranties, may it be expressed or implied, therefore
             negates all other warranties.
           </p>
@@ -64,17 +64,17 @@
             4. Limitations
           </h2>
           <p class="text-muted-foreground mb-4">
-            Acme Inc or its suppliers will not be held accountable for any
+            Corrad or its suppliers will not be held accountable for any
             damages that will arise with the use or inability to use the
-            materials on Acme Inc's Website.
+            materials on Corrad's Website.
           </p>
 
           <h2 class="text-xl font-medium mt-8 mb-4 text-foreground">
             5. Revisions
           </h2>
           <p class="text-muted-foreground mb-4">
-            The materials appearing on Acme Inc's Website may include technical,
-            typographical, or photographic errors. Acme Inc will not promise
+            The materials appearing on Corrad's Website may include technical,
+            typographical, or photographic errors. Corrad will not promise
             that any of the materials in this Website are accurate, complete, or
             current.
           </p>

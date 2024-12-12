@@ -3,28 +3,38 @@ import { inject, ref, computed } from "vue";
 
 defineOptions({ name: "DropdownContent" });
 
-const { isOpen, position } = inject("dropdown");
+const { isOpen, position, triggerRef } = inject("dropdown");
 const contentRef = ref(null);
 
 const adjustedPosition = computed(() => {
-  if (!contentRef.value) return position.value;
+  if (!contentRef.value || !triggerRef.value) return position.value;
 
   const content = contentRef.value;
+  const trigger = triggerRef.value;
   const contentRect = content.getBoundingClientRect();
+  const triggerRect = trigger.getBoundingClientRect();
   const windowHeight = window.innerHeight;
   const windowWidth = window.innerWidth;
 
   let { x, y } = position.value;
 
-  // Adjust vertical position
-  if (y + contentRect.height > windowHeight) {
-    y = Math.max(0, windowHeight - contentRect.height);
+  // Check if dropdown should appear above instead of below
+  const shouldShowAbove = y + contentRect.height > windowHeight;
+  if (shouldShowAbove) {
+    y = triggerRect.top - contentRect.height - 4; // 4px gap
   }
 
-  // Adjust horizontal position
+  // Ensure horizontal alignment stays within bounds
   if (x + contentRect.width > windowWidth) {
-    x = Math.max(0, windowWidth - contentRect.width);
+    // Align to right edge of trigger
+    x = triggerRect.right - contentRect.width;
   }
+
+  // Prevent going off-screen left
+  x = Math.max(8, x); // 8px minimum margin
+
+  // Prevent going off-screen top
+  y = Math.max(8, y); // 8px minimum margin
 
   return { x, y };
 });
@@ -35,7 +45,7 @@ const adjustedPosition = computed(() => {
     <div
       v-if="isOpen"
       ref="contentRef"
-      class="absolute z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md animate-in data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+      class="absolute z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
       :style="{
         position: 'fixed',
         top: `${adjustedPosition.y}px`,

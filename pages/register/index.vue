@@ -27,7 +27,7 @@ const handleRegister = async (formData) => {
       <!-- Logo section -->
       <div class="flex items-center gap-2 text-base">
         <div class="p-0.5">⌘</div>
-        Acme Inc
+        Corrad
       </div>
 
       <!-- Testimonial section - positioned at bottom -->

@@ -44,7 +44,7 @@ const unreadCount = 2;
           <button
             class="p-1.5 hover:bg-accent rounded-lg flex items-center justify-center"
           >
-            <Icon name="mdi:bell" class="w-4 h-4" />
+            <Icon name="mdi:bell" class="w-5 h-5" />
             <span
               v-if="unreadCount"
               :class="[

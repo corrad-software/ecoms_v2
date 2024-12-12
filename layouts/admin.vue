@@ -24,7 +24,7 @@ const mainContentClasses = computed(() => {
   if (isHorizontal.value) {
     return "mt-14";
   }
-  const sidebarWidth = isMinimized.value ? "md:ml-16" : "md:ml-56";
+  const sidebarWidth = isMinimized.value ? "md:ml-14" : "md:ml-56";
   return isRTL.value
     ? `md:mr-${isMinimized.value ? "16" : "56"}`
     : sidebarWidth;
@@ -72,7 +72,7 @@ const handleOverlayClick = () => {
       />
 
       <!-- Page Content -->
-      <main class="p-6 bg-content min-h-screen">
+      <main class="p-6 bg-content min-h-screen z-0">
         <slot />
       </main>
     </div>

@@ -276,7 +276,7 @@ const showErrorToast = () => {
 
       <!-- Tab Navigation -->
       <div class="mb-8">
-        <div class="border-b ">
+        <div class="border-b">
           <nav class="flex flex-wrap gap-4" aria-label="Component categories">
             <button
               v-for="category in categories"
@@ -491,7 +491,7 @@ const showErrorToast = () => {
               <!-- Table Skeleton -->
               <div class="space-y-2">
                 <h3 class="text-sm font-medium">Table with Skeleton</h3>
-                <div class="rounded-md border ">
+                <div class="rounded-md border">
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -747,9 +747,7 @@ const showErrorToast = () => {
               <!-- Basic Scroll Area -->
               <div class="space-y-2">
                 <h3 class="text-sm font-medium">Basic Scroll Area</h3>
-                <ScrollArea
-                  class="h-[200px] w-full rounded-md border "
-                >
+                <ScrollArea class="h-[200px] w-full rounded-md border">
                   <div class="p-4">
                     <h4 class="mb-4 text-sm font-medium leading-none">Tags</h4>
                     <div class="space-y-2">
@@ -766,7 +764,7 @@ const showErrorToast = () => {
                 <h3 class="text-sm font-medium">Horizontal Scroll</h3>
                 <ScrollArea
                   orientation="horizontal"
-                  class="h-[120px] w-full rounded-md border "
+                  class="h-[120px] w-full rounded-md border"
                 >
                   <div class="flex p-4">
                     <div

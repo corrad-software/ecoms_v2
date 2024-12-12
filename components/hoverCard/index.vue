@@ -6,6 +6,8 @@ defineOptions({ name: 'HoverCard' });
 const isOpen = ref(false);
 const position = ref({ x: 0, y: 0 });
 const triggerRef = ref(null);
+const isHoveringTrigger = ref(false);
+const isHoveringContent = ref(false);
 
 const show = () => {
   if (triggerRef.value) {
@@ -19,7 +21,24 @@ const show = () => {
 };
 
 const hide = () => {
-  isOpen.value = false;
+  // Only hide if neither trigger nor content is being hovered
+  if (!isHoveringTrigger.value && !isHoveringContent.value) {
+    isOpen.value = false;
+  }
+};
+
+const setIsHoveringTrigger = (value) => {
+  isHoveringTrigger.value = value;
+  if (!value && !isHoveringContent.value) {
+    hide();
+  }
+};
+
+const setIsHoveringContent = (value) => {
+  isHoveringContent.value = value;
+  if (!value && !isHoveringTrigger.value) {
+    hide();
+  }
 };
 
 provide('hover-card', {
@@ -28,6 +47,8 @@ provide('hover-card', {
   triggerRef,
   show,
   hide,
+  setIsHoveringContent,
+  setIsHoveringTrigger,
 });
 </script>
 

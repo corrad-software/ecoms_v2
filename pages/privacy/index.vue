@@ -11,7 +11,7 @@
           <!-- Logo -->
           <NuxtLink to="/" class="flex items-center gap-2 text-foreground">
             <div class="p-0.5">⌘</div>
-            Acme Inc
+            Corrad
           </NuxtLink>
 
           <!-- Login link -->

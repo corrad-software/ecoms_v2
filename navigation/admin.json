@@ -1,0 +1,38 @@
+{
+  "menu": [
+    {
+      "type": "section",
+      "title": "Platform",
+      "items": [
+        {
+          "name": "Home",
+          "icon": "lucide:home",
+          "path": "/admin"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "title": "Component",
+      "items": [
+        { "name": "Component", "icon": "lucide:puzzle", "path": "/component" }
+      ]
+    },
+    {
+      "type": "section",
+      "title": "Setting",
+      "items": [
+        {
+          "name": "Setting",
+          "icon": "lucide:puzzle",
+          "children": [
+            {
+              "name": "Theme",
+              "path": "/admin/settings/theme"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

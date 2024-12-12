@@ -1,5 +1,5 @@
 <script setup>
-import { inject } from 'vue';
+import { inject, onBeforeUnmount } from 'vue';
 
 defineOptions({ name: 'HoverCardTrigger' });
 
@@ -10,18 +10,19 @@ const props = defineProps({
   },
 });
 
-const { triggerRef, show, hide } = inject('hover-card');
+const { triggerRef, show, setIsHoveringTrigger } = inject('hover-card');
 
 let timeout;
 
 const handleMouseEnter = () => {
   clearTimeout(timeout);
+  setIsHoveringTrigger(true);
   timeout = setTimeout(show, props.delay);
 };
 
 const handleMouseLeave = () => {
   clearTimeout(timeout);
-  timeout = setTimeout(hide, props.delay);
+  setIsHoveringTrigger(false);
 };
 
 onBeforeUnmount(() => {

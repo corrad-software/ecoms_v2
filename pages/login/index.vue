@@ -66,14 +66,12 @@ const handleLogin = async (formData) => {
           type="form"
           :actions="false"
           @submit="handleLogin"
-          #default="{ value }"
         >
           <FormKit
-            type="email"
+            type="text"
             name="email"
             placeholder="name@example.com"
             label="Email"
-            validation="required|email"
           />
 
           <FormKit
@@ -81,7 +79,6 @@ const handleLogin = async (formData) => {
             name="password"
             placeholder="Enter your password"
             label="Password"
-            validation="required"
           />
 
           <div class="flex items-start justify-between">

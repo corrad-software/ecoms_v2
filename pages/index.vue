@@ -1,4 +1,9 @@
 <script setup>
+definePageMeta({
+  title: "Root",
+  redirect: "/login",
+});
+
 const colors = {
   primary: "Primary",
   secondary: "Secondary",

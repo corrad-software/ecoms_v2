@@ -5,7 +5,7 @@ defineOptions({
 </script>
 
 <template>
-  <h3 class="text-lg font-semibold leading-none tracking-tight">
+  <div class="text-lg font-semibold leading-none tracking-tight">
     <slot />
-  </h3>
+  </div>
 </template>

@@ -13,9 +13,65 @@
     },
     {
       "type": "section",
-      "title": "Component",
+      "title": "Components",
       "items": [
-        { "name": "Component", "icon": "lucide:puzzle", "path": "/component" }
+        {
+          "name": "Data Display",
+          "icon": "lucide:layout-panel-left",
+          "children": [
+            { "name": "Avatar", "path": "/admin/component/avatar" },
+            { "name": "Badge", "path": "/admin/component/badge" },
+            { "name": "Card", "path": "/admin/component/card" },
+            { "name": "Data Table", "path": "/admin/component/data-table" },
+            { "name": "Progress", "path": "/admin/component/progress" },
+            { "name": "Skeleton", "path": "/admin/component/skeleton" },
+            { "name": "Table", "path": "/admin/component/table" }
+          ]
+        },
+        {
+          "name": "Feedback",
+          "icon": "lucide:bell",
+          "children": [
+            { "name": "Alert", "path": "/admin/component/alert" },
+            { "name": "Toast", "path": "/admin/component/toast" }
+          ]
+        },
+        {
+          "name": "Navigation",
+          "icon": "lucide:navigation",
+          "children": [
+            { "name": "Breadcrumb", "path": "/admin/component/breadcrumb" },
+            { "name": "Stepper", "path": "/admin/component/stepper" },
+            { "name": "Tabs", "path": "/admin/component/tabs" }
+          ]
+        },
+        {
+          "name": "Overlay",
+          "icon": "lucide:layers",
+          "children": [
+            { "name": "Context Menu", "path": "/admin/component/context-menu" },
+            { "name": "Dropdown", "path": "/admin/component/dropdown" },
+            { "name": "Hover Card", "path": "/admin/component/hover-card" },
+            { "name": "Modal", "path": "/admin/component/modal" },
+            { "name": "Popover", "path": "/admin/component/popover" },
+            { "name": "Tooltip", "path": "/admin/component/tooltip" }
+          ]
+        },
+        {
+          "name": "Layout",
+          "icon": "lucide:layout",
+          "children": [
+            { "name": "Carousel", "path": "/admin/component/carousel" },
+            { "name": "Scroll Area", "path": "/admin/component/scroll-area" }
+          ]
+        },
+        {
+          "name": "Forms",
+          "icon": "lucide:box-select",
+          "children": [
+            { "name": "Button", "path": "/admin/component/button" }
+          ]
+        }
       ]
     },
     {
@@ -24,7 +80,7 @@
       "items": [
         {
           "name": "Setting",
-          "icon": "lucide:puzzle",
+          "icon": "lucide:settings",
           "children": [
             {
               "name": "Theme",

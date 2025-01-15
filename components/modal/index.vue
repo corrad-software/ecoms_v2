@@ -41,10 +41,10 @@ provide("closeModal", close);
       leave-from-class="opacity-100"
       leave-to-class="opacity-0"
     >
-      <div v-if="open" class="fixed inset-0 z-50">
+      <div v-if="open" class="fixed inset-0 z-[9999]">
         <!-- Backdrop -->
         <div
-          class="fixed inset-0 bg-background/80 backdrop-blur-sm"
+          class="fixed inset-0 bg-background/50 backdrop-blur-sm"
           @click="close"
         />
         <!-- Modal Content -->

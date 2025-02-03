@@ -76,7 +76,8 @@ const delayCode = `<template>
           <h1 class="text-2xl font-bold">Tooltip</h1>
         </CardTitle>
         <CardDescription>
-          A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.
+          A popup that displays information related to an element when the
+          element receives keyboard focus or the mouse hovers over it.
         </CardDescription>
       </CardHeader>
     </Card>
@@ -92,14 +93,12 @@ const delayCode = `<template>
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div class="mb-6">
+        <div class="flex justify-center mb-6">
           <Tooltip>
             <TooltipTrigger>
               <Button variant="outline">Hover me</Button>
             </TooltipTrigger>
-            <TooltipContent>
-              Add to library
-            </TooltipContent>
+            <TooltipContent> Add to library </TooltipContent>
           </Tooltip>
         </div>
         <div class="mt-4">
@@ -127,36 +126,28 @@ const delayCode = `<template>
               <TooltipTrigger>
                 <Button variant="outline">Top</Button>
               </TooltipTrigger>
-              <TooltipContent>
-                Tooltip on top
-              </TooltipContent>
+              <TooltipContent> Tooltip on top </TooltipContent>
             </Tooltip>
 
             <Tooltip side="right">
               <TooltipTrigger>
                 <Button variant="outline">Right</Button>
               </TooltipTrigger>
-              <TooltipContent>
-                Tooltip on right
-              </TooltipContent>
+              <TooltipContent> Tooltip on right </TooltipContent>
             </Tooltip>
 
             <Tooltip side="bottom">
               <TooltipTrigger>
                 <Button variant="outline">Bottom</Button>
               </TooltipTrigger>
-              <TooltipContent>
-                Tooltip on bottom
-              </TooltipContent>
+              <TooltipContent> Tooltip on bottom </TooltipContent>
             </Tooltip>
 
             <Tooltip side="left">
               <TooltipTrigger>
                 <Button variant="outline">Left</Button>
               </TooltipTrigger>
-              <TooltipContent>
-                Tooltip on left
-              </TooltipContent>
+              <TooltipContent> Tooltip on left </TooltipContent>
             </Tooltip>
           </div>
         </div>
@@ -184,9 +175,7 @@ const delayCode = `<template>
             <TooltipTrigger>
               <Button variant="outline">Hover with Delay</Button>
             </TooltipTrigger>
-            <TooltipContent>
-              Tooltip with custom delay
-            </TooltipContent>
+            <TooltipContent> Tooltip with custom delay </TooltipContent>
           </Tooltip>
         </div>
         <div class="mt-4">
@@ -221,21 +210,32 @@ const delayCode = `<template>
               <TableBody>
                 <TableRow>
                   <TableCell>side</TableCell>
-                  <TableCell><code>'top' | 'right' | 'bottom' | 'left'</code></TableCell>
+                  <TableCell
+                    ><code>'top' | 'right' | 'bottom' | 'left'</code></TableCell
+                  >
                   <TableCell><code>'top'</code></TableCell>
-                  <TableCell>The preferred side of the trigger to render the tooltip.</TableCell>
+                  <TableCell
+                    >The preferred side of the trigger to render the
+                    tooltip.</TableCell
+                  >
                 </TableRow>
                 <TableRow>
                   <TableCell>delayDuration</TableCell>
                   <TableCell><code>number</code></TableCell>
                   <TableCell><code>200</code></TableCell>
-                  <TableCell>The delay duration in milliseconds before showing the tooltip.</TableCell>
+                  <TableCell
+                    >The delay duration in milliseconds before showing the
+                    tooltip.</TableCell
+                  >
                 </TableRow>
                 <TableRow>
                   <TableCell>skipDelayDuration</TableCell>
                   <TableCell><code>number</code></TableCell>
                   <TableCell><code>300</code></TableCell>
-                  <TableCell>The delay duration in milliseconds before hiding the tooltip.</TableCell>
+                  <TableCell
+                    >The delay duration in milliseconds before hiding the
+                    tooltip.</TableCell
+                  >
                 </TableRow>
               </TableBody>
             </Table>
@@ -256,15 +256,21 @@ const delayCode = `<template>
               <TableBody>
                 <TableRow>
                   <TableCell>side</TableCell>
-                  <TableCell><code>'top' | 'right' | 'bottom' | 'left'</code></TableCell>
+                  <TableCell
+                    ><code>'top' | 'right' | 'bottom' | 'left'</code></TableCell
+                  >
                   <TableCell><code>'top'</code></TableCell>
-                  <TableCell>The side of the trigger to render the tooltip.</TableCell>
+                  <TableCell
+                    >The side of the trigger to render the tooltip.</TableCell
+                  >
                 </TableRow>
                 <TableRow>
                   <TableCell>sideOffset</TableCell>
                   <TableCell><code>number</code></TableCell>
                   <TableCell><code>4</code></TableCell>
-                  <TableCell>The distance in pixels from the trigger.</TableCell>
+                  <TableCell
+                    >The distance in pixels from the trigger.</TableCell
+                  >
                 </TableRow>
               </TableBody>
             </Table>
@@ -288,4 +294,4 @@ const delayCode = `<template>
       </CardContent>
     </Card>
   </div>
-</template> 
+</template>

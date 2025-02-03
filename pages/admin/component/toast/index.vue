@@ -83,6 +83,45 @@ const showLongDurationToast = () => {
     duration: 10000,
   });
 };
+
+// Add these functions after other example functions
+const showTopRightToast = () => {
+  const toast = useToast();
+  toast.add({
+    title: "Top Right",
+    description: "This toast appears in the top right corner",
+    position: "top-right",
+  });
+};
+
+
+const showTopLeftToast = () => {
+  const toast = useToast();
+  toast.add({
+    title: "Top Left",
+    description: "This toast appears in the top left corner",
+    position: "top-left",
+  });
+};
+
+const showBottomLeftToast = () => {
+  const toast = useToast();
+  toast.add({
+    title: "Bottom Left",
+    description: "This toast appears in the bottom left corner",
+    position: "bottom-left",
+  });
+
+};
+
+const showBottomRightToast = () => {
+  const toast = useToast();
+  toast.add({
+    title: "Bottom Right",
+    description: "This toast appears in the bottom right corner",
+    position: "bottom-right",
+  });
+};
 </script>
 
 <template>
@@ -133,10 +172,16 @@ const showLongDurationToast = () => {
         </CardTitle>
         <CardDescription>
           Toast notifications can be positioned in different corners of the
-          screen.
+          screen. Use the position prop to control where toasts appear.
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <div class="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <Button @click="showTopLeftToast" variant="outline">Top Left</Button>
+          <Button @click="showTopRightToast" variant="outline">Top Right</Button>
+          <Button @click="showBottomLeftToast" variant="outline">Bottom Left</Button>
+          <Button @click="showBottomRightToast" variant="outline">Bottom Right</Button>
+        </div>
         <div class="mt-4">
           <ClientOnly>
             <CodeBlock :code="positionCode" language="markup" />

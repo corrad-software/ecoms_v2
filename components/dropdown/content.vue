@@ -45,9 +45,8 @@ const adjustedPosition = computed(() => {
     <div
       v-if="isOpen"
       ref="contentRef"
-      class="absolute z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
+      class="fixed z-[100] min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
       :style="{
-        position: 'fixed',
         top: `${adjustedPosition.y}px`,
         left: `${adjustedPosition.x}px`,
       }"

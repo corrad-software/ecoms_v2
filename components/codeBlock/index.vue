@@ -76,7 +76,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="relative my-6 w-full rounded-md border">
+  <div class="my-6 w-full rounded-md border">
     <!-- Header -->
     <div class="flex items-center border-b">
       <!-- Tab-like buttons -->

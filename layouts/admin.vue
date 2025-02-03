@@ -73,9 +73,12 @@ const handleOverlayClick = () => {
 
       <!-- Page Content -->
       <main class="p-6 bg-content min-h-screen z-0">
-        <slot />
+        <div class="max-w-[1920px] mx-auto">
+          <slot />
+        </div>
       </main>
     </div>
+
   </div>
 </template>
 

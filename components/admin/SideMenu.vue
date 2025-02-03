@@ -15,6 +15,58 @@ const layoutStore = useLayoutStore();
 const { getAdminNavigation } = useNavigation();
 const menuItems = getAdminNavigation();
 
+// Initialize expanded items based on current route
+const initializeExpandedItems = () => {
+  const currentPath = useRoute().path;
+  
+  const checkAndExpandParents = (items, parentNames = []) => {
+    items.forEach(item => {
+      if (item.children) {
+        const hasActiveChild = item.children.some(child => {
+          if (child.path === currentPath) return true;
+          if (child.children) {
+            return checkAndExpandParents([child], [...parentNames, item.name]);
+          }
+          return false;
+        });
+
+        if (hasActiveChild) {
+          // Expand all parent items in the chain
+          parentNames.forEach(name => expandedItems.value.add(name));
+          expandedItems.value.add(item.name);
+        }
+      }
+      
+      if (item.path === currentPath) {
+        // Expand all parent items when current item is found
+        parentNames.forEach(name => expandedItems.value.add(name));
+        return true;
+      }
+      
+      return false;
+    });
+    
+    return items.some(item => item.path === currentPath);
+  };
+
+  menuItems.forEach(section => {
+    checkAndExpandParents(section.items);
+  });
+};
+
+// Call initialization on mount
+onMounted(() => {
+  initializeExpandedItems();
+});
+
+// Watch for route changes to update expanded state
+watch(
+  () => useRoute().path,
+  () => {
+    initializeExpandedItems();
+  }
+);
+
 const handleOverlayClick = () => {
   emit("toggle");
 };
@@ -59,17 +111,70 @@ const toggleExpand = (itemName) => {
 
 // Dynamic classes for navigation items
 const navItemClasses = computed(() => {
-  return "flex items-center w-full px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-md gap-3";
+  return "flex items-center w-full px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-md gap-3 transition-colors duration-200";
 });
 
 const sectionTitleClasses = computed(() => {
   return "px-3 text-xs font-medium text-muted-foreground tracking-wider uppercase";
 });
 
+const getNestedItemClasses = (level = 1) => {
+  const baseClasses = "flex items-center w-full py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors duration-200 relative";
+  // Use fixed padding classes instead of dynamic ones
+  const levelPadding = {
+    1: 'pl-10',  // First level indent
+    2: 'pl-16',  // Second level indent
+    3: 'pl-20'   // Third level indent
+  };
+  return `${baseClasses} ${levelPadding[level] || 'pl-10'} pr-3`;
+};
+
 const isActive = (path) => {
   if (!path) return false;
-  return path === useRoute().path;
+  const currentPath = useRoute().path;
+  return currentPath === path;
 };
+
+const isParentActive = (item) => {
+  const currentPath = useRoute().path;
+  
+  const checkChildrenActive = (items) => {
+    return items.some(child => {
+      if (child.path === currentPath) return true;
+      if (child.children) {
+        return checkChildrenActive(child.children);
+      }
+      return false;
+    });
+  };
+
+  if (item.path) {
+    return isActive(item.path);
+  }
+  if (item.children) {
+    return checkChildrenActive(item.children);
+  }
+  return false;
+};
+
+// Add this to the script section
+const activePopover = ref(null);
+
+const handlePopoverTrigger = (itemName) => {
+  if (activePopover.value === itemName) {
+    activePopover.value = null;
+  } else {
+    activePopover.value = itemName;
+  }
+};
+
+// Add this computed property to the script section
+const dropdownPosition = computed(() => {
+  return {
+    placement: 'right-start',
+    middleware: [{ name: 'offset', options: { mainAxis: 12 } }]
+  };
+});
 </script>
 
 <template>
@@ -145,51 +250,63 @@ const isActive = (path) => {
                 <template v-if="item.children">
                   <!-- Minimized state -->
                   <template v-if="effectiveIsMinimized">
-                    <HoverCard>
-                      <HoverCardTrigger>
+                    <Dropdown 
+                      v-model="activePopover" 
+                      :model-value="activePopover === item.name"
+                      placement="right"
+                    >
+                      <DropdownTrigger>
                         <button
+                          @click="handlePopoverTrigger(item.name)"
                           class="submenu-trigger relative"
-                          :class="navItemClasses"
+                          :class="[
+                            navItemClasses,
+                            activePopover === item.name ? 'bg-accent text-foreground' : ''
+                          ]"
                         >
                           <Icon :name="item.icon" class="w-4 h-4 shrink-0" />
                         </button>
-                      </HoverCardTrigger>
+                      </DropdownTrigger>
 
-                      <HoverCardContent side="right" align="start">
-                        <div class="min-w-[8rem] z-50">
-                          <div class="mb-2 font-medium">{{ item.name }}</div>
-                          <div class="space-y-1">
-                            <template
-                              v-for="child in item.children"
-                              :key="child.name"
-                            >
-                              <!-- Handle nested children -->
-                              <template v-if="child.children">
-                                <div class="px-2 py-1.5 text-sm font-medium">
-                                  {{ child.name }}
-                                </div>
-                                <NuxtLink
-                                  v-for="subChild in child.children"
-                                  :key="subChild.name"
-                                  :to="subChild.path"
-                                  class="block px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-sm"
-                                >
-                                  {{ subChild.name }}
-                                </NuxtLink>
-                              </template>
-                              <!-- Regular child item -->
-                              <NuxtLink
-                                v-else
-                                :to="child.path"
-                                class="block px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-sm"
-                              >
-                                {{ child.name }}
-                              </NuxtLink>
-                            </template>
-                          </div>
+                      <DropdownContent 
+                        class="min-w-[200px]"
+                        @select="() => activePopover = null"
+                      >
+                        <div class="py-1.5 px-2 text-sm font-medium border-b">
+                          {{ item.name }}
                         </div>
-                      </HoverCardContent>
-                    </HoverCard>
+                        <template
+                          v-for="child in item.children"
+                          :key="child.name"
+                        >
+                          <!-- Handle nested children -->
+                          <template v-if="child.children">
+                            <div class="px-2 py-1.5 text-xs font-medium text-muted-foreground">
+                              {{ child.name }}
+                            </div>
+                            <NuxtLink
+                              v-for="subChild in child.children"
+                              :key="subChild.name"
+                              :to="subChild.path"
+                            >
+                              <DropdownItem @click="activePopover = null">
+                                {{ subChild.name }}
+                              </DropdownItem>
+                            </NuxtLink>
+                            <DropdownSeparator v-if="child !== item.children[item.children.length - 1]" />
+                          </template>
+                          <!-- Regular child item -->
+                          <NuxtLink
+                            v-else
+                            :to="child.path"
+                          >
+                            <DropdownItem @click="activePopover = null">
+                              {{ child.name }}
+                            </DropdownItem>
+                          </NuxtLink>
+                        </template>
+                      </DropdownContent>
+                    </Dropdown>
                   </template>
 
                   <!-- Non-minimized state -->
@@ -198,9 +315,8 @@ const isActive = (path) => {
                       @click="toggleExpand(item.name)"
                       :class="[
                         navItemClasses,
-                        expandedItems.has(item.name)
-                          ? 'bg-accent text-foreground'
-                          : '',
+                        isParentActive(item) ? 'bg-accent text-foreground' : '',
+                        expandedItems.has(item.name) ? '' : '',
                       ]"
                     >
                       <Icon :name="item.icon" class="w-4 h-4 shrink-0" />
@@ -226,47 +342,72 @@ const isActive = (path) => {
                     <!-- Expanded menu in non-minimized state -->
                     <div
                       v-show="expandedItems.has(item.name)"
-                      class="mt-1 space-y-1"
+                      class="mt-0.5 relative"
                     >
+                      <!-- Vertical line for first level -->
+                      <div class="absolute left-5 top-0 bottom-0 w-px bg-border"></div>
+                      
                       <template
-                        v-for="child in item.children"
+                        v-for="(child, childIndex) in item.children"
                         :key="child.name"
                       >
                         <!-- Handle nested children -->
                         <template v-if="child.children">
-                          <button
-                            @click="toggleExpand(child.name)"
-                            class="w-full pl-10 pr-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 flex items-center justify-between"
-                          >
-                            <span>{{ child.name }}</span>
-                            <Icon
-                              :name="
-                                expandedItems.has(child.name)
-                                  ? 'lucide:chevron-down'
-                                  : 'lucide:chevron-right'
-                              "
-                              class="w-4 h-4 shrink-0"
-                            />
-                          </button>
-                          <div
-                            v-show="expandedItems.has(child.name)"
-                            class="pl-12"
-                          >
-                            <NuxtLink
-                              v-for="subChild in child.children"
-                              :key="subChild.name"
-                              :to="subChild.path"
-                              class="block py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                          <div class="relative">
+                            <button
+                              @click="toggleExpand(child.name)"
+                              :class="[
+                                getNestedItemClasses(1),
+                                'flex items-center justify-between group',
+                                { 
+                                  'text-foreground font-medium': isParentActive(child)
+                                }
+                              ]"
                             >
-                              {{ subChild.name }}
-                            </NuxtLink>
+                              <span>{{ child.name }}</span>
+                              <Icon
+                                :name="
+                                  expandedItems.has(child.name)
+                                    ? 'lucide:chevron-down'
+                                    : 'lucide:chevron-right'
+                                "
+                                class="w-4 h-4 shrink-0 opacity-50 group-hover:opacity-100"
+                              />
+                            </button>
+                            
+                            <div
+                              v-show="expandedItems.has(child.name)"
+                              class="py-0.5 relative"
+                            >
+                              <!-- Vertical line for second level -->
+                              <div class="absolute left-12 top-0 bottom-0 w-px bg-border"></div>
+                              
+                              <NuxtLink
+                                v-for="subChild in child.children"
+                                :key="subChild.name"
+                                :to="subChild.path"
+                                :class="[
+                                  getNestedItemClasses(2),
+                                  { 
+                                    'text-foreground font-medium': isActive(subChild.path)
+                                  }
+                                ]"
+                              >
+                                {{ subChild.name }}
+                              </NuxtLink>
+                            </div>
                           </div>
                         </template>
                         <!-- Regular child item -->
                         <NuxtLink
                           v-else
                           :to="child.path"
-                          class="block pl-10 pr-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                          :class="[
+                            getNestedItemClasses(1),
+                            { 
+                              'text-foreground font-medium': isActive(child.path)
+                            }
+                          ]"
                         >
                           {{ child.name }}
                         </NuxtLink>

@@ -1,5 +1,5 @@
 <script setup>
-import { provide, ref } from 'vue';
+import { provide, ref, watch, onBeforeUnmount } from 'vue';
 
 defineOptions({ name: 'HoverCard' });
 
@@ -8,6 +8,25 @@ const position = ref({ x: 0, y: 0 });
 const triggerRef = ref(null);
 const isHoveringTrigger = ref(false);
 const isHoveringContent = ref(false);
+const originalOverflow = ref('');
+
+const lockScroll = () => {
+  originalOverflow.value = document.body.style.overflow;
+  document.body.style.overflow = 'hidden';
+};
+
+const unlockScroll = () => {
+  document.body.style.overflow = originalOverflow.value;
+};
+
+// Watch for changes in isOpen to handle scroll locking
+watch(isOpen, (newValue) => {
+  if (newValue) {
+    lockScroll();
+  } else {
+    unlockScroll();
+  }
+});
 
 const show = () => {
   if (triggerRef.value) {
@@ -49,6 +68,13 @@ provide('hover-card', {
   hide,
   setIsHoveringContent,
   setIsHoveringTrigger,
+});
+
+// Cleanup on component destruction
+onBeforeUnmount(() => {
+  if (isOpen.value) {
+    unlockScroll();
+  }
 });
 </script>
 

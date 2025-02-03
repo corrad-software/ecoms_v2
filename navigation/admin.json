@@ -68,9 +68,7 @@
         {
           "name": "Forms",
           "icon": "lucide:box-select",
-          "children": [
-            { "name": "Button", "path": "/admin/component/button" }
-          ]
+          "children": [{ "name": "Button", "path": "/admin/component/button" }]
         }
       ]
     },
@@ -85,6 +83,34 @@
             {
               "name": "Theme",
               "path": "/admin/settings/theme"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "title": "Examples",
+      "items": [
+        {
+          "name": "Management",
+          "icon": "lucide:folder", 
+          "children": [
+            {
+              "name": "Users",
+              "children": [
+                { "name": "List", "path": "#" },
+                { "name": "Create", "path": "#" },
+                { "name": "Groups", "path": "#" }
+              ]
+            },
+            {
+              "name": "Products",
+              "children": [
+                { "name": "Catalog", "path": "#" },
+                { "name": "Categories", "path": "#" },
+                { "name": "Inventory", "path": "#" }
+              ]
             }
           ]
         }

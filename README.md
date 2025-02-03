@@ -1,76 +1,157 @@
-# Nuxt Minimal Starter
+# Corrad UI 2025 🚀
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A modern, feature-rich UI component library built with Nuxt 3, designed for creating beautiful and responsive web applications. Corrad UI combines the power of Vue 3 with the flexibility of Tailwind CSS to deliver a seamless development experience.
 
-## Setup
+![Nuxt 3](https://img.shields.io/badge/Nuxt-3-00DC82?style=for-the-badge&logo=nuxt.js&logoColor=white)
+![Vue 3](https://img.shields.io/badge/Vue-3-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 
-Make sure to install dependencies:
+## ✨ Features
+
+- 🎨 **25+ Modern UI Components** - From basic buttons to complex data tables
+- 🌓 **Light/Dark Theme** - Built-in theme switching capability
+- 🌐 **RTL Support** - Full Right-to-Left layout support
+- 📱 **Responsive Design** - Mobile-first approach for all components
+- 🔧 **Customizable** - Easy to customize with Tailwind CSS
+- 📝 **Form Handling** - Integrated FormKit with custom styling
+- 🎯 **TypeScript Support** - Full type safety and better DX
+- ⚡ **Auto-imports** - Zero-config component importing
+
+## 🎯 Components
+
+<details>
+<summary>View Component List</summary>
+
+- **Layout**
+  - Accordion
+  - Card
+  - Modal
+  - Tabs
+  - Separator
+
+- **Data Display**
+  - Table
+  - Data Table
+  - Avatar
+  - Badge
+  - Progress
+
+- **Navigation**
+  - Breadcrumb
+  - Dropdown
+  - Context Menu
+  - Stepper
+
+- **Feedback**
+  - Alert
+  - Toast
+  - Tooltip
+  - Hover Card
+  - Popover
+
+- **Media**
+  - Carousel
+  - Skeleton
+
+- **Utils**
+  - Scroll Area
+  - Theme Switcher
+  - Button
+
+</details>
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 16.x or later
+- pnpm (recommended) or npm
+
+### Installation
 
 ```bash
-# npm
-npm install
+# Clone the repository
+git clone https://github.com/corrad-software/corrad-2025.git
 
-# pnpm
+# Navigate to project directory
+cd corrad-2025
+
+# Install dependencies
 pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+### Development
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
+# Start development server
 pnpm dev
 
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
+# Build for production
 pnpm build
 
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
+# Preview production build
 pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-# corrad-ui-2025
+## 📖 Documentation
+
+Each component comes with comprehensive documentation and examples:
+
+- Basic usage
+- Props API
+- Events
+- Customization options
+- Live examples
+
+## 🎨 Customization
+
+### Tailwind Configuration
+
+Customize the design system by modifying `tailwind.config.js`:
+
+```js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        // Your custom colors
+      },
+      // Other theme extensions
+    }
+  }
+}
+```
+
+### FormKit Theme
+
+Customize form elements through `formkit.theme.js`.
+
+## 🛠️ Project Structure
+
+```
+corrad-2025/
+├── components/        # UI Components
+├── composables/       # Vue composables
+├── layouts/          # Page layouts
+├── pages/           # Application routes
+├── plugins/         # Nuxt plugins
+├── stores/          # State management
+├── assets/          # Static assets
+├── public/          # Public files
+└── server/          # Server-side code
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our contributing guidelines before submitting pull requests.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgments
+
+- Built with [Nuxt 3](https://nuxt.com)
+- Styled with [Tailwind CSS](https://tailwindcss.com)
+- Forms powered by [FormKit](https://formkit.com)

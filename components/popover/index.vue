@@ -1,11 +1,30 @@
 <script setup>
-import { provide, ref } from 'vue';
+import { provide, ref, watch } from 'vue';
 
 defineOptions({ name: 'Popover' });
 
 const isOpen = ref(false);
 const position = ref({ x: 0, y: 0 });
 const triggerRef = ref(null);
+const originalOverflow = ref('');
+
+const lockScroll = () => {
+  originalOverflow.value = document.body.style.overflow;
+  document.body.style.overflow = 'hidden';
+};
+
+const unlockScroll = () => {
+  document.body.style.overflow = originalOverflow.value;
+};
+
+// Watch for changes in isOpen to handle scroll locking
+watch(isOpen, (newValue) => {
+  if (newValue) {
+    lockScroll();
+  } else {
+    unlockScroll();
+  }
+});
 
 const toggle = () => {
   isOpen.value = !isOpen.value;
@@ -41,6 +60,10 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   document.removeEventListener('click', close);
+  // Ensure we unlock scroll when component is destroyed
+  if (isOpen.value) {
+    unlockScroll();
+  }
 });
 </script>
 

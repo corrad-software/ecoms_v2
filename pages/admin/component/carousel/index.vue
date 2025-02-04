@@ -63,16 +63,10 @@ const customContentCode = `<Carousel>
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Carousel</h1>
-        </CardTitle>
-        <CardDescription>
-          A slideshow component for cycling through elements, built on top of Splide.js with smooth transitions and customizable controls.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Carousel</h1>
+      <p class="text-gray-600">A carousel component for cycling through elements, with support for navigation and indicators.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

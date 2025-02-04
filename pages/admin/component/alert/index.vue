@@ -67,17 +67,10 @@ const customCode = `<Alert variant="success" class="max-w-md">
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Alert</h1>
-        </CardTitle>
-        <CardDescription>
-          Displays important messages and feedback to users with various styles and
-          states. Built with accessibility in mind.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Alert</h1>
+      <p class="text-gray-600">Displays important messages and feedback to users with various styles and states. Built with accessibility in mind.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

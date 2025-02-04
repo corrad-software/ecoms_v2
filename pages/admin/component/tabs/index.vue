@@ -84,16 +84,10 @@ const disabledCode = `<template>
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Tabs</h1>
-        </CardTitle>
-        <CardDescription>
-          A set of layered sections of content that display one panel at a time, with support for horizontal, vertical, and responsive layouts.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Tabs</h1>
+      <p class="text-gray-600">A tabbed interface component for organizing and switching between different views.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

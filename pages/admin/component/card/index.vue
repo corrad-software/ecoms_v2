@@ -6,7 +6,9 @@ definePageMeta({
 
 const basicCode = `<Card>
   <CardHeader>
-    <CardTitle>Card Title</CardTitle>
+    <CardTitle>
+      <h1 class="text-2xl font-bold">Card Title</h1>
+    </CardTitle>
     <CardDescription>Card Description</CardDescription>
   </CardHeader>
   <CardContent>
@@ -51,17 +53,10 @@ const simpleCode = `<Card>
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Card</h1>
-        </CardTitle>
-        <CardDescription>
-          A versatile container component with header, content, and footer
-          sections. Built with composable components for flexible layouts.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Card</h1>
+      <p class="text-gray-600">A flexible card component for displaying content in a contained format with optional header and footer sections.</p>
+    </div>
 
     <!-- Anatomy -->
     <Card>

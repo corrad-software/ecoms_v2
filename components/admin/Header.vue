@@ -95,7 +95,7 @@ const unreadCount = 2;
           </div>
           <div class="px-3 py-2 border-t text-center">
             <NuxtLink
-              to="/notifications"
+              to="#"
               class="text-xs text-primary hover:text-primary/90"
             >
               View all notifications
@@ -110,12 +110,25 @@ const unreadCount = 2;
           <button
             class="flex items-center gap-2 p-1 hover:bg-accent rounded-lg"
           >
-            <img
-              src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin"
-              alt="User"
-              class="w-7 h-7 rounded-full"
-            />
-            <span class="text-sm font-medium">Admin User</span>
+            <div
+              class="w-7 h-7 rounded-full border flex items-center justify-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 256 256"
+              >
+                <path
+                  fill="currentColor"
+                  d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24M74.08 197.5a64 64 0 0 1 107.84 0a87.83 87.83 0 0 1-107.84 0M96 120a32 32 0 1 1 32 32a32 32 0 0 1-32-32m97.76 66.41a79.66 79.66 0 0 0-36.06-28.75a48 48 0 1 0-59.4 0a79.66 79.66 0 0 0-36.06 28.75a88 88 0 1 1 131.52 0"
+                />
+              </svg>
+            </div>
+            <div class="flex flex-col items-start">
+              <span class="text-sm font-medium">John Doe</span>
+              <span class="text-xs text-muted-foreground">Administrator</span>
+            </div>
             <Icon name="mdi:chevron-down" class="w-4 h-4" />
           </button>
         </DropdownTrigger>

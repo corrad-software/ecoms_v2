@@ -90,16 +90,10 @@ const alignmentCode = `<template>
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Popover</h1>
-        </CardTitle>
-        <CardDescription>
-          A floating element that displays relative to a trigger, perfect for dropdown menus, tooltips, and more.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Popover</h1>
+      <p class="text-gray-600">A popover component that displays floating content when clicking on a trigger element.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

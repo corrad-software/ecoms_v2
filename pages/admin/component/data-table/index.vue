@@ -59,16 +59,10 @@ const columnsWithCustomCell = [
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Data Table</h1>
-        </CardTitle>
-        <CardDescription>
-          A feature-rich data table component with sorting, filtering, pagination, and customizable cells.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Data Table</h1>
+      <p class="text-gray-600">A powerful data table component with sorting, filtering, pagination, and row selection capabilities.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

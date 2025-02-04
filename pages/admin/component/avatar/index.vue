@@ -28,16 +28,10 @@ const groupCode = `<AvatarGroup :max="3">
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Avatar</h1>
-        </CardTitle>
-        <CardDescription>
-          A versatile avatar component for displaying user images with fallback support and group functionality.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Avatar</h1>
+      <p class="text-gray-600">A versatile avatar component for displaying user images with fallback support and group functionality.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

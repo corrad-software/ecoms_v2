@@ -77,15 +77,27 @@
       "title": "Setting",
       "items": [
         {
-          "name": "Setting",
+          "name": "Settings",
           "icon": "lucide:settings",
           "children": [
             {
-              "name": "Theme",
-              "path": "/admin/settings/theme"
+              "name": "Profile",
+              "path": "/admin/settings/profile",
+              "icon": "ph:user"
+            },
+            {
+              "name": "Appearance",
+              "path": "/admin/settings/appearance",
+              "icon": "ph:paint-brush"
+            },
+            {
+              "name": "Password",
+              "path": "/admin/settings/password",
+              "icon": "ph:lock"
             }
           ]
         }
+
       ]
     },
     {

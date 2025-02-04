@@ -52,16 +52,10 @@ const stripedCode = `<template>
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Progress</h1>
-        </CardTitle>
-        <CardDescription>
-          A progress bar component that displays the completion status of a task or process.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Progress</h1>
+      <p class="text-gray-600">A progress indicator component that displays the completion status of a task or process.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

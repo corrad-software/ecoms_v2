@@ -64,16 +64,10 @@ const customContentCode = `<HoverCard>
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Hover Card</h1>
-        </CardTitle>
-        <CardDescription>
-          A popup card that appears when hovering over a trigger element, perfect for rich preview content.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Hover Card</h1>
+      <p class="text-gray-600">A card that appears when hovering over an element, perfect for displaying additional information.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

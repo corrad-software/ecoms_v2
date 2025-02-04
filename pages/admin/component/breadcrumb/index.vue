@@ -32,16 +32,10 @@ const disabledItemCode = `<Breadcrumb>
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Breadcrumb</h1>
-        </CardTitle>
-        <CardDescription>
-          A navigation component that helps users understand their current location within a website's hierarchy.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Breadcrumb</h1>
+      <p class="text-gray-600">A navigation component that helps users understand their current location within a website's hierarchy.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

@@ -118,16 +118,10 @@ const isOpen = ref(false);
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Modal</h1>
-        </CardTitle>
-        <CardDescription>
-          A modal dialog component that overlays content on top of the main view, with customizable header, body, and footer sections.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Modal</h1>
+      <p class="text-gray-600">A modal dialog component for displaying content that requires user interaction, with customizable sizes and positions.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

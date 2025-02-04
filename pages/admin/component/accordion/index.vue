@@ -83,17 +83,10 @@ const faqCode = `<Accordion type="single" class="w-full max-w-3xl">
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Accordion</h1>
-        </CardTitle>
-        <CardDescription>
-          A vertically stacked set of interactive headings that each reveal a
-          section of content. Built with accessibility and customization in mind.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Accordion</h1>
+      <p class="text-gray-600">A vertically stacked set of interactive headings that each reveal a section of content. Built with accessibility and customization in mind.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

@@ -73,16 +73,10 @@ const customStylingCode = `<template>
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Table</h1>
-        </CardTitle>
-        <CardDescription>
-          A responsive table component for displaying tabular data with support for headers, hover states, and custom styling.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Table</h1>
+      <p class="text-gray-600">A responsive table component for displaying tabular data with various styling options.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

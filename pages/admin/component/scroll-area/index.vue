@@ -70,16 +70,10 @@ const orientationCode = `<template>
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Scroll Area</h1>
-        </CardTitle>
-        <CardDescription>
-          A custom scrollable container with a stylized scrollbar that works across browsers.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Scroll Area</h1>
+      <p class="text-gray-600">A custom scrollable container with a native-like scrollbar design.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

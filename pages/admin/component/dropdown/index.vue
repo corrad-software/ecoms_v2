@@ -73,16 +73,10 @@ const handleLogout = () => console.log('Logout clicked');
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Dropdown</h1>
-        </CardTitle>
-        <CardDescription>
-          A dropdown menu component for displaying a list of actions or options triggered by a button.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Dropdown</h1>
+      <p class="text-gray-600">A dropdown menu component for displaying a list of actions or options triggered by a button.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

@@ -70,17 +70,10 @@ const delayCode = `<template>
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Tooltip</h1>
-        </CardTitle>
-        <CardDescription>
-          A popup that displays information related to an element when the
-          element receives keyboard focus or the mouse hovers over it.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Tooltip</h1>
+      <p class="text-gray-600">A popup component that displays informative text when users hover over or focus on an element.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

@@ -237,16 +237,10 @@ const withContentCode = `<template>
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Stepper</h1>
-        </CardTitle>
-        <CardDescription>
-          A stepper component that guides users through a multi-step process, with indicators, descriptions, and completion states.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Stepper</h1>
+      <p class="text-gray-600">A step-by-step navigation component for guiding users through a process or workflow.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

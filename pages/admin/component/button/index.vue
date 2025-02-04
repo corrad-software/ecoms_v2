@@ -36,17 +36,10 @@ const statesCode = `<Button>Default State</Button>
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Button</h1>
-        </CardTitle>
-        <CardDescription>
-          A versatile button component with various styles, sizes, and states.
-          Built with accessibility and customization in mind.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Button</h1>
+      <p class="text-gray-600">A versatile button component with various styles, sizes, and states. Built with accessibility and customization in mind.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

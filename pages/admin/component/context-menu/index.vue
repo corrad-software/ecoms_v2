@@ -62,16 +62,10 @@ const handleDelete = () => console.log('Delete clicked');
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Context Menu</h1>
-        </CardTitle>
-        <CardDescription>
-          A custom context menu component that appears on right-click, providing additional actions and options for elements.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Context Menu</h1>
+      <p class="text-gray-600">A context menu component that displays a menu when right-clicking or long-pressing an element.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

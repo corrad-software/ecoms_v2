@@ -200,7 +200,7 @@ const dropdownPosition = computed(() => {
         v-if="!isHorizontal"
         class="h-14 flex items-center px-3 border-b border-border"
       >
-        <div class="flex items-center gap-2">
+        <NuxtLink to="/admin" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <div
             class="w-8 h-8 bg-primary rounded-md flex items-center justify-center"
           >
@@ -211,6 +211,7 @@ const dropdownPosition = computed(() => {
             :style="{
               width: effectiveIsMinimized ? '0' : 'auto',
               opacity: effectiveIsMinimized ? '0' : '1',
+              transform: effectiveIsMinimized ? 'translateX(-10px)' : 'translateX(0)'
             }"
           >
             <h2 class="text-sm font-semibold whitespace-nowrap">Corrad UI</h2>
@@ -218,7 +219,7 @@ const dropdownPosition = computed(() => {
               Enterprise
             </p>
           </div>
-        </div>
+        </NuxtLink>
       </div>
 
       <!-- Navigation -->
@@ -328,90 +329,97 @@ const dropdownPosition = computed(() => {
                       </span>
                       <Icon
                         :name="
-                          expandedItems.has(item.name)
-                            ? 'lucide:chevron-down'
-                            : isRTL
+                          isRTL
                             ? 'lucide:chevron-left'
                             : 'lucide:chevron-right'
                         "
-                        class="w-4 h-4 shrink-0"
-                        :class="{ 'ml-auto': !isRTL, 'mr-auto': isRTL }"
+                        class="w-4 h-4 shrink-0 transition-transform duration-300"
+                        :class="[
+                          { 'ml-auto': !isRTL, 'mr-auto': isRTL },
+                          expandedItems.has(item.name) ? 'rotate-90' : ''
+                        ]"
                       />
                     </button>
 
                     <!-- Expanded menu in non-minimized state -->
                     <div
-                      v-show="expandedItems.has(item.name)"
-                      class="mt-0.5 relative"
+                      class="overflow-hidden transition-all duration-500 ease-in-out"
+                      :style="{
+                        maxHeight: expandedItems.has(item.name) ? '500px' : '0'
+                      }"
                     >
-                      <!-- Vertical line for first level -->
-                      <div class="absolute left-5 top-0 bottom-0 w-px bg-border"></div>
-                      
-                      <template
-                        v-for="(child, childIndex) in item.children"
-                        :key="child.name"
-                      >
-                        <!-- Handle nested children -->
-                        <template v-if="child.children">
-                          <div class="relative">
-                            <button
-                              @click="toggleExpand(child.name)"
-                              :class="[
-                                getNestedItemClasses(1),
-                                'flex items-center justify-between group',
-                                { 
-                                  'text-foreground font-medium': isParentActive(child)
-                                }
-                              ]"
-                            >
-                              <span>{{ child.name }}</span>
-                              <Icon
-                                :name="
-                                  expandedItems.has(child.name)
-                                    ? 'lucide:chevron-down'
-                                    : 'lucide:chevron-right'
-                                "
-                                class="w-4 h-4 shrink-0 opacity-50 group-hover:opacity-100"
-                              />
-                            </button>
-                            
-                            <div
-                              v-show="expandedItems.has(child.name)"
-                              class="py-0.5 relative"
-                            >
-                              <!-- Vertical line for second level -->
-                              <div class="absolute left-12 top-0 bottom-0 w-px bg-border"></div>
-                              
-                              <NuxtLink
-                                v-for="subChild in child.children"
-                                :key="subChild.name"
-                                :to="subChild.path"
+                      <div class="mt-0.5 relative">
+                        <!-- Vertical line for first level -->
+                        <div class="absolute left-5 top-0 bottom-0 w-px bg-border"></div>
+                        
+                        <template
+                          v-for="(child, childIndex) in item.children"
+                          :key="child.name"
+                        >
+                          <!-- Handle nested children -->
+                          <template v-if="child.children">
+                            <div class="relative">
+                              <button
+                                @click="toggleExpand(child.name)"
                                 :class="[
-                                  getNestedItemClasses(2),
+                                  getNestedItemClasses(1),
+                                  'flex items-center justify-between group',
                                   { 
-                                    'text-foreground font-medium': isActive(subChild.path)
+                                    'text-foreground font-medium': isParentActive(child)
                                   }
                                 ]"
                               >
-                                {{ subChild.name }}
-                              </NuxtLink>
+                                <span>{{ child.name }}</span>
+                                <Icon
+                                  :name="'lucide:chevron-right'"
+                                  class="w-4 h-4 shrink-0 opacity-50 group-hover:opacity-100 transition-transform duration-300"
+                                  :class="expandedItems.has(child.name) ? 'rotate-90' : ''"
+                                />
+                              </button>
+                              
+                              <!-- Nested submenu -->
+                              <div
+                                class="overflow-hidden transition-all duration-500 ease-in-out"
+                                :style="{
+                                  maxHeight: expandedItems.has(child.name) ? '500px' : '0'
+                                }"
+                              >
+                                <div class="py-0.5 relative">
+                                  <!-- Vertical line for second level -->
+                                  <div class="absolute left-12 top-0 bottom-0 w-px bg-border"></div>
+                                  
+                                  <NuxtLink
+                                    v-for="subChild in child.children"
+                                    :key="subChild.name"
+                                    :to="subChild.path"
+                                    :class="[
+                                      getNestedItemClasses(2),
+                                      { 
+                                        'text-foreground font-medium': isActive(subChild.path)
+                                      }
+                                    ]"
+                                  >
+                                    {{ subChild.name }}
+                                  </NuxtLink>
+                                </div>
+                              </div>
                             </div>
-                          </div>
+                          </template>
+                          <!-- Regular child item -->
+                          <NuxtLink
+                            v-else
+                            :to="child.path"
+                            :class="[
+                              getNestedItemClasses(1),
+                              { 
+                                'text-foreground font-medium': isActive(child.path)
+                              }
+                            ]"
+                          >
+                            {{ child.name }}
+                          </NuxtLink>
                         </template>
-                        <!-- Regular child item -->
-                        <NuxtLink
-                          v-else
-                          :to="child.path"
-                          :class="[
-                            getNestedItemClasses(1),
-                            { 
-                              'text-foreground font-medium': isActive(child.path)
-                            }
-                          ]"
-                        >
-                          {{ child.name }}
-                        </NuxtLink>
-                      </template>
+                      </div>
                     </div>
                   </template>
                 </template>

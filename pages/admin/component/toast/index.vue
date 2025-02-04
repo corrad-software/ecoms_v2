@@ -127,17 +127,10 @@ const showBottomRightToast = () => {
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Toast</h1>
-        </CardTitle>
-        <CardDescription>
-          A toast component for displaying brief, non-intrusive notifications or
-          feedback messages to users.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Toast</h1>
+      <p class="text-gray-600">A notification component that displays brief, temporary messages to users.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

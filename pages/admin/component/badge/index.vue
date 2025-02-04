@@ -31,16 +31,10 @@ const withIconCode = `<Badge variant="default">
 <template>
   <div class="space-y-6">
     <!-- Introduction -->
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 class="text-2xl font-bold">Badge</h1>
-        </CardTitle>
-        <CardDescription>
-          A versatile badge component for displaying status, labels, and counts with various styles.
-        </CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Badge</h1>
+      <p class="text-gray-600">A versatile badge component for displaying status, labels, and counts with various styles.</p>
+    </div>
 
     <!-- Basic Usage -->
     <Card>

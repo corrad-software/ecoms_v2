@@ -44,12 +44,10 @@ const recentActivity = [
 
 <template>
   <div>
-    <Card class="mb-6">
-      <CardHeader>
-        <CardTitle>Dashboard</CardTitle>
-        <CardDescription>Welcome back, Admin User</CardDescription>
-      </CardHeader>
-    </Card>
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold">Dashboard</h1>
+      <p class="text-gray-600">Welcome back, John Doe</p>
+    </div>
 
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">

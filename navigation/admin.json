@@ -127,6 +127,40 @@
           ]
         }
       ]
+    },
+    {
+      "type": "section",
+      "title": "ECOMS v2",
+      "items": [
+        {
+          "name": "Repository",
+          "icon": "mdi:source-repository", 
+          "children": [
+            {
+              "name": "Document Tray",
+              "path": "/repository/document-tray"
+            },
+            {
+              "name": "Settings",
+              "path": "#"
+            }
+          ]
+        },
+        {
+          "name": "Approval",
+          "icon": "material-symbols:approval-delegation-rounded", 
+          "children": [
+            {
+              "name": "Permohonan PAP",
+              "path": "/repository/approval/borang-permohonan"
+            },
+            {
+              "name": "Senarai Permohonan",
+              "path": "/repository/approval/senarai-permohonan"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

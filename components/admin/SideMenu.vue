@@ -214,9 +214,9 @@ const dropdownPosition = computed(() => {
               transform: effectiveIsMinimized ? 'translateX(-10px)' : 'translateX(0)'
             }"
           >
-            <h2 class="text-sm font-semibold whitespace-nowrap">Corrad UI</h2>
+            <h2 class="text-sm font-semibold whitespace-nowrap">ECOMS_V2</h2>
             <p class="text-xs text-muted-foreground whitespace-nowrap">
-              Enterprise
+              Jabatan Kerja Raya
             </p>
           </div>
         </NuxtLink>

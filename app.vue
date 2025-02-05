@@ -1,7 +1,7 @@
 <script setup>
 useSeoMeta({
-  title: "CORRAD UI 2025",
-  description: "Modern UI components for CORRAD",
+  title: "ECOMS JKR V2",
+  description: "Modern UI components for ECOMS JKR V2",
 });
 </script>
 

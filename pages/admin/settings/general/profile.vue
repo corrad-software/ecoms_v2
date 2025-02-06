@@ -10,7 +10,7 @@ const { getAdminNavigation } = useNavigation();
 const settingsNavigation = computed(() => {
   const adminNav = getAdminNavigation();
   const settingsSection = adminNav.find(
-    (section) => section.title === "Setting"
+    (section) => section.title === "Settings"
   );
   return settingsSection?.items[0]?.children || [];
 });
@@ -21,20 +21,11 @@ const isActiveRoute = (path) => route.path === path;
 
 // Profile form data
 const profileData = reactive({
-  fullName: "John Doe",
-  email: "john@example.com",
+  fullName: "Ali bin Ahmad",
+  email: "ali.ahmad@jkr.gov.com",
   avatar: "/placeholder-avatar.jpg",
-  bio: "Full-stack developer with a passion for building great user experiences.",
-  location: "New York, USA",
-  timezone: "America/New_York",
 });
 
-const timezones = [
-  { value: "America/New_York", label: "New York (EST)" },
-  { value: "America/Los_Angeles", label: "Los Angeles (PST)" },
-  { value: "Europe/London", label: "London (GMT)" },
-  { value: "Asia/Tokyo", label: "Tokyo (JST)" },
-];
 
 const updateProfile = () => {
   const toast = useToast();
@@ -49,8 +40,8 @@ const updateProfile = () => {
 <template>
   <div>
     <div class="mb-6">
-      <h1 class="text-2xl font-semibold">Settings (Profile)</h1>
-      <p class="text-gray-600">Manage your account profile and preferences</p>
+      <h1 class="text-2xl font-semibold">Profile Settings</h1>
+      <p class="text-gray-600">Manage your account profile</p>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-8">
@@ -131,30 +122,6 @@ const updateProfile = () => {
                   label="Email Address"
                   v-model="profileData.email"
                   validation="required|email"
-                />
-
-                <FormKit
-                  type="textarea"
-                  name="bio"
-                  label="Bio"
-                  v-model="profileData.bio"
-                  validation="required|length:10,500"
-                />
-
-                <FormKit
-                  type="text"
-                  name="location"
-                  label="Location"
-                  v-model="profileData.location"
-                />
-
-                <FormKit
-                  type="select"
-                  name="timezone"
-                  label="Timezone"
-                  v-model="profileData.timezone"
-                  :options="timezones"
-                  placeholder="Select your timezone"
                 />
               </div>
             </div>

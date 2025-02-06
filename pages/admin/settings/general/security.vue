@@ -10,7 +10,7 @@ const { getAdminNavigation } = useNavigation();
 const settingsNavigation = computed(() => {
   const adminNav = getAdminNavigation();
   const settingsSection = adminNav.find(
-    (section) => section.title === "Setting"
+    (section) => section.title === "Settings"
   );
   return settingsSection?.items[0]?.children || [];
 });
@@ -44,7 +44,7 @@ const updatePassword = () => {
 <template>
   <div>
     <div class="mb-6">
-      <h1 class="text-2xl font-semibold">Settings (Password)</h1>
+      <h1 class="text-2xl font-semibold">Security Settings</h1>
       <p class="text-gray-600">
         Change your account password and security settings
       </p>
@@ -127,38 +127,6 @@ const updatePassword = () => {
           <CardFooter>
             <Button @click="updatePassword">Update Password</Button>
           </CardFooter>
-        </Card>
-
-        <!-- Password Security -->
-        <Card>
-          <CardHeader>
-            <CardTitle>Password Security</CardTitle>
-            <CardDescription
-              >Additional security measures for your account</CardDescription
-            >
-          </CardHeader>
-          <CardContent>
-            <div class="space-y-4">
-              <div class="flex items-center justify-between py-3">
-                <div>
-                  <h3 class="text-sm font-medium">Two-Factor Authentication</h3>
-                  <p class="text-sm text-muted-foreground">
-                    Add an extra layer of security to your account
-                  </p>
-                </div>
-                <Button variant="outline" size="sm">Enable 2FA</Button>
-              </div>
-              <div class="flex items-center justify-between py-3 border-t">
-                <div>
-                  <h3 class="text-sm font-medium">Password Reset Email</h3>
-                  <p class="text-sm text-muted-foreground">
-                    Receive email notifications for password resets
-                  </p>
-                </div>
-                <Button variant="outline" size="sm">Configure</Button>
-              </div>
-            </div>
-          </CardContent>
         </Card>
       </div>
     </div>

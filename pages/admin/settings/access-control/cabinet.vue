@@ -11,9 +11,10 @@ const { getAdminNavigation } = useNavigation();
 const settingsNavigation = computed(() => {
   const adminNav = getAdminNavigation();
   const settingsSection = adminNav.find(
-    (section) => section.title === "Setting"
+    (section) => section.title === "Settings"
   );
-  return settingsSection?.items[0]?.children || [];
+  // Return the second item in the settings section
+  return settingsSection?.items[1]?.children || [];
 });
 
 // Set active state for current route
@@ -102,9 +103,9 @@ const handleDirectionChange = () => {
 <template>
   <div>
     <div class="mb-6">
-      <h1 class="text-2xl font-semibold">Settings (Appearance)</h1>
+      <h1 class="text-2xl font-semibold">Cabinet Access Control</h1>
       <p class="text-gray-600">
-        Customize your admin interface layout and direction
+        Manage access control settings for your cabinets
       </p>
     </div>
 

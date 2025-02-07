@@ -1,7 +1,7 @@
 <script setup>
 definePageMeta({
   layout: "admin",
-  title: "Settings",
+  title: "Cabinet Access Control",
 });
 
 const layoutStore = useLayoutStore();
@@ -98,6 +98,56 @@ const handleLayoutChange = (layoutId) => {
 const handleDirectionChange = () => {
   layoutStore.toggleDirection();
 };
+
+const cabinets = ref([
+  { id: 1, name: "Cabinet 1" },
+  { id: 2, name: "Cabinet 2" },
+  { id: 3, name: "Cabinet 3" },
+]);
+
+const selectedCabinet = ref(cabinets.value[0].id);
+
+const users = ref({
+  1: [
+    { username: "900101-01-1234", role: "Admin", accessType: "Full" },
+    { username: "900202-02-2345", role: "User", accessType: "Read" },
+  ],
+  2: [
+    { username: "900303-03-3456", role: "Admin", accessType: "Full" },
+    { username: "900404-04-4567", role: "User", accessType: "Read" },
+  ],
+  3: [
+    { username: "900505-05-5678", role: "Admin", accessType: "Full" },
+    { username: "900606-06-6789", role: "User", accessType: "Read" },
+  ],
+});
+
+const newUser = ref({ username: "", role: "", accessType: "" });
+
+const showAddUserModal = ref(false);
+const showDeleteUserModal = ref(false);
+const userToDelete = ref(null);
+
+const addUser = () => {
+  if (newUser.value.username && newUser.value.role && newUser.value.accessType) {
+    users.value[selectedCabinet.value].push({ ...newUser.value });
+    newUser.value = { username: "", role: "", accessType: "" };
+    showAddUserModal.value = false;
+  }
+};
+
+const confirmDeleteUser = (index) => {
+  userToDelete.value = index;
+  showDeleteUserModal.value = true;
+};
+
+const deleteUser = () => {
+  if (userToDelete.value !== null) {
+    users.value[selectedCabinet.value].splice(userToDelete.value, 1);
+    userToDelete.value = null;
+    showDeleteUserModal.value = false;
+  }
+};
 </script>
 
 <template>
@@ -137,177 +187,49 @@ const handleDirectionChange = () => {
         <!-- Combined Settings Card -->
         <Card>
           <CardHeader>
-            <CardTitle>Appearance Settings</CardTitle>
-            <CardDescription>Customize the look and feel of your dashboard</CardDescription>
+            <CardTitle>Cabinet Access Control</CardTitle>
+            <CardDescription>Manage access control settings for your cabinets</CardDescription>
           </CardHeader>
           <CardContent>
             <div class="space-y-8">
-              <!-- Font Section -->
+              <!-- Cabinet Dropdown -->
               <div>
-                <h3 class="text-lg font-medium mb-2">Font</h3>
-                <p class="text-sm text-muted-foreground mb-4">Set the font you want to use in the dashboard.</p>
-                <div class="max-w-xl">
-                  <FormKit
-                    type="select"
-                    name="font"
-                    v-model="selectedFont"
-                    :options="fonts"
-                    placeholder="Select a font"
-                  />
-                </div>
+                <label for="cabinet" class="block text-sm font-medium text-gray-700">Select Cabinet</label>
+                <select id="cabinet" v-model="selectedCabinet" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                  <option v-for="cabinet in cabinets" :key="cabinet.id" :value="cabinet.id">{{ cabinet.name }}</option>
+                </select>
               </div>
 
-              <Separator />
-
-              <!-- Theme Section -->
+              <!-- Users Table -->
               <div>
-                <h3 class="text-lg font-medium mb-2">Theme</h3>
-                <p class="text-sm text-muted-foreground mb-4">Select the theme for the dashboard.</p>
-                <div class="grid grid-cols-2 gap-4 max-w-xl">
-                  <!-- Light Theme Option -->
-                  <button
-                    class="relative aspect-[1.2/1] rounded-lg border-2 overflow-hidden hover:border-primary transition-colors"
-                    :class="!selectedTheme ? 'border-primary' : 'border-border'"
-                    @click="handleThemeChange(false)"
-                  >
-                    <div class="absolute inset-0 bg-white p-4">
-                      <div class="flex flex-col h-full">
-                        <!-- Header -->
-                        <div class="flex items-center gap-2 mb-4">
-                          <Skeleton class="h-8 w-8 rounded-full border" />
-                          <div class="space-y-1.5">
-                            <Skeleton class="h-2.5 w-24 border" />
-                            <Skeleton class="h-2 w-16 border" />
-                          </div>
-                        </div>
-                        <!-- Content -->
-                        <div class="flex-1 space-y-4">
-                          <!-- Navigation -->
-                          <div class="flex gap-2 mb-4">
-                            <Skeleton class="h-2 w-12 border" />
-                            <Skeleton class="h-2 w-12 border" />
-                            <Skeleton class="h-2 w-12 border" />
-                          </div>
-                          <!-- Cards -->
-                          <div class="grid grid-cols-2 gap-2">
-                            <Skeleton class="h-12 w-full border rounded" />
-                            <Skeleton class="h-12 w-full border rounded" />
-                          </div>
-                          <div class="space-y-2">
-                            <Skeleton class="h-2 w-3/4 border" />
-                            <Skeleton class="h-2 w-1/2 border" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <span class="absolute bottom-2 left-2 text-sm font-medium text-gray-900">Light</span>
-                    <div class="absolute top-2 right-2">
-                      <Icon v-if="!selectedTheme" name="ph:check-circle-fill" class="w-5 h-5 text-primary" />
-                    </div>
-                  </button>
-
-                  <!-- Dark Theme Option -->
-                  <button
-                    class="relative aspect-[1.2/1] rounded-lg border-2 overflow-hidden hover:border-primary transition-colors"
-                    :class="selectedTheme ? 'border-primary' : 'border-border'"
-                    @click="handleThemeChange(true)"
-                  >
-                    <div class="absolute inset-0 bg-[#09090B] p-4">
-                      <div class="flex flex-col h-full">
-                        <!-- Header -->
-                        <div class="flex items-center gap-2 mb-4">
-                          <Skeleton class="h-8 w-8 rounded-full bg-[#18181B]" />
-                          <div class="space-y-1.5">
-                            <Skeleton class="h-2.5 w-24 bg-[#18181B]" />
-                            <Skeleton class="h-2 w-16 bg-[#18181B]" />
-                          </div>
-                        </div>
-                        <!-- Content -->
-                        <div class="flex-1 space-y-4">
-                          <!-- Navigation -->
-                          <div class="flex gap-2 mb-4">
-                            <Skeleton class="h-2 w-12 bg-[#18181B]" />
-                            <Skeleton class="h-2 w-12 bg-[#18181B]" />
-                            <Skeleton class="h-2 w-12 bg-[#18181B]" />
-                          </div>
-                          <!-- Cards -->
-                          <div class="grid grid-cols-2 gap-2">
-                            <Skeleton class="h-12 w-full bg-[#18181B] rounded" />
-                            <Skeleton class="h-12 w-full bg-[#18181B] rounded" />
-                          </div>
-                          <div class="space-y-2">
-                            <Skeleton class="h-2 w-3/4 bg-[#18181B]" />
-                            <Skeleton class="h-2 w-1/2 bg-[#18181B]" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <span class="absolute bottom-2 left-2 text-sm font-medium text-white">Dark</span>
-                    <div class="absolute top-2 right-2">
-                      <Icon v-if="selectedTheme" name="ph:check-circle-fill" class="w-5 h-5 text-primary" />
-                    </div>
-                  </button>
-                </div>
+                <h3 class="text-lg font-medium mb-2">Users</h3>
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username (NRIC)</th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Access Type</th>
+                      <th scope="col" class="relative px-6 py-3">
+                        <span class="sr-only">Delete</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-200">
+                    <tr v-for="(user, index) in users[selectedCabinet]" :key="index">
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.username }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.role }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.accessType }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <Button @click="confirmDeleteUser(index)" variant="danger" >Delete</Button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
 
-              <Separator />
-
-              <!-- Layout Configuration -->
+              <!-- Add User Button -->
               <div>
-                <h3 class="text-lg font-medium mb-2">Layout Configuration</h3>
-                <p class="text-sm text-muted-foreground mb-4">Choose the layout style for your dashboard navigation.</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <button
-                    v-for="option in layoutOptions"
-                    :key="option.id"
-                    class="relative flex flex-col items-start rounded-lg border-2 p-4 hover:border-primary transition-colors"
-                    :class="layoutStore.sidebarLayout === option.id ? 'border-primary' : 'border-border'"
-                    @click="handleLayoutChange(option.id)"
-                  >
-                    <div class="mb-4 rounded-lg border bg-card p-2">
-                      <Icon :name="option.icon" class="h-6 w-6" />
-                    </div>
-                    <div class="mb-1 text-lg font-medium">{{ option.title }}</div>
-                    <div class="text-sm text-muted-foreground">{{ option.description }}</div>
-                    <div class="absolute top-2 right-2">
-                      <Icon
-                        v-if="layoutStore.sidebarLayout === option.id"
-                        name="ph:check-circle-fill"
-                        class="w-5 h-5 text-primary"
-                      />
-                    </div>
-                  </button>
-                </div>
-              </div>
-
-              <Separator />
-
-              <!-- Direction Configuration -->
-              <div>
-                <h3 class="text-lg font-medium mb-2">Direction Configuration</h3>
-                <p class="text-sm text-muted-foreground mb-4">Set the text direction for your dashboard interface.</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <button
-                    v-for="option in directionOptions"
-                    :key="option.id"
-                    class="relative flex flex-col items-start rounded-lg border-2 p-4 hover:border-primary transition-colors"
-                    :class="(layoutStore.isRTL ? 'rtl' : 'ltr') === option.id ? 'border-primary' : 'border-border'"
-                    @click="handleDirectionChange"
-                  >
-                    <div class="mb-4 rounded-lg border bg-card p-2">
-                      <Icon :name="option.icon" class="h-6 w-6" />
-                    </div>
-                    <div class="mb-1 text-lg font-medium">{{ option.title }}</div>
-                    <div class="text-sm text-muted-foreground">{{ option.description }}</div>
-                    <div class="absolute top-2 right-2">
-                      <Icon
-                        v-if="(layoutStore.isRTL ? 'rtl' : 'ltr') === option.id"
-                        name="ph:check-circle-fill"
-                        class="w-5 h-5 text-primary"
-                      />
-                    </div>
-                  </button>
-                </div>
+                <Button @click="showAddUserModal = true" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Add User</Button>
               </div>
             </div>
           </CardContent>
@@ -317,6 +239,47 @@ const handleDirectionChange = () => {
         </Card>
       </div>
     </div>
+
+    <!-- Add User Modal -->
+    <Modal v-model:open="showAddUserModal">
+      <ModalHeader>
+        <ModalTitle>Add User</ModalTitle>
+      </ModalHeader>
+      <ModalBody>
+        <div class="space-y-4">
+          <div>
+            <label for="username" class="block text-sm font-medium text-gray-700">Username (NRIC)</label>
+            <input id="username" v-model="newUser.username" type="text" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+          </div>
+          <div>
+            <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+            <input id="role" v-model="newUser.role" type="text" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+          </div>
+          <div>
+            <label for="accessType" class="block text-sm font-medium text-gray-700">Access Type</label>
+            <input id="accessType" v-model="newUser.accessType" type="text" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+          </div>
+        </div>
+      </ModalBody>
+      <ModalFooter>
+        <Button @click="addUser" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Add User</Button>
+        <Button @click="showAddUserModal = false" class="ml-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Cancel</Button>
+      </ModalFooter>
+    </Modal>
+
+    <!-- Delete User Confirmation Modal -->
+    <Modal v-model:open="showDeleteUserModal">
+      <ModalHeader>
+        <ModalTitle>Confirm Delete</ModalTitle>
+      </ModalHeader>
+      <ModalBody>
+        <p>Are you sure you want to delete this user?</p>
+      </ModalBody>
+      <ModalFooter>
+        <Button @click="deleteUser" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Delete</Button>
+        <Button @click="showDeleteUserModal = false" class="ml-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Cancel</Button>
+      </ModalFooter>
+    </Modal>
   </div>
 </template>
 

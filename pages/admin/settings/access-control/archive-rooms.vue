@@ -233,6 +233,29 @@ const filteredRoomCabinets = computed(() => {
 
 const activeTab = ref("room");
 
+const newCabinet = ref({ id: null, name: "", accessType: [] });
+
+const showAddCabinetModal = ref(false);
+
+const openAddCabinetModal = () => {
+  newCabinet.value = { id: null, name: "", accessType: [] };
+  showAddCabinetModal.value = true;
+};
+
+const addCabinet = () => {
+  if (newCabinet.value.id && newCabinet.value.name && newCabinet.value.accessType.length) {
+    cabinets.value.push({ ...newCabinet.value });
+    if (selectedRoom.value !== null) {
+      const room = rooms.value.find(room => room.id === selectedRoom.value);
+      if (room && !room.cabinets.includes(newCabinet.value.id)) {
+        room.cabinets.push(newCabinet.value.id);
+      }
+    }
+    newCabinet.value = { id: null, name: "", accessType: [] };
+    showAddCabinetModal.value = false;
+  }
+};
+
 </script>
 
 <template>
@@ -330,7 +353,9 @@ const activeTab = ref("room");
                     <div class="flex justify-between items-center mb-2">
                       <h3 class="text-lg font-medium">Cabinets in Room</h3>
                       <div class="flex gap-x-1">
-                        <Button @click="openAddUserModal" class="inline-flex items-center px-2 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 "><Icon name="mdi:plus"></Icon></Button>
+                        <Button @click="openAddCabinetModal" class="inline-flex items-center px-2 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2">
+                          <Icon name="mdi:plus"></Icon>
+                        </Button>
                         <Button @click="toggleDeleteButtons" class="inline-flex items-center px-2 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white  focus:outline-none focus:ring-2 focus:ring-offset-2"><Icon name="mdi:minus"></Icon></Button>
                       </div>
                     </div>
@@ -338,6 +363,7 @@ const activeTab = ref("room");
                       <thead class="bg-gray-50">
                         <tr>
                           <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cabinet Name</th>
+                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Access Type</th>
                           <th scope="col" class="relative px-6 py-3">
                             <span class="sr-only"><Icon name ="mdi:delete"></Icon></span>
                           </th>
@@ -346,6 +372,7 @@ const activeTab = ref("room");
                       <tbody class="bg-white divide-y divide-gray-200">
                         <tr v-for="(cabinet, index) in filteredRoomCabinets" :key="index">
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ cabinet.name }}</td>
+                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ cabinet.accessType.join(', ') }}</td>
                           <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <Button v-if="showDeleteButtons" @click="confirmDeleteUser(cabinet.username)" variant="danger"><Icon name="mdi:trash-can"></Icon></Button>
                           </td>
@@ -363,66 +390,34 @@ const activeTab = ref("room");
       </div>
     </div>
 
-    <!-- Add User Modal -->
-    <Modal v-model:open="showAddUserModal">
+    <!-- Add Cabinet Modal -->
+    <Modal v-model:open="showAddCabinetModal">
       <ModalHeader>
-        <ModalTitle>Add User</ModalTitle>
+        <ModalTitle>Add Cabinet</ModalTitle>
       </ModalHeader>
       <ModalBody>
         <div class="space-y-4">
           <div>
-            <label for="username" class="block text-sm font-medium text-gray-700">Username (NRIC)</label>
-            <input id="username" v-model="newUser.username" type="text" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" @input="newUser.username = newUser.username.replace(/\D/g, '')">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Role</label>
-            <div class="mt-2 flex space-x-4">
-              <div class="flex items-center">
-                <input type="radio" id="owner" value="Owner" v-model="newUser.role" class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                <label for="owner" class="ml-2 block text-sm text-gray-700">Owner</label>
-              </div>
-              <div class="flex items-center">
-                <input type="radio" id="user" value="User" v-model="newUser.role" class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                <label for="user" class="ml-2 block text-sm text-gray-700">User</label>
-              </div>
-            </div>
+            <label for="cabinetId" class="block text-sm font-medium text-gray-700">Cabinet</label>
+            <select id="cabinetId" v-model="newCabinet.id" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+              <option disabled value="">Select a Cabinet</option>
+              <option v-for="cabinet in cabinets" :key="cabinet.id" :value="cabinet.id">{{ cabinet.name }}</option>
+            </select>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700">Access Type</label>
             <div class="mt-2 flex flex-wrap space-x-4">
               <div v-for="type in accessTypes" :key="type" class="flex items-center">
-                <input type="checkbox" :value="type" v-model="newUser.accessType" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                <input type="checkbox" :value="type" v-model="newCabinet.accessType" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                 <label :for="type" class="ml-2 block text-sm text-gray-700">{{ type }}</label>
               </div>
             </div>
           </div>
-          <!-- Hide Cabinet, Project, and Discipline dropdowns -->
-          <div v-if="false">
-            <label for="cabinetId" class="block text-sm font-medium text-gray-700">Cabinet</label>
-            <select id="cabinetId" v-model="newUser.cabinetId" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-              <option disabled value="">Select a Cabinet</option>
-              <option v-for="cabinet in cabinets" :key="cabinet.id" :value="cabinet.id">{{ cabinet.name }}</option>
-            </select>
-          </div>
-          <div v-if="false">
-            <label for="projectId" class="block text-sm font-medium text-gray-700">Project</label>
-            <select id="projectId" v-model="newUser.projectId" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-              <option disabled value="">Select a Project</option>
-              <option v-for="project in projects[selectedCabinet]" :key="project.id" :value="project.id">{{ project.name }}</option>
-            </select>
-          </div>
-          <div v-if="false" class="mb-4">
-            <label for="disciplineId" class="block text-sm font-medium text-gray-700">Discipline</label>
-            <select id="disciplineId" v-model="newUser.disciplineId" class="mt-1 mb-4 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-              <option disabled value="">Select a Discipline</option>
-              <option v-for="discipline in disciplines" :key="discipline.id" :value="discipline.id">{{ discipline.name }}</option>
-            </select>
-          </div>
         </div>
       </ModalBody>
       <ModalFooter>
-        <Button @click="addUser" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Add User</Button>
-        <Button @click="showAddUserModal = false" class=" mt-4 ml-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Cancel</Button>
+        <Button @click="addCabinet" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Add Cabinet</Button>
+        <Button @click="showAddCabinetModal = false" class="mt-4 ml-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Cancel</Button>
       </ModalFooter>
     </Modal>
 

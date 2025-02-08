@@ -14,7 +14,7 @@ const settingsNavigation = computed(() => {
     (section) => section.title === "Settings"
   );
   // Return the second item in the settings section
-  return settingsSection?.items[1]?.children || [];
+  return settingsSection?.items[0]?.children || [];
 });
 
 // Set active state for current route
@@ -103,9 +103,9 @@ const handleDirectionChange = () => {
 <template>
   <div>
     <div class="mb-6">
-      <h1 class="text-2xl font-semibold">Document Tray Settings</h1>
+      <h1 class="text-2xl font-semibold">Appearance Settings</h1>
       <p class="text-gray-600">
-        Manage your document tray settings
+        Customize the look and feel of your dashboard. Choose your preferred font, theme, layout, and text direction.
       </p>
     </div>
 

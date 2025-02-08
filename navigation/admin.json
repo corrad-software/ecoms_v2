@@ -5,9 +5,13 @@
       "title": "SUPER ADMINISTRATOR",
       "items": [
         {
-          "name": "Repository",
+          "name": "Repositori",
           "icon": "mdi:source-repository", 
           "children": [
+            {
+              "name": "Carian Dokumen",
+              "path": "/repository/document-explorer"
+            },
             {
               "name": "Document Tray",
               "path": "/repository/document-tray"
@@ -15,7 +19,7 @@
           ]
         },
         {
-          "name": "Approval",
+          "name": "Pengesahan",
           "icon": "material-symbols:approval-delegation-rounded", 
           "children": [
             {
@@ -25,6 +29,10 @@
             {
               "name": "Senarai Permohonan",
               "path": "/repository/approval/senarai-permohonan"
+            },
+            {
+              "name": "Senarai Pengesahan",
+              "path": "/repository/approval/senarai-pengesahan"
             }
           ]
         }
@@ -47,6 +55,11 @@
               "name": "Security",
               "path": "/admin/settings/general/security",
               "icon": "ph:lock"
+            },
+            {
+              "name": "Appearence",
+              "path": "/admin/settings/general/appearence",
+              "icon": "mdi:palette"
             }
           ]
         },
@@ -55,14 +68,19 @@
           "icon": "uis:lock-access",
           "children": [
             {
+              "name": "Archive Rooms",
+              "path": "/admin/settings/access-control/archive-rooms",
+              "icon": "mdi:archive-edit"
+            },
+            {
               "name": "Cabinet",
               "path": "/admin/settings/access-control/cabinet",
               "icon": "mdi:file-cabinet"
             },
             {
-              "name": "Document Tray",
-              "path": "/admin/settings/access-control/document-tray",
-              "icon": "mdi:tray-full"
+              "name": "Group Management",
+              "path": "/admin/settings/access-control/group-management",
+              "icon": "material-symbols:groups"
             }
           ]
         }

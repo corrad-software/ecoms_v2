@@ -27,7 +27,7 @@
           <Icon name="mdi:clock-outline" class="h-6 w-6" />
         </div>
         <div>
-          <p class="text-lg font-semibold">Menunggu Pengesahan</p>
+          <p class="text-lg font-semibold">Menunggu</p>
           <p class="text-xl">{{ pendingRequestsCount }}</p>
         </div>
       </div>
@@ -76,7 +76,7 @@
             <DropdownItem @click="filterRequests('all')">All</DropdownItem>
             <DropdownItem @click="filterRequests('new')">Baharu</DropdownItem>
             <DropdownItem @click="filterRequests('approved')">Diluluskan</DropdownItem>
-            <DropdownItem @click="filterRequests('pending')">Menunggu Pengesahan</DropdownItem>
+            <DropdownItem @click="filterRequests('pending')">Menunggu</DropdownItem>
             <DropdownItem @click="filterRequests('rejected')">Ditolak</DropdownItem>
             <DropdownItem @click="filterRequests('closed')">Ditutup</DropdownItem>
             <DropdownItem @click="filterRequests('almostExpired')">Hampir Tamat</DropdownItem>
@@ -143,21 +143,22 @@
             <TableCell>{{ calculateRemainingDays(request.updatedAt, request.accessPeriod) }}</TableCell>
             <TableCell class=" space-x-2 sticky right-0">
               <Button variant="outline" size="sm" @click="viewDetails(request)"><Icon name="material-symbols:multimodal-hand-eye" class="mr-2"></Icon>Lihat</Button>
-              <template v-if="getStatusLabel(request) === 'Menunggu Pengesahan'">
-                <Button variant="outline" size="sm" @click="approveRequest(request)" class="hover:bg-green-500 hover:text-white"> <Icon name="material-symbols:check-box-outline" class="mr-2" ></Icon>Lulus</Button>
-                <Button variant="outline" size="sm" @click="rejectRequest(request)" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Tolak</Button>
+              <template v-if="getStatusLabel(request) === 'Menunggu'">
+                <Button variant="outline" size="sm" @click="handleApproveRequest" class="hover:bg-green-500 hover:text-white"> <Icon name="material-symbols:check-box-outline" class="mr-2" ></Icon>Lulus</Button>
+                <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Tolak</Button>
               </template>
               <template v-if="getStatusLabel(request) === 'Diluluskan'">
-                <Button variant="outline" size="sm" @click="blockRequest(request)" class="hover:bg-yellow-500 hover:text-white"> <Icon name="material-symbols:block" class="mr-2"></Icon>Sekat</Button>
+                <Button variant="outline" size="sm" @click="handleBlockRequest" class="hover:bg-yellow-500 hover:text-white"> <Icon name="material-symbols:block" class="mr-2"></Icon>Sekat</Button>
               </template>
               <template v-if="getStatusLabel(request) === 'Ditolak'">
-                <Button variant="outline" size="sm" @click="sendRejectionEmail(request)" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-alert" class="mr-2"></Icon>Hantar Email</Button>
+                <Button variant="outline" size="sm" @click="handleSendRejectionEmail" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-alert" class="mr-2"></Icon>Hantar Email</Button>
               </template>
               <template v-if="getStatusLabel(request) === 'Ditutup'">
-                <Button variant="outline" size="sm" @click="reopenRequest(request)" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-check" class="mr-2"></Icon>Buka Permohonan</Button>
+                <Button variant="outline" size="sm" @click="handleReopenRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-check" class="mr-2"></Icon>Buka Permohonan</Button>
               </template>
               <template v-if="getStatusLabel(request) === 'Baharu'">
-                <Button variant="outline" size="sm" @click="confirmRequest(request)" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:check-circle" class="mr-2"></Icon>Sahkan</Button>
+                <Button variant="outline" size="sm" @click="handleConfirmRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:check-circle" class="mr-2"></Icon>Sahkan</Button>
+                <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Tolak</Button>
               </template>
             </TableCell>
           </TableRow>
@@ -207,6 +208,73 @@
         <Button @click="downloadReport"><Icon name="material-symbols:download" class="mr-2" ></Icon>Download</Button>
       </ModalFooter>
     </Modal>
+    <Modal v-model:open="isStatusUpdateModalOpen" class="z-50">
+      <ModalHeader>
+        <ModalTitle>Status Update</ModalTitle>
+      </ModalHeader>
+      <ModalBody>
+        <p>{{ statusUpdateMessage }}</p>
+      </ModalBody>
+      <ModalFooter>
+        <Button @click="isStatusUpdateModalOpen = false">Close</Button>
+      </ModalFooter>
+    </Modal>
+    <Modal v-model:open="isDetailsModalOpen" class="rounded-lg shadow-lg max-w-3xl mx-auto">
+      <ModalHeader class="bg-blue-600 text-white rounded-t-lg p-4">
+        <ModalTitle class="text-xl font-bold">Request Details</ModalTitle>
+      </ModalHeader>
+      <ModalBody class="p-6 bg-white">
+        <div class="mb-6">
+          <h2 class="text-lg font-semibold border-b pb-2">Project Section</h2>
+          <div class="mt-2 grid grid-cols-2 gap-4">
+            <p><strong>Tajuk Projek:</strong> {{ selectedRequest.projectTitle }}</p>
+            <p><strong>Kementerian:</strong> {{ selectedRequest.ministry }}</p>
+            <p><strong>Syarat Pemohon:</strong> {{ selectedRequest.applicantRequirements }}</p>
+            <p><strong>Permohonan Aksess & Tempoh Aksess:</strong> {{ selectedRequest.accessRequest }} & {{ selectedRequest.accessPeriod }} bulan</p>
+          </div>
+        </div>
+        <div class="mb-6">
+          <h2 class="text-lg font-semibold border-b pb-2">Applicant's Section</h2>
+          <div class="mt-2 grid grid-cols-2 gap-4">
+            <p><strong>Nama:</strong> {{ selectedRequest.name }}</p>
+            <p><strong>IC:</strong> {{ selectedRequest.ic }}</p>
+            <p><strong>Gred:</strong> {{ selectedRequest.grade }}</p>
+            <p><strong>Tempat Bertugas:</strong> {{ selectedRequest.workplace }}</p>
+            <p><strong>Emel:</strong> {{ selectedRequest.email }}</p>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-lg font-semibold border-b pb-2">Request Section</h2>
+          <div class="mt-2 grid grid-cols-2 gap-4">
+            <p><strong>Jenis Kategori:</strong> {{ selectedRequest.categoryType }}</p>
+            <p><strong>Kategori Bangunan:</strong> {{ selectedRequest.buildingCategory }}</p>
+            <p><strong>Kategori PAP:</strong> {{ selectedRequest.papCategory }}</p>
+            <p><strong>Jenis Reka Bentuk:</strong> {{ selectedRequest.designType }}</p>
+            <p><strong>Disiplin:</strong> {{ selectedRequest.discipline }}</p>
+          </div>
+        </div>
+      </ModalBody>
+      <ModalFooter class="bg-gray-100 rounded-b-lg flex justify-end p-4 space-x-2">
+        <Button @click="isDetailsModalOpen = false" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Close</Button>
+        <template v-if="getStatusLabel(selectedRequest) === 'Menunggu'">
+          <Button variant="outline" size="sm" @click="handleApproveRequest" class="hover:bg-green-500 hover:text-white"> <Icon name="material-symbols:check-box-outline" class="mr-2" ></Icon>Lulus</Button>
+          <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Tolak</Button>
+        </template>
+        <template v-if="getStatusLabel(selectedRequest) === 'Diluluskan'">
+          <Button variant="outline" size="sm" @click="handleBlockRequest" class="hover:bg-yellow-500 hover:text-white"> <Icon name="material-symbols:block" class="mr-2"></Icon>Sekat</Button>
+        </template>
+        <template v-if="getStatusLabel(selectedRequest) === 'Ditolak'">
+          <Button variant="outline" size="sm" @click="handleSendRejectionEmail" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-alert" class="mr-2"></Icon>Hantar Email</Button>
+        </template>
+        <template v-if="getStatusLabel(selectedRequest) === 'Ditutup'">
+          <Button variant="outline" size="sm" @click="handleReopenRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-check" class="mr-2"></Icon>Buka Permohonan</Button>
+        </template>
+        <template v-if="getStatusLabel(selectedRequest) === 'Baharu'">
+          <Button variant="outline" size="sm" @click="handleConfirmRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:check-circle" class="mr-2"></Icon>Sahkan</Button>
+          <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Tolak</Button>
+        </template>
+      </ModalFooter>
+    </Modal>
   </div>
 </template>
 
@@ -219,19 +287,258 @@ import { ref, computed } from 'vue';
 import { FormKit } from '@formkit/vue';
 
 const requests = ref([
-  { name: 'Ahmad bin Ali', email: 'ahmad.ali@jkr.gov.my', status: 'New', comment:'Permohonan baru diterima', requestDate: '2023-10-01', updatedAt: 'Tiada', accessPeriod: 3 },
-  { name: 'Siti binti Abu', email: 'siti.abu@jkr.gov.my', status: 'Approved', comment:'Permohonan berjaya dikemaskini', requestDate: '2023-09-25', updatedAt: '2025-10-01', accessPeriod: 6 },
-  { name: 'Ali bin Abu', email: 'ali.abu@jkr.gov.my', status: 'Rejected', comment:'Permohonan ditolak', requestDate: '2023-09-20', updatedAt: '2025-09-25', accessPeriod: 3 },
-  { name: 'Fatimah binti Ali', email: 'fatimah.ali@jkr.gov.my', status: 'Pending', comment:'Menunggu kelulusan', requestDate: '2023-09-15', updatedAt: 'Tiada', accessPeriod: 6 },
-  { name: 'Abu bin Ahmad', email: 'abu.ahmad@jkr.gov.my', status: 'Pending', comment:'Menunggu kelulusan', requestDate: '2023-09-10', updatedAt: 'Tiada', accessPeriod: 3 },
-  { name: 'Ali bin Siti', email: 'ali.siti@jkr.gov.my', status: 'Approved', comment:'Permohonan berjaya dikemaskini', requestDate: '2023-09-05', updatedAt: '2025-10-02', accessPeriod: 6 },
-  { name: 'Siti binti Ali', email: 'siti.ali@jkr.gov.my', status: 'Rejected', comment:'Permohonan ditolak', requestDate: '2023-09-01', updatedAt: '2025-09-30', accessPeriod: 3 },
-  { name: 'Ahmad bin Abu', email: 'ahmad.abu@jkr.gov.my', status: 'Approved', comment:'Permohonan berjaya dikemaskini', requestDate: '2023-08-25', updatedAt: '2025-07-01', accessPeriod: 3 },
-  { name: 'Aisyah binti Ali', email: 'aisyah.ali@jkr.gov.my', status: 'Approved', comment:'Permohonan berjaya dikemaskini', requestDate: '2023-08-15', updatedAt: '2023-08-15', accessPeriod: 6 },
-  { name: 'Muhammad bin Sulaiman', email: 'muhammad.sulaiman@jkr.gov.my', status: 'Approved', comment:'Permohonan berjaya dikemaskini', requestDate: '2023-08-10', updatedAt: '2023-09-20', accessPeriod: 3 },
-  { name: 'Nurul binti Hassan', email: 'nurul.hassan@jkr.gov.my', status: 'Approved', comment:'Permohonan berjaya dikemaskini', requestDate: '2023-08-05', updatedAt: '2024-09-25', accessPeriod: 6 },
-  { name: 'Hafiz bin Rahman', email: 'hafiz.rahman@jkr.gov.my', status: 'Approved', comment:'Permohonan berjaya dikemaskini', requestDate: '2023-08-01', updatedAt: '2025-10-05', accessPeriod: 3 },
-  // Add more request data as needed
+  {
+    name: 'Ahmad bin Ali',
+    email: 'ahmad.ali@jkr.gov.my',
+    status: 'New',
+    comment: 'Permohonan baru diterima',
+    requestDate: '2023-10-01',
+    updatedAt: 'Tiada',
+    accessPeriod: 3,
+    projectTitle: 'Projek Pembinaan Sekolah',
+    ministry: 'Kementerian Pendidikan',
+    applicantRequirements: 'Pegawai Kerajaan',
+    accessRequest: 'Akses penuh',
+    ic: '800101-01-1234',
+    grade: 'Gred 41',
+    workplace: 'JKR Kuala Lumpur',
+    categoryType: 'Bangunan',
+    buildingCategory: 'Sekolah',
+    papCategory: 'PAP A',
+    designType: 'Reka Bentuk Moden',
+    discipline: 'Arkitek'
+  },
+  {
+    name: 'Siti binti Abu',
+    email: 'siti.abu@jkr.gov.my',
+    status: 'Approved',
+    comment: 'Permohonan berjaya dikemaskini',
+    requestDate: '2023-09-25',
+    updatedAt: '2025-10-01',
+    accessPeriod: 6,
+    projectTitle: 'Projek Pembinaan Hospital',
+    ministry: 'Kementerian Kesihatan',
+    applicantRequirements: 'Pegawai Kerajaan',
+    accessRequest: 'Akses penuh',
+    ic: '810202-02-2345',
+    grade: 'Gred 44',
+    workplace: 'JKR Selangor',
+    categoryType: 'Bangunan',
+    buildingCategory: 'Hospital',
+    papCategory: 'PAP B',
+    designType: 'Reka Bentuk Kontemporari',
+    discipline: 'Jurutera'
+  },
+  {
+    name: 'Ali bin Abu',
+    email: 'ali.abu@jkr.gov.my',
+    status: 'Rejected',
+    comment: 'Permohonan ditolak',
+    requestDate: '2023-09-20',
+    updatedAt: '2025-09-25',
+    accessPeriod: 3,
+    projectTitle: 'Projek Pembinaan Jalan Raya',
+    ministry: 'Kementerian Kerja Raya',
+    applicantRequirements: 'Pegawai Kerajaan',
+    accessRequest: 'Akses separa',
+    ic: '820303-03-3456',
+    grade: 'Gred 41',
+    workplace: 'JKR Johor',
+    categoryType: 'Infrastruktur',
+    buildingCategory: 'Jalan Raya',
+    papCategory: 'PAP C',
+    designType: 'Reka Bentuk Tradisional',
+    discipline: 'Jurutera Awam'
+  },
+  {
+    name: 'Fatimah binti Ali',
+    email: 'fatimah.ali@jkr.gov.my',
+    status: 'Pending',
+    comment: 'Menunggu kelulusan',
+    requestDate: '2023-09-15',
+    updatedAt: 'Tiada',
+    accessPeriod: 6,
+    projectTitle: 'Projek Pembinaan Jambatan',
+    ministry: 'Kementerian Pengangkutan',
+    applicantRequirements: 'Pegawai Kerajaan',
+    accessRequest: 'Akses penuh',
+    ic: '830404-04-4567',
+    grade: 'Gred 42',
+    workplace: 'JKR Perak',
+    categoryType: 'Infrastruktur',
+    buildingCategory: 'Jambatan',
+    papCategory: 'PAP D',
+    designType: 'Reka Bentuk Moden',
+    discipline: 'Jurutera Struktur'
+  },
+  {
+    name: 'Abu bin Ahmad',
+    email: 'abu.ahmad@jkr.gov.my',
+    status: 'Pending',
+    comment: 'Menunggu kelulusan',
+    requestDate: '2023-09-10',
+    updatedAt: 'Tiada',
+    accessPeriod: 3,
+    projectTitle: 'Projek Pembinaan Lapangan Terbang',
+    ministry: 'Kementerian Pengangkutan',
+    applicantRequirements: 'Pegawai Kerajaan',
+    accessRequest: 'Akses penuh',
+    ic: '840505-05-5678',
+    grade: 'Gred 43',
+    workplace: 'JKR Kedah',
+    categoryType: 'Infrastruktur',
+    buildingCategory: 'Lapangan Terbang',
+    papCategory: 'PAP E',
+    designType: 'Reka Bentuk Futuristik',
+    discipline: 'Jurutera Mekanikal'
+  },
+  {
+    name: 'Ali bin Siti',
+    email: 'ali.siti@jkr.gov.my',
+    status: 'Approved',
+    comment: 'Permohonan berjaya dikemaskini',
+    requestDate: '2023-09-05',
+    updatedAt: '2025-10-02',
+    accessPeriod: 6,
+    projectTitle: 'Projek Pembinaan Stadium',
+    ministry: 'Kementerian Belia dan Sukan',
+    applicantRequirements: 'Pegawai Kerajaan',
+    accessRequest: 'Akses penuh',
+    ic: '850606-06-6789',
+    grade: 'Gred 44',
+    workplace: 'JKR Melaka',
+    categoryType: 'Bangunan',
+    buildingCategory: 'Stadium',
+    papCategory: 'PAP F',
+    designType: 'Reka Bentuk Moden',
+    discipline: 'Jurutera Elektrik'
+  },
+  {
+    name: 'Siti binti Ali',
+    email: 'siti.ali@jkr.gov.my',
+    status: 'Rejected',
+    comment: 'Permohonan ditolak',
+    requestDate: '2023-09-01',
+    updatedAt: '2025-09-30',
+    accessPeriod: 3,
+    projectTitle: 'Projek Pembinaan Perpustakaan',
+    ministry: 'Kementerian Pendidikan',
+    applicantRequirements: 'Pegawai Kerajaan',
+    accessRequest: 'Akses separa',
+    ic: '860707-07-7890',
+    grade: 'Gred 41',
+    workplace: 'JKR Pahang',
+    categoryType: 'Bangunan',
+    buildingCategory: 'Perpustakaan',
+    papCategory: 'PAP G',
+    designType: 'Reka Bentuk Klasik',
+    discipline: 'Arkitek'
+  },
+  {
+    name: 'Ahmad bin Abu',
+    email: 'ahmad.abu@jkr.gov.my',
+    status: 'Approved',
+    comment: 'Permohonan berjaya dikemaskini',
+    requestDate: '2023-08-25',
+    updatedAt: '2025-07-01',
+    accessPeriod: 3,
+    projectTitle: 'Projek Pembinaan Masjid',
+    ministry: 'Kementerian Wilayah Persekutuan',
+    applicantRequirements: 'Pegawai Kerajaan',
+    accessRequest: 'Akses penuh',
+    ic: '870808-08-8901',
+    grade: 'Gred 42',
+    workplace: 'JKR Terengganu',
+    categoryType: 'Bangunan',
+    buildingCategory: 'Masjid',
+    papCategory: 'PAP H',
+    designType: 'Reka Bentuk Islamik',
+    discipline: 'Arkitek'
+  },
+  {
+    name: 'Aisyah binti Ali',
+    email: 'aisyah.ali@jkr.gov.my',
+    status: 'Approved',
+    comment: 'Permohonan berjaya dikemaskini',
+    requestDate: '2023-08-15',
+    updatedAt: '2023-08-15',
+    accessPeriod: 6,
+    projectTitle: 'Projek Pembinaan Kompleks Sukan',
+    ministry: 'Kementerian Belia dan Sukan',
+    applicantRequirements: 'Pegawai Kerajaan',
+    accessRequest: 'Akses penuh',
+    ic: '880909-09-9012',
+    grade: 'Gred 43',
+    workplace: 'JKR Kelantan',
+    categoryType: 'Bangunan',
+    buildingCategory: 'Kompleks Sukan',
+    papCategory: 'PAP I',
+    designType: 'Reka Bentuk Moden',
+    discipline: 'Jurutera Awam'
+  },
+  {
+    name: 'Muhammad bin Sulaiman',
+    email: 'muhammad.sulaiman@jkr.gov.my',
+    status: 'Approved',
+    comment: 'Permohonan berjaya dikemaskini',
+    requestDate: '2023-08-10',
+    updatedAt: '2023-09-20',
+    accessPeriod: 3,
+    projectTitle: 'Projek Pembinaan Balai Polis',
+    ministry: 'Kementerian Dalam Negeri',
+    applicantRequirements: 'Pegawai Kerajaan',
+    accessRequest: 'Akses penuh',
+    ic: '890101-10-0123',
+    grade: 'Gred 41',
+    workplace: 'JKR Sabah',
+    categoryType: 'Bangunan',
+    buildingCategory: 'Balai Polis',
+    papCategory: 'PAP J',
+    designType: 'Reka Bentuk Kontemporari',
+    discipline: 'Jurutera Elektrik'
+  },
+  {
+    name: 'Nurul binti Hassan',
+    email: 'nurul.hassan@jkr.gov.my',
+    status: 'Approved',
+    comment: 'Permohonan berjaya dikemaskini',
+    requestDate: '2023-08-05',
+    updatedAt: '2024-09-25',
+    accessPeriod: 6,
+    projectTitle: 'Projek Pembinaan Universiti',
+    ministry: 'Kementerian Pendidikan',
+    applicantRequirements: 'Pegawai Kerajaan',
+    accessRequest: 'Akses penuh',
+    ic: '900202-11-1234',
+    grade: 'Gred 44',
+    workplace: 'JKR Sarawak',
+    categoryType: 'Bangunan',
+    buildingCategory: 'Universiti',
+    papCategory: 'PAP K',
+    designType: 'Reka Bentuk Moden',
+    discipline: 'Arkitek'
+  },
+  {
+    name: 'Hafiz bin Rahman',
+    email: 'hafiz.rahman@jkr.gov.my',
+    status: 'Approved',
+    comment: 'Permohonan berjaya dikemaskini',
+    requestDate: '2023-08-01',
+    updatedAt: '2025-10-05',
+    accessPeriod: 3,
+    projectTitle: 'Projek Pembinaan Pusat Konvensyen',
+    ministry: 'Kementerian Pelancongan',
+    applicantRequirements: 'Pegawai Kerajaan',
+    accessRequest: 'Akses penuh',
+    ic: '910303-12-2345',
+    grade: 'Gred 42',
+    workplace: 'JKR Perlis',
+    categoryType: 'Bangunan',
+    buildingCategory: 'Pusat Konvensyen',
+    papCategory: 'PAP L',
+    designType: 'Reka Bentuk Futuristik',
+    discipline: 'Jurutera Mekanikal'
+  }
 ]);
 
 const totalRequests = computed(() => requests.value.length);
@@ -358,44 +665,93 @@ function sortTable(key) {
   }
 }
 
-function viewDetails(row) {
-  // Implement the logic to view details of the request
-  console.log('Viewing details for:', row);
+const isDetailsModalOpen = ref(false);
+const selectedRequest = ref({
+  projectTitle: '',
+  ministry: '',
+  applicantRequirements: '',
+  accessRequest: '',
+  name: '',
+  ic: '',
+  grade: '',
+  workplace: '',
+  email: '',
+  categoryType: '',
+  buildingCategory: '',
+  papCategory: '',
+  designType: '',
+  discipline: ''
+});
+
+function viewDetails(request) {
+  selectedRequest.value = request;
+  isDetailsModalOpen.value = true;
+}
+
+function handleApproveRequest() {
+  approveRequest(selectedRequest.value);
+  isDetailsModalOpen.value = false;
+}
+
+function handleRejectRequest() {
+  rejectRequest(selectedRequest.value);
+  isDetailsModalOpen.value = false;
+}
+
+function handleBlockRequest() {
+  blockRequest(selectedRequest.value);
+  isDetailsModalOpen.value = false;
+}
+
+function handleSendRejectionEmail() {
+  sendRejectionEmail(selectedRequest.value);
+  isDetailsModalOpen.value = false;
+}
+
+function handleReopenRequest() {
+  reopenRequest(selectedRequest.value);
+  isDetailsModalOpen.value = false;
+}
+
+function handleConfirmRequest() {
+  confirmRequest(selectedRequest.value);
+  isDetailsModalOpen.value = false;
 }
 
 function approveRequest(request) {
   // Implement the logic to approve the request
   console.log('Approving request for:', request);
+  showStatusUpdateModal(`User ${request.name} has been updated to Approved.`);
 }
 
 function rejectRequest(request) {
   // Implement the logic to reject the request
   console.log('Rejecting request for:', request);
+  showStatusUpdateModal(`User ${request.name} has been updated to Rejected.`);
 }
 
 function blockRequest(request) {
   // Implement the logic to block the request
   console.log('Blocking request for:', request);
+  showStatusUpdateModal(`User ${request.name} has been updated to Blocked.`);
 }
 
 function sendRejectionEmail(request) {
   // Implement the logic to send rejection email
   console.log('Sending rejection email for:', request);
-}
-
-function sendClosureEmail(request) {
-  // Implement the logic to send closure email
-  console.log('Sending closure email for:', request);
+  showStatusUpdateModal(`Rejection email has been sent to ${request.name}.`);
 }
 
 function reopenRequest(request) {
   // Implement the logic to reopen the request
   console.log('Reopening request for:', request);
+  showStatusUpdateModal(`User ${request.name} has been updated to Reopened.`);
 }
 
 function confirmRequest(request) {
   // Implement the logic to confirm the request
   console.log('Confirming request for:', request);
+  showStatusUpdateModal(`User ${request.name} has been updated to Confirmed.`);
 }
 
 function printTable() {
@@ -449,7 +805,7 @@ function getStatusLabel(request) {
   if (request.status === 'Approved' && remainingDays !== 'Luput') {
     return 'Diluluskan';
   } else if (request.status === 'Pending') {
-    return 'Menunggu Pengesahan';
+    return 'Menunggu';
   } else if (request.status === 'Rejected') {
     return 'Ditolak';
   } else if (request.status === 'New') {
@@ -499,5 +855,13 @@ function downloadReport() {
     exportToPDF();
   }
   isExportModalOpen.value = false;
+}
+
+const isStatusUpdateModalOpen = ref(false);
+const statusUpdateMessage = ref('');
+
+function showStatusUpdateModal(message) {
+  statusUpdateMessage.value = message;
+  isStatusUpdateModalOpen.value = true;
 }
 </script>

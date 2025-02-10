@@ -220,7 +220,7 @@
       </ModalFooter>
     </Modal>
     <Modal v-model:open="isDetailsModalOpen" class="rounded-lg shadow-lg max-w-3xl mx-auto">
-      <ModalHeader class="bg-blue-600 text-white rounded-t-lg p-4">
+      <ModalHeader class="bg-gray-600 text-white rounded-t-lg p-4">
         <ModalTitle class="text-xl font-bold">Request Details</ModalTitle>
       </ModalHeader>
       <ModalBody class="p-6 bg-white">

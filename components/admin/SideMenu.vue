@@ -201,11 +201,11 @@ const dropdownPosition = computed(() => {
         class="h-14 flex items-center px-3 border-b border-border"
       >
         <NuxtLink to="/admin" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <div
-            class="w-8 h-8 bg-primary rounded-md flex items-center justify-center"
-          >
-            <Icon name="lucide:box" class="w-5 h-5 text-primary-foreground" />
-          </div>
+          <img
+            src="\assets\image\jkr_logo.png"
+            alt="Logo"
+            class="w-12 h-8 rounded-md"
+          />
           <div
             class="overflow-hidden transition-all duration-200"
             :style="{

@@ -197,9 +197,12 @@ const filteredCabinetActivity = computed(() => {
                 class="py-3 flex items-center justify-between cursor-pointer"
                 @click="selectDocument(activity)"
               >
-                <div>
-                  <p class="font-medium">{{ activity.fileName }}</p>
-                  <p class="text-sm text-muted-foreground">{{ activity.fileSize }} - {{ activity.fileType }}</p>
+                <div class="flex items-center">
+                  <Icon :name="`mdi:file-${activity.fileType.toLowerCase() === 'presentation' ? 'powerpoint' : activity.fileType.toLowerCase() === 'spreadsheet' ? 'excel' : activity.fileType.toLowerCase()}`" class="h-6 w-6 mr-2" />
+                  <div>
+                    <p class="font-medium">{{ activity.fileName }}</p>
+                    <p class="text-sm text-muted-foreground">{{ activity.fileSize }} - {{ activity.fileType }}</p>
+                  </div>
                 </div>
                 <div class="flex items-center space-x-2">
                   <Badge>{{ activity.daysLeft }} days left</Badge>
@@ -216,8 +219,13 @@ const filteredCabinetActivity = computed(() => {
                 class="p-4 border rounded cursor-pointer"
                 @click="selectDocument(activity)"
               >
-                <p class="font-medium">{{ activity.fileName }}</p>
-                <p class="text-sm text-muted-foreground">{{ activity.fileSize }} - {{ activity.fileType }}</p>
+                <div class="flex items-center">
+                  <Icon :name="`mdi:file-${activity.fileType.toLowerCase() === 'presentation' ? 'powerpoint' : activity.fileType.toLowerCase() === 'spreadsheet' ? 'excel' : activity.fileType.toLowerCase()}`" class="h-6 w-6 mr-2" />
+                  <div>
+                    <p class="font-medium">{{ activity.fileName }}</p>
+                    <p class="text-sm text-muted-foreground">{{ activity.fileSize }} - {{ activity.fileType }}</p>
+                  </div>
+                </div>
                 <div class="flex items-center space-x-2">
                   <Badge>{{ activity.daysLeft }} days left</Badge>
                   <Button @click.stop="transferToCabinet(activity.fileName)" variant="ghost" class="text-sm py-1 px-2">
@@ -280,9 +288,12 @@ const filteredCabinetActivity = computed(() => {
               class="py-3 flex items-center justify-between cursor-pointer"
               @click="selectDocument(activity)"
             >
-              <div>
-                <p class="font-medium">{{ activity.fileName }}</p>
-                <p class="text-sm text-muted-foreground">{{ activity.fileSize }} - {{ activity.fileType }}</p>
+              <div class="flex items-center">
+                <Icon :name="`mdi:file-${activity.fileType.toLowerCase() === 'presentation' ? 'powerpoint' : activity.fileType.toLowerCase() === 'spreadsheet' ? 'excel' : activity.fileType.toLowerCase()}`" class="h-6 w-6 mr-2" />
+                <div>
+                  <p class="font-medium">{{ activity.fileName }}</p>
+                  <p class="text-sm text-muted-foreground">{{ activity.fileSize }} - {{ activity.fileType }}</p>
+                </div>
               </div>
               <div class="flex items-center space-x-2">
                 <Button @click.stop="removeFromCabinet(activity.fileName)" variant="ghost" class="text-sm py-1 px-2">
@@ -308,7 +319,7 @@ const filteredCabinetActivity = computed(() => {
       </div>
     </ModalHeader>
     <ModalBody>
-      <div class="grid grid-cols-5 gap-4 h-full">
+      <div class="grid grid-cols-10 gap-4 h-full">
         <div class="col-span-3">
             <FormKit type="file" name="documentName" label="Document Name" validation="required" />
             <FormKit type="text" name="tajuk" label="Tajuk" validation="required" />
@@ -324,7 +335,7 @@ const filteredCabinetActivity = computed(() => {
               <Button @click="addDocument">Add Document</Button>
             </div>
         </div>
-        <div class="col-span-2">
+        <div class="col-span-7">
           <iframe :src="googleDocsViewerUrl" width="100%" class="h-full"></iframe>
         </div>
       </div>

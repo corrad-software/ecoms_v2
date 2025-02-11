@@ -39,7 +39,7 @@ const unreadCount = 2;
       <ThemeSwitcher />
 
       <!-- Notification -->
-      <Dropdown>
+      <!-- <Dropdown>
         <DropdownTrigger class="relative">
           <button
             class="p-1.5 hover:bg-accent rounded-lg flex items-center justify-center"
@@ -102,13 +102,13 @@ const unreadCount = 2;
             </NuxtLink>
           </div>
         </DropdownContent>
-      </Dropdown>
+      </Dropdown> -->
 
       <!-- User Profile -->
       <Dropdown>
         <DropdownTrigger>
           <button
-            class="flex items-center gap-2 p-1 hover:bg-accent rounded-lg"
+            class="flex items-center gap-2 p-1 hover:bg-accent rounded-lg ml-auto"
           >
             <div
               class="w-7 h-7 rounded-full border flex items-center justify-center"
@@ -126,8 +126,8 @@ const unreadCount = 2;
               </svg>
             </div>
             <div class="flex flex-col items-start">
-              <span class="text-sm font-medium">John Doe</span>
-              <span class="text-xs text-muted-foreground">Administrator</span>
+              <span class="text-sm font-medium">Muhammad Said bin Ramlan</span>
+              <span class="text-xs text-muted-foreground">Super Administrator</span>
             </div>
             <Icon name="mdi:chevron-down" class="w-4 h-4" />
           </button>

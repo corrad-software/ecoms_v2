@@ -55,11 +55,6 @@
               "name": "Security",
               "path": "/admin/settings/general/security",
               "icon": "ph:lock"
-            },
-            {
-              "name": "Appearence",
-              "path": "/admin/settings/general/appearence",
-              "icon": "mdi:palette"
             }
           ]
         },

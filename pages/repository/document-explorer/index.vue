@@ -100,10 +100,10 @@ const projects = ref({
   ],
 });
 
-const selectedRoom = ref(null);
-const selectedCabinet = ref(null);
-const selectedProject = ref(null);
-const selectedDiscipline = ref(null);
+const selectedRoom = ref("");
+const selectedCabinet = ref("");
+const selectedProject = ref("");
+const selectedDiscipline = ref("");
 
 const filteredCabinets = computed(() => {
   if (selectedRoom.value) {
@@ -125,22 +125,18 @@ const filteredDisciplines = computed(() => {
 
 const searchQuery = ref("");
 const sortAscending = ref(true);
-const gridView = ref(true);
 
 const toggleSort = () => {
   sortAscending.value = !sortAscending.value;
 };
 
-const toggleView = () => {
-  gridView.value = !gridView.value;
-};
-
 const documents = ref([
-  { id: 1, name: "Document 1", room: 1, cabinet: 4, project: 7, discipline: 1, fileName: "doc1.pdf", fileSize: "2MB", fileType: "PDF", daysLeft: 10 },
-  { id: 2, name: "Document 2", room: 1, cabinet: 5, project: 8, discipline: 2, fileName: "doc2.pdf", fileSize: "3MB", fileType: "PDF", daysLeft: 5 },
-  { id: 3, name: "Document 3", room: 2, cabinet: 1, project: 1, discipline: 3, fileName: "doc3.pdf", fileSize: "1MB", fileType: "PDF", daysLeft: 15 },
-  { id: 4, name: "Document 4", room: 2, cabinet: 2, project: 2, discipline: 4, fileName: "doc4.pdf", fileSize: "4MB", fileType: "PDF", daysLeft: 7 },
-  { id: 5, name: "Document 5", room: 3, cabinet: 7, project: 13, discipline: 5, fileName: "doc5.pdf", fileSize: "5MB", fileType: "PDF", daysLeft: 3 },
+  { id: 1, name: "Laporan Kewangan 2023", room: 1, cabinet: 4, project: 7, discipline: 1, fileName: "Laporan_Kewangan_2023.pdf", fileSize: "2MB", fileType: "PDF", daysLeft: 10 },
+  { id: 1, name: "Laporan Kewangan 2023 Copy", room: 1, cabinet: 4, project: 7, discipline: 1, fileName: "Laporan_Kewangan_2023 Copy.pdf", fileSize: "2MB", fileType: "PDF", daysLeft: 10 },
+  { id: 2, name: "Pelan Projek Jambatan Batu Kawan", room: 2, cabinet: 1, project: 3, discipline: 2, fileName: "Pelan_Projek_Jambatan_Batu_Kawan.pdf", fileSize: "3MB", fileType: "PDF", daysLeft: 5 },
+  { id: 3, name: "Renovasi Pejabat Kewangan 2022", room: 2, cabinet: 2, project: 2, discipline: 3, fileName: "Renovasi_Pejabat_Kewangan_2022.pdf", fileSize: "1MB", fileType: "PDF", daysLeft: 15 },
+  { id: 4, name: "Pembangunan Sistem IT 2021", room: 3, cabinet: 7, project: 13, discipline: 4, fileName: "Pembangunan_Sistem_IT_2021.pdf", fileSize: "4MB", fileType: "PDF", daysLeft: 7 },
+  { id: 5, name: "Projek Jalan Raya Kota Bharu", room: 3, cabinet: 8, project: 15, discipline: 5, fileName: "Projek_Jalan_Raya_Kota_Bharu.pdf", fileSize: "5MB", fileType: "PDF", daysLeft: 3 },
   // Add more documents as needed
 ]);
 
@@ -168,15 +164,15 @@ const selectedDocument = ref(null);
 
 const selectDocument = (document) => {
   selectedDocument.value = {
-    tajuk: "Tajuk 1",
-    perkara: "Perkara 1",
-    negeri: "Negeri 1",
+    tajuk: "Laporan Kewangan Pembinaan Cawangan Tebedu 2024",
+    perkara: "Laporan melibatkan perbelanjaan pembinaan pejabat kewangan cawangan tebedu bagi tahun 2024",
+    negeri: "Sarawak",
     tarikh: "2023-01-01",
-    nama: "John Doe",
-    fulltext: "Fulltext 1",
+    nama: "Abdul Rahman",
+    fulltext: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
     storeDate: "2023-01-10",
     namaFail: document.fileName,
-    user: "User1"
+    user: "Said Abdullah",
   };
 };
 
@@ -202,6 +198,8 @@ const downloadDocument = (fileName) => {
 const printDocument = (fileName) => {
   // Logic to print the document
 };
+
+const googleDocsViewerUrl = "https://docs.google.com/viewer?url=https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf&embedded=true";
 </script>
 
 <template>
@@ -211,14 +209,24 @@ const printDocument = (fileName) => {
       <div class="w-1/5 pr-4 h-[calc(100vh-200px)]">
         <Card class="h-full">
           <CardContent class="p-4 h-full">
-            <div class="mb-6">
-              <h1 class="text-2xl font-semibold mt-4">Carian Dokumen</h1>
+            <div class="mb-6 flex items-center space-x-2 mt-4">
+              <h1 class="text-2xl font-semibold">Carian Dokumen</h1>
+              <HoverCard>
+                <HoverCardTrigger>
+                  <Button variant="ghost">
+                    <Icon name="mdi:information-outline" class="h-4 w-4" />
+                  </Button>
+                </HoverCardTrigger>
+                <HoverCardContent side="right" align="start">
+                  <p class="text-sm">Search for documents by selecting the appropriate filters.</p>
+                </HoverCardContent>
+              </HoverCard>
             </div>
             <div class="flex flex-col space-y-4 h-full">
               <div>
                 <label for="archiveRooms" class="block text-sm font-medium text-gray-700">Archive Rooms</label>
-                <select id="archiveRooms" name="archiveRooms" pla v-model="selectedRoom" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md cursor-pointer">
-                  <option disabled value="">Select an Archive Room</option>
+                <select id="archiveRooms" name="archiveRooms" v-model="selectedRoom" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md cursor-pointer">
+                  <option disabled value="">Select a room</option>
                   <option v-for="room in rooms" :key="room.id" :value="room.id">{{ room.name }}</option>
                 </select>
               </div>
@@ -244,18 +252,15 @@ const printDocument = (fileName) => {
                 </select>
               </div>
 
-              <div v-if="selectedDocument" class="mt-4 p-4 border rounded bg-gray-50">
-              <p class="text-xl font-semibold mb-2">Document Metadata</p>
-              <p><strong>Tajuk:</strong> {{ selectedDocument.tajuk }}</p>
-              <p><strong>Perkara:</strong> {{ selectedDocument.perkara }}</p>
-              <p><strong>Negeri:</strong> {{ selectedDocument.negeri }}</p>
-              <p><strong>Tarikh:</strong> {{ selectedDocument.tarikh }}</p>
-              <p><strong>Nama:</strong> {{ selectedDocument.nama }}</p>
-              <p><strong>Fulltext:</strong> {{ selectedDocument.fulltext }}</p>
-              <p><strong>Store Date:</strong> {{ selectedDocument.storeDate }}</p>
-              <p><strong>Nama Fail:</strong> {{ selectedDocument.namaFail }}</p>
-              <p><strong>User:</strong> {{ selectedDocument.user }}</p>
-            </div>
+              <div v-if="selectedDocument" class="mt-2 p-4 border rounded bg-gray-50">
+                <div class="flex items-center space-x-1 mb-2">
+                  <Icon name="mdi:document" class="h-4 w-4" />
+                  <p class="text-xs font-semibold">Document Metadata</p>
+                </div>
+                <p><strong>Tajuk:</strong> {{ selectedDocument.tajuk }}</p>
+                <p><strong>Perkara:</strong> {{ selectedDocument.perkara }}</p>
+                <p><strong>Fulltext:</strong> {{ selectedDocument.fulltext }}</p>
+              </div>
 
             </div>
             
@@ -275,24 +280,24 @@ const printDocument = (fileName) => {
                 class="input input-bordered w-full max-w-lg text-sm py-1 px-2 mt-4"
               />
               <div class="flex space-x-2 mt-4">
-                <Button @click="toggleView" class="btn btn-primary text-white text-sm py-1 px-2">
-                  <Icon :name="gridView.value ? 'mdi:view-list' : 'mdi:view-grid'" class="h-4 w-4" />
-                </Button>
                 <Button @click="toggleSort" class="btn btn-secondary text-white text-sm py-1 px-2">
                   <Icon name="mdi:sort" class="h-4 w-4" />
                 </Button>
               </div>
             </div>
-            <div class="divide-y divide-border overflow-y-auto h-[calc(100vh-300px)] bg-gray-100" v-if="!gridView.value">
+            <div class="divide-y divide-border overflow-y-auto h-[calc(100vh-300px)] bg-gray-100">
               <div
                 v-for="document in filteredDocuments"
                 :key="document.fileName"
                 class="py-3 flex items-center justify-between cursor-pointer ml-4"
                 @click="selectDocument(document)"
               >
-                <div>
-                  <p class="font-medium">{{ document.fileName }}</p>
-                  <p class="text-sm text-muted-foreground">{{ document.fileSize }} - {{ document.fileType }}</p>
+                <div class="flex items-center">
+                  <Icon :name="`mdi:file-${document.fileType.toLowerCase() === 'presentation' ? 'powerpoint' : document.fileType.toLowerCase() === 'spreadsheet' ? 'excel' : document.fileType.toLowerCase()}`" class="h-6 w-6 mr-2" />
+                  <div>
+                    <p class="font-medium">{{ document.fileName }}</p>
+                    <p class="text-sm text-muted-foreground">{{ document.fileSize }} - {{ document.fileType }}</p>
+                  </div>
                 </div>
                 <div class="flex items-center space-x-2 mr-2">
                   <Button @click.stop="viewDocument(document.fileName)" variant="primary" class="text-sm py-1 px-2">
@@ -307,35 +312,13 @@ const printDocument = (fileName) => {
                 </div>
               </div>
             </div>
-            <div class="grid grid-cols-2 gap-4 overflow-y-auto h-[calc(100vh-300px)] bg-gray-100" v-else>
-              <div
-                v-for="document in filteredDocuments"
-                :key="document.fileName"
-                class="p-4 border rounded cursor-pointer"
-                @click="selectDocument(document)"
-              >
-                <p class="font-medium">{{ document.fileName }}</p>
-                <p class="text-sm text-muted-foreground">{{ document.fileSize }} - {{ document.fileType }}</p>
-                <div class="flex items-center space-x-2">
-                  <Button @click.stop="viewDocument(document.fileName)" variant="primary" class="text-sm py-1 px-2">
-                    <Icon name="mdi:eye" class="h-6 w-6 text-info" />
-                  </Button>
-                  <Button @click.stop="downloadDocument(document.fileName)" variant="primary" class="text-sm py-1 px-2">
-                    <Icon name="mdi:download" class="h-6 w-6 text-info" />
-                  </Button>
-                  <Button @click.stop="printDocument(document.fileName)" variant="primary" class="text-sm py-1 px-2">
-                    <Icon name="mdi:printer" class="h-6 w-6 text-info" />
-                  </Button>
-                </div>
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>
     </div>
   </div>
 
-  <Modal v-model:open="isOpen" size="5xl" class="h-3/4">
+  <Modal v-model:open="isOpen" size="5xl" class="h-[calc(100vh-100px)]">
     <ModalHeader>
       <div class="flex justify-between items-center w-full">
         <div>
@@ -347,7 +330,21 @@ const printDocument = (fileName) => {
       </div>
     </ModalHeader>
     <ModalBody>
-      <iframe :src="`https://docs.google.com/viewer?url=${selectedDocument.value.fileName}&embedded=true`" width="100%" class="h-full"></iframe>
+      <div class="grid grid-cols-10 gap-4 h-full">
+        <div class="col-span-3">
+          <FormKit type="text" name="tajuk" label="Tajuk" :value="selectedDocument.value?.tajuk || 'Laporan Kewangan Pembinaan Cawangan Tebedu 2024'" disabled />
+          <FormKit type="text" name="perkara" label="Perkara" :value="selectedDocument.value?.perkara || 'Laporan melibatkan perbelanjaan pembinaan pejabat kewangan cawangan tebedu bagi tahun 2024'" disabled />
+          <FormKit type="text" name="negeri" label="Negeri" :value="selectedDocument.value?.negeri || 'Sarawak'" disabled />
+          <FormKit type="date" name="tarikh" label="Tarikh" :value="selectedDocument.value?.tarikh || '2023-01-01'" disabled />
+          <FormKit type="text" name="namaFail" label="Nama Fail" :value="selectedDocument.value?.namaFail || 'Dummy_Nama_Fail.pdf'" disabled />
+          <FormKit type="text" name="user" label="User" :value="selectedDocument.value?.user || 'Said Abdullah'" disabled />
+          <FormKit type="textarea" name="fulltext" label="Fulltext" :value="selectedDocument.value?.fulltext || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'" disabled />
+          <FormKit type="date" name="tarikhSimpan" label="Tarikh Simpan" :value="selectedDocument.value?.storeDate || '2023-01-10'" disabled />
+        </div>
+        <div class="col-span-7">
+          <iframe :src="googleDocsViewerUrl" width="100%" class="h-full"></iframe>
+        </div>
+      </div>
     </ModalBody>
   </Modal>
 </template>

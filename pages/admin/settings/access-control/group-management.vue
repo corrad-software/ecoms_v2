@@ -14,7 +14,7 @@ const settingsNavigation = computed(() => {
     (section) => section.title === "Settings"
   );
   // Return the second item in the settings section
-  return settingsSection?.items[1]?.children || [];
+  return settingsSection?.items[0]?.children || [];
 });
 
 // Set active state for current route

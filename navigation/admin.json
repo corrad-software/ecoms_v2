@@ -19,7 +19,7 @@
           ]
         },
         {
-          "name": "Pengesahan",
+          "name": "Pre Approved Plan (PAP)",
           "icon": "material-symbols:approval-delegation-rounded", 
           "children": [
             {
@@ -43,22 +43,6 @@
       "title": "Settings",
       "items": [
         {
-          "name": "General Settings",
-          "icon": "lucide:settings",
-          "children": [
-            {
-              "name": "Profile",
-              "path": "/admin/settings/general/profile",
-              "icon": "ph:user"
-            },
-            {
-              "name": "Security",
-              "path": "/admin/settings/general/security",
-              "icon": "ph:lock"
-            }
-          ]
-        },
-        {
           "name": "Access Controls",
           "icon": "uis:lock-access",
           "children": [
@@ -77,6 +61,13 @@
               "path": "/admin/settings/access-control/group-management",
               "icon": "material-symbols:groups"
             }
+          ]
+        },
+        {
+          "name": "Cabinet Management",
+          "icon": "mdi:file-cabinet",
+          "children": [
+
           ]
         }
 

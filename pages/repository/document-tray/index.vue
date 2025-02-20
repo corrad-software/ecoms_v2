@@ -5,7 +5,6 @@ definePageMeta({
 
 import { ref, computed } from 'vue';
 
-
 const recentActivity = ref([
   { fileName: "Document1.pdf", fileSize: "2 MB", fileType: "PDF", daysLeft: 5, metadata: { tajuk: "Tajuk 1", perkara: "Perkara 1", negeri: "Negeri 1", tarikh: "2023-01-01", nama: "John Doe", fulltext: "Fulltext 1", storeDate: "2023-01-10", namaFail: "Document1.pdf", user: "User1" } },
   { fileName: "Image1.png", fileSize: "1.5 MB", fileType: "Image", daysLeft: 3, metadata: { tajuk: "Tajuk 2", perkara: "Perkara 2", negeri: "Negeri 2", tarikh: "2023-02-01", nama: "Jane Smith", fulltext: "Fulltext 2", storeDate: "2023-02-05", namaFail: "Image1.png", user: "User2" } },
@@ -48,10 +47,10 @@ const transferToCabinet = (fileName) => {
 };
 
 const buttonTooltips = {
-  toggleView: "Toggle between grid and list view",
-  sortData: "Sort documents by name",
-  addData: "Add a new document",
-  transferToCabinet: "Transfer to cabinet"
+  toggleView: "Tukar antara paparan grid dan senarai",
+  sortData: "Susun dokumen mengikut nama",
+  addData: "Tambah dokumen baru",
+  transferToCabinet: "Pindahkan ke kabinet"
 };
 
 const selectedDocument = ref(null);
@@ -80,10 +79,10 @@ const addDocument = () => {
       tajuk: formData.value.tajuk,
       perkara: formData.value.perkara,
       negeri: formData.value.negeri,
-      tarikh: formData.value.tarikh,
+      tarikh: format(new Date(formData.value.tarikh), 'dd/MM/yyyy'),
       nama: formData.value.user,
       fulltext: formData.value.fulltext,
-      storeDate: formData.value.tarikhSimpan,
+      storeDate: format(new Date(formData.value.tarikhSimpan), 'dd/MM/yyyy'),
       namaFail: formData.value.namaFail,
       user: formData.value.user
     }
@@ -147,13 +146,34 @@ const filteredCabinetActivity = computed(() => {
   );
 });
 
+const totalFiles = computed(() => recentActivity.value.length);
+const filesNeedingAction = computed(() => recentActivity.value.filter(activity => activity.daysLeft <= 5).length);
+const trayClearanceDate = ref('31/12/2023'); // Contoh tarikh, sesuaikan mengikut keperluan
+
 </script>
 
 <template>
-  <div class="grid grid-cols-5 gap-4 h-[calc(100vh-140px)]">
-    <div class="col-span-4 grid grid-cols-10 gap-4">
-      <div class="col-span-6 flex flex-col h-full">
-        <!-- Recent Activity -->
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 h-[calc(100vh-140px)]">
+    <div class="col-span-1 lg:col-span-4 grid grid-cols-1 lg:grid-cols-10 gap-4">
+      <div class="col-span-1 lg:col-span-6 flex flex-col h-full">
+        <!-- Bahagian Visualisasi -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-2">
+          <Card class="flex items-center justify-between p-2">
+            <div class="flex items-center space-x-2">
+              <Icon name="mdi:file-document-outline" class="h-6 w-6 text-primary" />
+              <p class="text-sm font-semibold">Jumlah Fail Yang Tinggal</p>
+            </div>
+            <p class="text-lg">{{ totalFiles }}</p>
+          </Card>
+          <Card class="flex items-center justify-between p-2">
+            <div class="flex items-center space-x-2">
+              <Icon name="mdi:calendar-clock" class="h-6 w-6 text-info" />
+              <p class="text-sm font-semibold">Tarikh Pembersihan Seterusnya</p>
+            </div>
+            <p class="text-lg">{{ trayClearanceDate }}</p>
+          </Card>
+        </div>
+        <!-- Aktiviti Terkini -->
         <Card class="flex-grow h-full">
           <CardHeader class="flex flex-row justify-between">
             <div class="flex items-center space-x-2">
@@ -165,17 +185,17 @@ const filteredCabinetActivity = computed(() => {
                   </Button>
                 </HoverCardTrigger>
                 <HoverCardContent side="right" align="start">
-                  <p class="text-sm">Unassigned documents are placed here.</p>
+                  <p class="text-sm">Dokumen yang belum disusun diletakkan di sini.</p>
                 </HoverCardContent>
               </HoverCard>
             </div>
           </CardHeader>
           <CardContent>
-            <div class="flex justify-between items-center mb-4 overflow-y-auto">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-4 overflow-y-auto">
               <input
                 v-model="searchQuery"
                 type="text"
-                placeholder="Search..."
+                placeholder="Cari..."
                 class="input input-bordered w-full max-w-xs text-sm py-1 px-2"
               />
               <div class="flex space-x-2">
@@ -194,41 +214,37 @@ const filteredCabinetActivity = computed(() => {
               <div
                 v-for="activity in filteredActivity"
                 :key="activity.fileName"
-                class="py-3 flex items-center justify-between cursor-pointer"
+                class="py-2 flex items-center justify-between cursor-pointer"
                 @click="selectDocument(activity)"
               >
-                <div class="flex items-center">
-                  <Icon :name="`mdi:file-${activity.fileType.toLowerCase() === 'presentation' ? 'powerpoint' : activity.fileType.toLowerCase() === 'spreadsheet' ? 'excel' : activity.fileType.toLowerCase()}`" class="h-6 w-6 mr-2" />
-                  <div>
-                    <p class="font-medium">{{ activity.fileName }}</p>
-                    <p class="text-sm text-muted-foreground">{{ activity.fileSize }} - {{ activity.fileType }}</p>
-                  </div>
+                <div class="flex items-center space-x-2">
+                  <Icon :name="`mdi:file-${activity.fileType.toLowerCase() === 'presentation' ? 'powerpoint' : activity.fileType.toLowerCase() === 'spreadsheet' ? 'excel' : activity.fileType.toLowerCase()}`" class="h-5 w-5" />
+                  <p class="font-medium text-sm">{{ activity.fileName }}</p>
+                  <p class="text-xs text-muted-foreground">{{ activity.fileSize }} - {{ activity.fileType }}</p>
                 </div>
                 <div class="flex items-center space-x-2">
-                  <Badge>{{ activity.daysLeft }} days left</Badge>
-                  <Button @click.stop="transferToCabinet(activity.fileName)" variant="ghost" class="text-sm py-1 px-2">
+                  <Badge class="text-xs">{{ activity.daysLeft }} hari lagi</Badge>
+                  <Button @click.stop="transferToCabinet(activity.fileName)" variant="ghost" class="text-xs py-1 px-2">
                     <Icon name="mdi:folder-move" class="h-4 w-4 text-default" />
                   </Button>
                 </div>
               </div>
             </div>
-            <div class="grid grid-cols-2 gap-4 overflow-y-auto h-[calc(100vh-300px)]" v-else>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 overflow-y-auto h-[calc(100vh-300px)]" v-else>
               <div
                 v-for="activity in filteredActivity"
                 :key="activity.fileName"
-                class="p-4 border rounded cursor-pointer"
+                class="p-2 border rounded cursor-pointer"
                 @click="selectDocument(activity)"
               >
-                <div class="flex items-center">
-                  <Icon :name="`mdi:file-${activity.fileType.toLowerCase() === 'presentation' ? 'powerpoint' : activity.fileType.toLowerCase() === 'spreadsheet' ? 'excel' : activity.fileType.toLowerCase()}`" class="h-6 w-6 mr-2" />
-                  <div>
-                    <p class="font-medium">{{ activity.fileName }}</p>
-                    <p class="text-sm text-muted-foreground">{{ activity.fileSize }} - {{ activity.fileType }}</p>
-                  </div>
+                <div class="flex items-center space-x-2">
+                  <Icon :name="`mdi:file-${activity.fileType.toLowerCase() === 'presentation' ? 'powerpoint' : activity.fileType.toLowerCase() === 'spreadsheet' ? 'excel' : activity.fileType.toLowerCase()}`" class="h-5 w-5" />
+                  <p class="font-medium text-sm">{{ activity.fileName }}</p>
+                  <p class="text-xs text-muted-foreground">{{ activity.fileSize }} - {{ activity.fileType }}</p>
                 </div>
                 <div class="flex items-center space-x-2">
-                  <Badge>{{ activity.daysLeft }} days left</Badge>
-                  <Button @click.stop="transferToCabinet(activity.fileName)" variant="ghost" class="text-sm py-1 px-2">
+                  <Badge class="text-xs">{{ activity.daysLeft }} hari lagi</Badge>
+                  <Button @click.stop="transferToCabinet(activity.fileName)" variant="ghost" class="text-xs py-1 px-2">
                     <Icon name="mdi:folder-move" class="h-4 w-4 text-info" />
                   </Button>
                 </div>
@@ -237,20 +253,20 @@ const filteredCabinetActivity = computed(() => {
           </CardContent>
         </Card>
       </div>
-      <div class="col-span-4 flex flex-col h-full">
-        <!-- Add any additional content or cards here for the 40% column -->
+      <div class="col-span-1 lg:col-span-4 flex flex-col h-full">
+        <!-- Tambah sebarang kandungan tambahan atau kad di sini untuk lajur 40% -->
         <Card class="flex-grow h-full">
-          <!-- Document Viewer Section -->
-          <iframe :src="googleDocsViewerUrl" width="100%" class="h-full"></iframe>
+          <!-- Bahagian Penonton Dokumen -->
+          <iframe :src="googleDocsViewerUrl" width="100%" class="h-full min-h-[300px] lg:min-h-[500px]"></iframe>
         </Card>
       </div>
     </div>
     <div class="col-span-1 flex flex-col h-full">
-      <!-- Cabinet Section -->
+      <!-- Bahagian Kabinet -->
       <Card class="flex-grow h-full">
         <CardHeader class="flex flex-row justify-between">
           <div class="flex items-center space-x-2">
-            <CardTitle>Cabinet</CardTitle>
+            <CardTitle>Kabinet</CardTitle>
             <HoverCard>
               <HoverCardTrigger>
                 <Button variant="ghost">
@@ -258,7 +274,7 @@ const filteredCabinetActivity = computed(() => {
                 </Button>
               </HoverCardTrigger>
               <HoverCardContent side="right" align="start">
-                <p class="text-sm">Documents in the cabinet are stored here.</p>
+                <p class="text-sm">Dokumen dalam kabinet disimpan di sini.</p>
               </HoverCardContent>
             </HoverCard>
           </div>
@@ -266,14 +282,14 @@ const filteredCabinetActivity = computed(() => {
         <CardContent>
           <div class="flex flex-col space-y-2 mb-4 overflow-y-auto">
             <select v-model="selectedCabinet" class="select select-bordered w-full max-w-xs text-sm py-1 px-2">
-              <option disabled value="Select a Cabinet">Select a Cabinet</option>
+              <option disabled value="Select a Cabinet">Pilih Kabinet</option>
               <option v-for="cabinet in cabinets" :key="cabinet.id" :value="cabinet.name">{{ cabinet.name }}</option>
             </select>
             <div class="flex space-x-2">
               <input
                 v-model="cabinetSearchQuery"
                 type="text"
-                placeholder="Search..."
+                placeholder="Cari..."
                 class="input input-bordered w-full max-w-xs text-sm py-1 px-2"
               />
               <Button @click="sortData" class="btn btn-secondary text-white text-sm py-1 px-2">
@@ -310,8 +326,8 @@ const filteredCabinetActivity = computed(() => {
     <ModalHeader>
       <div class="flex justify-between items-center w-full">
         <div>
-          <ModalTitle>Add New Document</ModalTitle>
-          <ModalDescription>Fill in the details below to add a new document.</ModalDescription>
+          <ModalTitle>Tambah Dokumen Baru</ModalTitle>
+          <ModalDescription>Isi butiran di bawah untuk menambah dokumen baru.</ModalDescription>
         </div>
         <Button variant="ghost" @click="closeModal">
           <Icon name="mdi:close" class="h-6 w-6" />
@@ -319,24 +335,24 @@ const filteredCabinetActivity = computed(() => {
       </div>
     </ModalHeader>
     <ModalBody>
-      <div class="grid grid-cols-10 gap-4 h-full">
-        <div class="col-span-3">
-            <FormKit type="file" name="documentName" label="Document Name" validation="required" />
+      <div class="grid grid-cols-1 lg:grid-cols-10 gap-4 h-full">
+        <div class="col-span-1 lg:col-span-3">
+            <FormKit type="file" name="documentName" label="Nama Dokumen" validation="required" />
             <FormKit type="text" name="tajuk" label="Tajuk" validation="required" />
             <FormKit type="text" name="perkara" label="Perkara" validation="required" />
             <FormKit type="select" name="negeri" label="Negeri" :options="statesInMalaysia" validation="required" />
             <FormKit type="date" name="tarikh" label="Tarikh" validation="required" />
             <FormKit type="text" name="namaFail" label="Nama Fail" validation="required" />
-            <FormKit type="text" name="user" label="User" validation="required" />
-            <FormKit type="textarea" name="fulltext" label="Fulltext" validation="required" />
+            <FormKit type="text" name="user" label="Pengguna" validation="required" />
+            <FormKit type="textarea" name="fulltext" label="Teks Penuh" validation="required" />
             <FormKit type="date" name="tarikhSimpan" label="Tarikh Simpan" validation="required" />
             <div class="flex justify-end space-x-2 mt-4">
-              <Button variant="outline" @click="closeModal">Cancel</Button>
-              <Button @click="addDocument">Add Document</Button>
+              <Button variant="outline" @click="closeModal">Batal</Button>
+              <Button @click="addDocument">Tambah Dokumen</Button>
             </div>
         </div>
-        <div class="col-span-7">
-          <iframe :src="googleDocsViewerUrl" width="100%" class="h-full"></iframe>
+        <div class="col-span-1 lg:col-span-7">
+          <iframe :src="googleDocsViewerUrl" width="100%" class="h-full min-h-[300px] lg:min-h-[500px]"></iframe>
         </div>
       </div>
     </ModalBody>

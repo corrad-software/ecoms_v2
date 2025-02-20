@@ -102,7 +102,7 @@ const refreshPage = () => {
 </script>
 
 <template>
-  <div>
+  <div class="p-6">
     <div class="mb-6">
       <h1 class="text-2xl font-semibold">Borang Permohonan Pre-Approval Plan</h1>
     </div>
@@ -122,11 +122,11 @@ const refreshPage = () => {
 
     <!-- Form Sections -->
     <Card>
-      <CardContent class="p-4">
+      <CardContent class="p-6">
         <div v-if="currentSection === 0" class="mb-4">
           <h2 class="text-xl font-semibold my-4">A. Tajuk Projek</h2>
           <FormKit type="text" label="Tajuk Projek" placeholder="Contoh : CADANGAN MEMBINA KLINIK KESIHATAN DI MUAR, JOHOR" class="w-full mb-4" help="Sila isikan nama projek dengan perkataan yang lengkap" />
-          <FormKit type="file" label="Surat Perlaksanaan" class="w-full mb-4" />
+          <FormKit type="file" accept=".pdf" help="Fail perlu dikemukakan dalam format .pdf" validation="required" label="Surat Perlaksanaan" class="w-full mb-4" multiple />
           <FormKit type="select" label="Kementerian" :options="kementerianOptions" class="w-full mb-4" />
           <FormKit type="select" label="Syarat Pemohon" :options="syaratPemohonOptions" class="w-full mb-4" />
           
@@ -140,7 +140,7 @@ const refreshPage = () => {
         <div v-if="currentSection === 1" class="mb-4">
           <h2 class="text-xl font-semibold my-4">B. Butiran Pemohon dan Pengakuan Pemohon</h2>
           <h3 class="text-lg font-semibold my-4">Butiran Pemohon</h3>
-          <div class="border border-gray-200 p-4 rounded-lg">
+          <div class="border border-gray-200 p-6 rounded-lg">
             <div class="grid grid-cols-2 gap-4 mb-4">
               <FormKit type="text" label="Nama" v-model="pemohonData.nama" />
               <FormKit type="text" label="IC" v-model="pemohonData.ic" />
@@ -153,7 +153,7 @@ const refreshPage = () => {
           </div>
           
           <h3 class="text-lg font-semibold my-4">Pre-Approved Plan</h3>
-          <div class="border border-gray-200 p-4 rounded-lg">
+          <div class="border border-gray-200 p-6 rounded-lg">
             <div class="grid grid-cols-4 gap-4 mb-4">
               <FormKit type="select" label="Jenis Kategori" :options="jenisKategoriOptions" class="w-full mb-4" />
               <FormKit type="select" label="Kategori Bangunan" :options="kategoriBangunanOptions" class="w-full mb-4" />
@@ -169,7 +169,7 @@ const refreshPage = () => {
           </div>
 
           <h2 class="text-lg font-semibold my-4">C. Pengakuan Pemohon</h2>
-          <div class="border border-gray-200 p-4 rounded-lg">
+          <div class="border border-gray-200 p-6 rounded-lg">
             <FormKit type="checkbox" :label="pengakuanText" class="mb-4" />
           </div>
         </div>

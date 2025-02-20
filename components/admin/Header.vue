@@ -39,7 +39,7 @@ const unreadCount = 2;
       <ThemeSwitcher />
 
       <!-- Notification -->
-      <!-- <Dropdown>
+      <Dropdown>
         <DropdownTrigger class="relative">
           <button
             class="p-1.5 hover:bg-accent rounded-lg flex items-center justify-center"
@@ -95,14 +95,14 @@ const unreadCount = 2;
           </div>
           <div class="px-3 py-2 border-t text-center">
             <NuxtLink
-              to="#"
+              to="/notification"
               class="text-xs text-primary hover:text-primary/90"
             >
               View all notifications
             </NuxtLink>
           </div>
         </DropdownContent>
-      </Dropdown> -->
+      </Dropdown>
 
       <!-- User Profile -->
       <Dropdown>

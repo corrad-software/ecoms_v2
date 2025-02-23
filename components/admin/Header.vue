@@ -40,10 +40,14 @@ const unreadCount = 2;
 
       <!-- Notification -->
       <Dropdown>
-        <DropdownTrigger class="relative">
+        <!-- <DropdownTrigger class="relative"> -->
           <button
             class="p-1.5 hover:bg-accent rounded-lg flex items-center justify-center"
           >
+          <NuxtLink
+              to="/notification"
+              class="text-xs text-primary hover:text-primary/90"
+            >
             <Icon name="mdi:bell" class="w-5 h-5" />
             <span
               v-if="unreadCount"
@@ -54,9 +58,10 @@ const unreadCount = 2;
             >
               {{ unreadCount }}
             </span>
+          </NuxtLink>
           </button>
-        </DropdownTrigger>
-        <DropdownContent class="w-80">
+        <!-- </DropdownTrigger> -->
+        <!-- <DropdownContent class="w-80">
           <div class="px-3 py-2 border-b">
             <h3 class="font-semibold text-sm">Notifications</h3>
           </div>
@@ -101,7 +106,7 @@ const unreadCount = 2;
               View all notifications
             </NuxtLink>
           </div>
-        </DropdownContent>
+        </DropdownContent> -->
       </Dropdown>
 
       <!-- User Profile -->

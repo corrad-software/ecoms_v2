@@ -18,3 +18,4 @@ useSeoMeta({
     <Toast position="bottom-right" />
   </div>
 </template>
+

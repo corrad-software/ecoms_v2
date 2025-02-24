@@ -3,7 +3,79 @@ definePageMeta({
   layout: "admin",
 });
 
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import PdfViewer from "./components/PdfViewer.vue";
+
+const viewer = ref(null);
+
+onMounted(async () => {
+  const WebViewer = (await import('@pdftron/webviewer')).default;
+  
+  if (!viewer.value) {
+    console.error('Viewer element not found');
+    return;
+  }
+
+  WebViewer(
+    {
+      path: '/pdftron',
+      initialDoc: '/pdf/ACFrOgDnI38nHOu8yjKkBZpA5lIJ_ImGLXx67w0Ju7nVj_SGznwL7VX6MWNCJuJs7PzNwjdyoXE4_VzpZTYv0PyGE678nP4HCLGuCl35awoknybqVSrcBVcmbcPvVyBSY4Mr7DvEbrN4nRs9Wwt9.pdf',
+      licenseKey: 'demo:1740318341938:61717c38030000000054ee29517d60d7b885313c0834a68bc7fc385a29',
+      enableFilePicker: true,
+      fullAPI: false,
+      enableRedaction: true, // Enable redaction tools
+      enableMeasurement: true, // Enable measurement tools
+      enableAnnotations: true, // Enable annotation tools
+      showToolbarControl: true, // Show the toolbar
+      annotationUser: 'Current User', // Set the current user for annotations
+    },
+    viewer.value
+  ).then((instance) => {
+    const { documentViewer, annotationManager, Tools, Annotations } = instance.Core;
+
+    // Add error handling
+    documentViewer.addEventListener('documentLoadFailure', function(error) {
+      console.error('Error loading document:', error);
+    });
+
+    // Add success handling
+    documentViewer.addEventListener('documentLoaded', function() {
+      console.log('Document loaded successfully');
+    });
+
+    // Enable all annotation tools
+    //instance.UI.enableFeatures([instance.UI.Feature.Annotations]);
+
+    // Enable features for editing
+    instance.UI.enableElements(['downloadButton', 'printButton', 'saveButton']);
+
+    // Add custom save button handler
+    instance.UI.setHeaderItems((header) => {
+      header.push({
+        type: 'actionButton',
+        img: 'icon-save',
+        onClick: async () => {
+          const doc = documentViewer.getDocument();
+          const xfdfString = await annotationManager.exportAnnotations();
+          const data = await doc.getFileData({
+            // Include annotations in saved file
+            xfdfString,
+            // Include any document modifications
+            incremental: true,
+            // Save as PDF
+            downloadType: 'pdf'
+          });
+          // Handle the saved data here
+          console.log('PDF saved:', data);
+        }
+      });
+    });
+  })
+  .catch(error => {
+    console.error('Error initializing WebViewer:', error);
+  });
+});
+
 
 const recentActivity = ref([
   { fileName: "Document1.pdf", fileSize: "2 MB", fileType: "PDF", daysLeft: 5, metadata: { tajuk: "Tajuk 1", perkara: "Perkara 1", negeri: "Negeri 1", tarikh: "2023-01-01", nama: "John Doe", fulltext: "Fulltext 1", storeDate: "2023-01-10", namaFail: "Document1.pdf", user: "User1" } },
@@ -13,7 +85,7 @@ const recentActivity = ref([
 ]);
 
 const googleDocsViewerUrl = "https://docs.google.com/viewer?url=https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf&embedded=true";
-
+const googleDocsViewerUrl2 = "https://app.luminpdf.com/viewer/67bb310ea62eacba01700e66?action=upload&from=functional-landing-page";
 const isGridView = ref(false);
 
 const toggleView = () => {
@@ -254,10 +326,14 @@ const trayClearanceDate = ref('31/12/2023'); // Contoh tarikh, sesuaikan mengiku
         </Card>
       </div>
       <div class="col-span-1 lg:col-span-4 flex flex-col h-full">
-        <!-- Tambah sebarang kandungan tambahan atau kad di sini untuk lajur 40% -->
         <Card class="flex-grow h-full">
-          <!-- Bahagian Penonton Dokumen -->
-          <iframe :src="googleDocsViewerUrl" width="100%" class="h-full min-h-[300px] lg:min-h-[500px]"></iframe>
+          <!-- Remove or comment out these lines -->
+          <!-- <iframe :src="googleDocsViewerUrl2" width="100%" class="h-full min-h-[300px] lg:min-h-[500px]"></iframe> -->
+          <!-- <PdfViewer /> -->
+          
+          <!-- Add this line -->
+          <div ref="viewer" class="h-full"></div>
+
         </Card>
       </div>
     </div>
@@ -360,7 +436,10 @@ const trayClearanceDate = ref('31/12/2023'); // Contoh tarikh, sesuaikan mengiku
 </template>
 
 <style scoped>
+
 .text-gray-700 {
   color: #4a5568;
 }
+
+
 </style>

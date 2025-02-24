@@ -104,4 +104,5 @@ const handleOverlayClick = () => {
 .bg-foreground\/50 {
   transition: opacity 0.2s ease-in-out;
 }
+
 </style>

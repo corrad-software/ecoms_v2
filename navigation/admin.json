@@ -35,6 +35,11 @@
               "path": "/repository/approval/senarai-pengesahan"
             }
           ]
+        },
+        {
+          "name": "Laporan",
+          "icon": "material-symbols:file-copy-rounded", 
+          "path":  "/repository/report"
         }
       ]
     },

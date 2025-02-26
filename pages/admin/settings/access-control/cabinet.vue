@@ -167,6 +167,8 @@ const deleteGroup = () => {
   }
 };
 
+
+
 const projects = ref({
   1: [
     { id: 1, name: "Pembinaan Pejabat Kewangan Batu Kawan" },
@@ -310,6 +312,7 @@ const projectToDelete = ref(null);
 const confirmDeleteProject = (cabinetId, index) => {
   projectToDelete.value = { cabinetId, index };
   showDeleteProjectModal.value = true;
+  //showDeleteCabinetModal.value = true;
 };
 
 const deleteProject = () => {
@@ -320,6 +323,19 @@ const deleteProject = () => {
     showDeleteProjectModal.value = false;
   }
 };
+
+
+const showDeleteCabinetModal = ref(false);
+const deleteGroupReason = ref("");
+const cabinetToDelete = ref({ name: "" });
+
+const confirmDeleteCabinet = (index, cabinetName) => {
+  cabinetToDelete.value = { name: cabinetName };
+  showDeleteCabinetModal.value = true;
+  deleteGroupReason.value = ""; // Clear input on opening modal
+};
+
+
 </script>
 
 <template>
@@ -398,7 +414,7 @@ const deleteProject = () => {
                         <tr v-for="(cabinet, index) in cabinets" :key="index">
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ cabinet.name }}</td>
                           <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <Button v-if="showDeleteButtons" @click="confirmDeleteGroup(index)" variant="danger">
+                            <Button v-if="showDeleteButtons" @click="confirmDeleteCabinet(index, cabinet.name)" variant="danger">
                               <Icon name="mdi:trash-can"></Icon>
                             </Button>
                           </td>
@@ -615,11 +631,32 @@ const deleteProject = () => {
         <ModalTitle>Confirm Delete</ModalTitle>
       </ModalHeader>
       <ModalBody>
-        <p>Are you sure you want to delete this group?</p>
+        <p>Are you sure you want to delete this cabinet?</p>
       </ModalBody>
       <ModalFooter>
         <Button @click="deleteGroup" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Delete</Button>
         <Button @click="showDeleteGroupModal = false" class="ml-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Cancel</Button>
+      </ModalFooter>
+    </Modal>
+
+    <!-- Delete Cabinet Confirmation Modal -->
+    <Modal v-model:open="showDeleteCabinetModal">
+      <ModalHeader>
+        <ModalTitle>Confirm Delete</ModalTitle>
+      </ModalHeader>
+      <ModalBody>
+        <p>Please enter the cabinet name to delete?</p>
+        <input
+          id="deleteGroupReason"
+          v-model="deleteGroupReason"
+          type="text"
+          class="mt-1 mb-3 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+          :placeholder="`Enter '${cabinetToDelete.name}' to confirm`"
+        />
+      </ModalBody>
+      <ModalFooter>
+        <Button @click="deleteGroup" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Delete</Button>
+        <Button @click="showDeleteCabinetModal = false" class="ml-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Cancel</Button>
       </ModalFooter>
     </Modal>
 

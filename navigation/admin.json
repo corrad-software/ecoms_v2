@@ -67,15 +67,7 @@
               "icon": "material-symbols:groups"
             }
           ]
-        },
-        {
-          "name": "Cabinet Management",
-          "icon": "mdi:file-cabinet",
-          "children": [
-
-          ]
         }
-
       ]
     }
   ]

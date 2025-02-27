@@ -183,8 +183,11 @@ const newRoom = ref({ name: "", cabinets: [] });
 const selectedRoom = ref("");
 
 const showAddRoomModal = ref(false);
+
 const showDeleteRoomModal = ref(false);
-const roomToDelete = ref(null);
+const deleteRoomName = ref("");
+const roomToDelete = ref({ name: "" });
+const errorMessage = ref("");
 
 const openAddRoomModal = () => {
   newRoom.value = { name: "", cabinets: [] };
@@ -199,16 +202,31 @@ const addRoom = () => {
   }
 };
 
-const confirmDeleteRoom = (index) => {
-  roomToDelete.value = index;
+const confirmDeleteRoom = (index, roomName) => {
+  // roomToDelete.value = index;
+  // showDeleteRoomModal.value = true;
+  console.log('roomName is ',roomName)
+  errorMessage.value = "";
+  roomToDelete.value = { name: roomName };
   showDeleteRoomModal.value = true;
+  deleteRoomName.value = ""; 
 };
 
 const deleteRoom = () => {
-  if (roomToDelete.value !== null) {
-    rooms.value.splice(roomToDelete.value, 1);
-    roomToDelete.value = null;
-    showDeleteRoomModal.value = false;
+  // if (roomToDelete.value !== null) {
+  //   rooms.value.splice(roomToDelete.value, 1);
+  //   roomToDelete.value = null;
+  //   showDeleteRoomModal.value = false;
+  // }
+
+  if (deleteRoomName.value.trim() === roomToDelete.value.name) {
+    const { index } = roomToDelete.value;
+    rooms.value.splice(index, 1); // Remove the cabinet
+    roomToDelete.value = { name: "" }; // Reset
+    deleteRoomName.value = ""; // Clear input
+    showDeleteRoomModal.value = false; // Close modal
+  } else {
+    errorMessage.value = "You need to fill the room name for deletion.";
   }
 };
 
@@ -328,7 +346,7 @@ const addCabinet = () => {
                         <tr v-for="(room, index) in rooms" :key="index">
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ room.name }}</td>
                           <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <Button v-if="showDeleteButtons" @click="confirmDeleteRoom(index)" variant="danger">
+                            <Button v-if="showDeleteButtons" @click="confirmDeleteRoom(index, room.name)" variant="danger">
                               <Icon name="mdi:trash-can"></Icon>
                             </Button>
                           </td>
@@ -460,7 +478,15 @@ const addCabinet = () => {
         <ModalTitle>Confirm Delete</ModalTitle>
       </ModalHeader>
       <ModalBody>
-        <p>Are you sure you want to delete this room?</p>
+        <p>Please enter the room name to delete?</p>
+        <input
+          id="deleteRoomName"
+          v-model="deleteRoomName"
+          type="text"
+          class="mt-1 mb-3 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+          :placeholder="`'${roomToDelete.name}'`"
+        />
+        <p v-if="errorMessage" class="text-red-500 text-sm mt-1">{{ errorMessage }}</p>
       </ModalBody>
       <ModalFooter>
         <Button @click="deleteRoom" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Delete</Button>

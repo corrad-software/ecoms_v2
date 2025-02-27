@@ -326,13 +326,27 @@ const deleteProject = () => {
 
 
 const showDeleteCabinetModal = ref(false);
-const deleteGroupReason = ref("");
+const deleteCabinetName = ref("");
 const cabinetToDelete = ref({ name: "" });
+const errorMessage = ref("");
 
 const confirmDeleteCabinet = (index, cabinetName) => {
+  errorMessage.value = "";
   cabinetToDelete.value = { name: cabinetName };
   showDeleteCabinetModal.value = true;
-  deleteGroupReason.value = ""; // Clear input on opening modal
+  deleteCabinetName.value = ""; // Clear input on opening modal
+};
+
+const deleteCabinet = () => {
+  if (deleteCabinetName.value.trim() === cabinetToDelete.value.name) {
+    const { index } = cabinetToDelete.value;
+    cabinets.value.splice(index, 1); // Remove the cabinet
+    cabinetToDelete.value = { name: "" }; // Reset
+    deleteCabinetName.value = ""; // Clear input
+    showDeleteCabinetModal.value = false; // Close modal
+  } else {
+    errorMessage.value = "You need to fill the cabinet name for deletion.";
+  }
 };
 
 
@@ -647,15 +661,16 @@ const confirmDeleteCabinet = (index, cabinetName) => {
       <ModalBody>
         <p>Please enter the cabinet name to delete?</p>
         <input
-          id="deleteGroupReason"
-          v-model="deleteGroupReason"
+          id="deleteCabinetName"
+          v-model="deleteCabinetName"
           type="text"
           class="mt-1 mb-3 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-          :placeholder="`Enter '${cabinetToDelete.name}' to confirm`"
+          :placeholder="`'${cabinetToDelete.name}'`"
         />
+        <p v-if="errorMessage" class="text-red-500 text-sm mt-1">{{ errorMessage }}</p>
       </ModalBody>
       <ModalFooter>
-        <Button @click="deleteGroup" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Delete</Button>
+        <Button @click="deleteCabinet" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Delete</Button>
         <Button @click="showDeleteCabinetModal = false" class="ml-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Cancel</Button>
       </ModalFooter>
     </Modal>

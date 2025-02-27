@@ -24,7 +24,7 @@ onMounted(async () => {
       enableFilePicker: true,
       fullAPI: false,
       enableRedaction: true, // Enable redaction tools
-      enableMeasurement: true, // Enable measurement tools
+      enableMeasurement: false, // Enable measurement tools
       enableAnnotations: true, // Enable annotation tools
       showToolbarControl: true, // Show the toolbar
       annotationUser: 'Current User', // Set the current user for annotations
@@ -33,18 +33,31 @@ onMounted(async () => {
   ).then((instance) => {
     const { documentViewer, annotationManager, Tools, Annotations } = instance.Core;
 
+    instance.UI.setLayoutMode(instance.UI.LayoutMode.Single);
+    instance.UI.closeElements(['printModal']);
+
+
+    
+
     // Add error handling
     documentViewer.addEventListener('documentLoadFailure', function(error) {
       console.error('Error loading document:', error);
     });
 
+
     // Add success handling
     documentViewer.addEventListener('documentLoaded', function() {
       console.log('Document loaded successfully');
+
+      setTimeout(() => {
+        instance.UI.closeElements(['printModal']);
+      }, 500);
     });
 
+    
+
     // Enable all annotation tools
-    //instance.UI.enableFeatures([instance.UI.Feature.Annotations]);
+    instance.UI.enableFeatures([instance.UI.Feature.Annotations]);
 
     // Enable features for editing
     instance.UI.enableElements(['downloadButton', 'printButton', 'saveButton']);

@@ -202,6 +202,89 @@ const cawangan = ref([
   },
 ]);
 
+// Add user access control data
+const userAccess = ref({
+  // Format: documentId: hasAccess (boolean)
+  1: true,
+  2: false,
+  3: true,
+  4: false,
+  5: true,
+  6: false,
+  7: true,
+  8: false,
+});
+
+// Add pending access requests
+const pendingRequests = ref([2, 6]);
+
+// Add tree view state
+const expandedNodes = ref({
+  cawangan: {},
+  units: {},
+  projects: {},
+});
+
+// Toggle tree node expansion
+const toggleNode = (type, id) => {
+  if (type === 'cawangan') {
+    expandedNodes.value.cawangan[id] = !expandedNodes.value.cawangan[id];
+  } else if (type === 'unit') {
+    expandedNodes.value.units[id] = !expandedNodes.value.units[id];
+  } else if (type === 'project') {
+    expandedNodes.value.projects[id] = !expandedNodes.value.projects[id];
+  }
+};
+
+// Modify the selectNode function to handle public cabinet
+const selectNode = (type, id, parentId = null, grandParentId = null) => {
+  if (type === 'cawangan') {
+    selectedCawangan.value = id;
+    selectedUnit.value = "";
+    selectedProject.value = "";
+    selectedDiscipline.value = "";
+    
+    // If selecting a special cabinet, expand it
+    if (id === 'public' || id === 'assigned') {
+      expandedNodes.value.cawangan[id] = true;
+    }
+  } else if (type === 'unit') {
+    selectedCawangan.value = parentId;
+    selectedUnit.value = id;
+    selectedProject.value = "";
+    selectedDiscipline.value = "";
+  } else if (type === 'project') {
+    selectedCawangan.value = grandParentId;
+    selectedUnit.value = parentId;
+    selectedProject.value = id;
+    selectedDiscipline.value = "";
+  } else if (type === 'discipline') {
+    selectedDiscipline.value = id;
+  }
+  
+  // Update last visited if it's a branch
+  if (type === 'cawangan' && typeof id === 'number') {
+    const branch = cawangan.value.find(c => c.id === id);
+    if (branch) {
+      lastVisitedCabinet.value = {
+        id: id,
+        name: branch.name,
+        path: `Assigned Cabinet > ${branch.name}`
+      };
+    }
+  }
+};
+
+// Request access to document
+const requestAccess = (documentId) => {
+  if (!pendingRequests.value.includes(documentId)) {
+    pendingRequests.value.push(documentId);
+    alert(`Permohonan akses untuk dokumen ID ${documentId} telah dihantar.`);
+  } else {
+    alert('Permohonan akses untuk dokumen ini sedang diproses.');
+  }
+};
+
 const selectedCawangan = ref("");
 const selectedUnit = ref("");
 const selectedProject = ref("");
@@ -265,25 +348,164 @@ const documents = ref([
   // Add more documents as needed
 ]);
 
+// Add public documents
+const publicDocuments = ref([
+  { id: 101, name: "JKR Standard Operating Procedures", fileName: "JKR_SOP_2023.pdf", fileType: "PDF", fileSize: "5MB", isPublic: true },
+  { id: 102, name: "Construction Guidelines 2023", fileName: "Construction_Guidelines_2023.pdf", fileType: "PDF", fileSize: "3MB", isPublic: true },
+  { id: 103, name: "Safety Regulations", fileName: "Safety_Regulations_2023.pdf", fileType: "PDF", fileSize: "2MB", isPublic: true },
+  { id: 104, name: "Project Management Templates", fileName: "PM_Templates.zip", fileType: "ZIP", fileSize: "8MB", isPublic: true },
+]);
+
+// Add templates
+const templateDocuments = ref([
+  { id: 201, name: "Project Proposal Template", fileName: "Project_Proposal_Template.docx", fileType: "Word", fileSize: "1MB", isTemplate: true },
+  { id: 202, name: "Budget Planning Template", fileName: "Budget_Planning_Template.xlsx", fileType: "Excel", fileSize: "2MB", isTemplate: true },
+  { id: 203, name: "Project Timeline Template", fileName: "Project_Timeline_Template.pptx", fileType: "PowerPoint", fileSize: "3MB", isTemplate: true },
+  { id: 204, name: "Construction Report Template", fileName: "Construction_Report_Template.docx", fileType: "Word", fileSize: "1MB", isTemplate: true },
+]);
+
+// Last visited cabinet
+const lastVisitedCabinet = ref({
+  id: 'last-visited',
+  name: 'JKR Cawangan Tebedu, Sarawak',
+  path: 'Assigned Cabinet > JKR Cawangan Tebedu, Sarawak'
+});
+
+// Add public cabinet structure
+const publicCabinet = ref({
+  id: 'public',
+  name: 'Public Cabinet',
+  cabinets: [
+    {
+      id: 'general',
+      name: 'General Documents',
+      documents: [
+        { 
+          id: 101, 
+          name: "JKR Standard Operating Procedures", 
+          fileName: "JKR_SOP_2023.pdf", 
+          fileType: "PDF", 
+          fileSize: "5MB", 
+          isPublic: true,
+          tajuk: "Standard Operating Procedures JKR 2023",
+          perkara: "Prosedur operasi standard untuk semua cawangan JKR",
+          negeri: "Federal",
+          tarikh: "2023-01-01",
+          user: "Admin JKR",
+          storeDate: "2023-01-01",
+          fulltext: "Dokumen ini mengandungi prosedur operasi standard untuk semua cawangan JKR..."
+        },
+        { 
+          id: 102, 
+          name: "Construction Guidelines 2023", 
+          fileName: "Construction_Guidelines_2023.pdf", 
+          fileType: "PDF", 
+          fileSize: "3MB", 
+          isPublic: true,
+          tajuk: "Garis Panduan Pembinaan 2023",
+          perkara: "Garis panduan pembinaan untuk projek JKR",
+          negeri: "Federal",
+          tarikh: "2023-01-15",
+          user: "Admin JKR",
+          storeDate: "2023-01-15",
+          fulltext: "Garis panduan ini merangkumi aspek pembinaan untuk projek JKR..."
+        }
+      ]
+    },
+    {
+      id: 'templates',
+      name: 'Templates',
+      documents: [
+        { 
+          id: 201, 
+          name: "Project Proposal Template", 
+          fileName: "Project_Proposal_Template.docx", 
+          fileType: "Word", 
+          fileSize: "1MB", 
+          isTemplate: true,
+          tajuk: "Template Cadangan Projek",
+          perkara: "Template standard untuk cadangan projek baru",
+          negeri: "Federal",
+          tarikh: "2023-03-01",
+          user: "Admin JKR",
+          storeDate: "2023-03-01",
+          fulltext: "Template ini mengandungi format standard untuk cadangan projek baru..."
+        },
+        { 
+          id: 202, 
+          name: "Budget Planning Template", 
+          fileName: "Budget_Planning_Template.xlsx", 
+          fileType: "Excel", 
+          fileSize: "2MB", 
+          isTemplate: true,
+          tajuk: "Template Perancangan Bajet",
+          perkara: "Template standard untuk perancangan bajet",
+          negeri: "Federal",
+          tarikh: "2023-03-15",
+          user: "Admin JKR",
+          storeDate: "2023-03-15",
+          fulltext: "Template ini mengandungi format standard untuk perancangan bajet projek..."
+        }
+      ]
+    }
+  ]
+});
+
+// Modify the filteredDocuments computed property
 const filteredDocuments = computed(() => {
-  if (!selectedCawangan.value || !selectedUnit.value || !selectedProject.value || (filteredDisciplines.value.length > 0 && !selectedDiscipline.value)) {
+  if (searchQuery.value) {
+    let allDocs = [
+      ...documents.value,
+      ...publicCabinet.value.cabinets.flatMap(cabinet => cabinet.documents)
+    ];
+    
+    let filtered = allDocs.filter(doc => 
+      doc.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      doc.fileName.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+    
+    if (!sortAscending.value) {
+      filtered = [...filtered].reverse();
+    }
+    
+    return filtered;
+  }
+  
+  // Handle public cabinet
+  if (selectedCawangan.value === 'public') {
+    const selectedCabinet = publicCabinet.value.cabinets.find(
+      cabinet => cabinet.id === selectedUnit.value
+    );
+    return selectedCabinet ? selectedCabinet.documents : [];
+  }
+  
+  // Handle regular documents (existing logic)
+  if (!selectedCawangan.value || (selectedCawangan.value === 'assigned' && !selectedUnit.value)) {
     return [];
   }
   
-  let filtered = documents.value;
-  filtered = filtered.filter(doc => doc.cawangan === selectedCawangan.value);
-  filtered = filtered.filter(doc => doc.unit === selectedUnit.value);
-  filtered = filtered.filter(doc => doc.project === selectedProject.value);
-  if (filteredDisciplines.value.length > 0) {
-    filtered = filtered.filter(doc => doc.discipline === selectedDiscipline.value);
+  let filtered = [...documents.value];
+  
+  if (typeof selectedCawangan.value === 'number') {
+    filtered = filtered.filter(doc => doc.cawangan === selectedCawangan.value);
+    
+    if (selectedUnit.value) {
+      filtered = filtered.filter(doc => doc.unit === selectedUnit.value);
+    }
+    
+    if (selectedProject.value) {
+      filtered = filtered.filter(doc => doc.project === selectedProject.value);
+    }
+    
+    if (filteredDisciplines.value.length > 0 && selectedDiscipline.value) {
+      filtered = filtered.filter(doc => doc.discipline === selectedDiscipline.value);
+    }
   }
   
-  if (searchQuery.value) {
-    filtered = filtered.filter(doc => doc.name.toLowerCase().includes(searchQuery.value.toLowerCase()));
-  }
   if (!sortAscending.value) {
     filtered = filtered.reverse();
   }
+  
   return filtered;
 });
 
@@ -291,21 +513,41 @@ const selectedDocument = ref(null);
 
 const selectDocument = (document) => {
   selectedDocument.value = {
-    tajuk: "Laporan Kewangan Pembinaan Cawangan Tebedu 2024",
-    perkara: "Laporan melibatkan perbelanjaan pembinaan pejabat kewangan cawangan tebedu bagi tahun 2024",
-    negeri: "Sarawak",
-    tarikh: "2023-01-01",
-    nama: "Abdul Rahman",
-    fulltext: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-    storeDate: "2023-01-10",
+    id: document.id,
+    tajuk: document.tajuk || document.name,
+    perkara: document.perkara || "No description available",
+    negeri: document.negeri || "Federal",
+    tarikh: document.tarikh || new Date().toISOString().split('T')[0],
+    nama: document.name,
+    fulltext: document.fulltext || "No content available",
+    storeDate: document.storeDate || new Date().toISOString().split('T')[0],
     namaFail: document.fileName,
-    user: "Said Abdullah",
+    user: document.user || "System",
+    fileType: document.fileType,
+    fileSize: document.fileSize,
+    isPublic: document.isPublic,
+    isTemplate: document.isTemplate,
+    // Add a default viewer URL for public documents
+    viewerUrl: document.isPublic || document.isTemplate ? 
+      `https://docs.google.com/viewer?url=${encodeURIComponent(document.fileName)}&embedded=true` : 
+      googleDocsViewerUrl
   };
+
+  // Automatically open the modal when a document is selected
+  openModal();
 };
 
 const viewDocument = (fileName) => {
-  selectedDocument.value = documents.value.find(doc => doc.fileName === fileName);
-  openModal();
+  let document;
+  
+  // Search in all document sources
+  document = documents.value.find(doc => doc.fileName === fileName) ||
+            publicCabinet.value.cabinets.flatMap(cabinet => cabinet.documents)
+              .find(doc => doc.fileName === fileName);
+  
+  if (document) {
+    selectDocument(document);
+  }
 };
 
 const isOpen = ref(false);
@@ -327,151 +569,553 @@ const printDocument = (fileName) => {
 };
 
 const googleDocsViewerUrl = "https://docs.google.com/viewer?url=https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf&embedded=true";
+
+// Add state for UI toggles
+const showNavbar = ref(true);
+const showDetails = ref(true);
+
+// Toggle navbar visibility
+const toggleNavbar = () => {
+  showNavbar.value = !showNavbar.value;
+};
+
+// Toggle details panel visibility
+const toggleDetails = () => {
+  showDetails.value = !showDetails.value;
+};
+
+// View type (list, icons, details)
+const viewType = ref('list');
+
+// Navigation history
+const history = ref({
+  back: [],
+  forward: [],
+  current: null
+});
+
+// Navigate back
+const goBack = () => {
+  if (history.value.back.length > 0) {
+    const previous = history.value.back.pop();
+    history.value.forward.push(history.value.current);
+    history.value.current = previous;
+    
+    // Restore state from history
+    selectedCawangan.value = previous.cawangan;
+    selectedUnit.value = previous.unit;
+    selectedProject.value = previous.project;
+    selectedDiscipline.value = previous.discipline;
+  }
+};
+
+// Navigate forward
+const goForward = () => {
+  if (history.value.forward.length > 0) {
+    const next = history.value.forward.pop();
+    history.value.back.push(history.value.current);
+    history.value.current = next;
+    
+    // Restore state from history
+    selectedCawangan.value = next.cawangan;
+    selectedUnit.value = next.unit;
+    selectedProject.value = next.project;
+    selectedDiscipline.value = next.discipline;
+  }
+};
+
+// Navigate up
+const goUp = () => {
+  if (selectedDiscipline.value) {
+    selectedDiscipline.value = "";
+  } else if (selectedProject.value) {
+    selectedProject.value = "";
+  } else if (selectedUnit.value) {
+    selectedUnit.value = "";
+  } else if (selectedCawangan.value) {
+    selectedCawangan.value = "";
+  }
+};
+
+// Update history when selection changes
+watch([selectedCawangan, selectedUnit, selectedProject, selectedDiscipline], () => {
+  const currentState = {
+    cawangan: selectedCawangan.value,
+    unit: selectedUnit.value,
+    project: selectedProject.value,
+    discipline: selectedDiscipline.value
+  };
+  
+  if (history.value.current) {
+    history.value.back.push(history.value.current);
+  }
+  
+  history.value.current = currentState;
+  history.value.forward = [];
+});
+
+// Function to navigate to last visited cabinet
+const goToLastVisited = () => {
+  if (lastVisitedCabinet.value && lastVisitedCabinet.value.id !== 'last-visited') {
+    selectNode('cawangan', lastVisitedCabinet.value.id);
+    expandedNodes.value.cawangan[lastVisitedCabinet.value.id] = true;
+  }
+};
 </script>
 
 <template>
   <div>
-    <div class="flex h-screen">
-      <!-- Sidebar (20%) -->
-      <div class="w-1/5 pr-4 h-[calc(100vh-200px)]">
-        <Card class="h-full">
-          <CardContent class="p-4 h-full">
-            <div class="mb-6 flex items-center space-x-2 mt-4">
-              <h1 class="text-2xl font-semibold">Carian Dokumen</h1>
-              <HoverCard>
-                <HoverCardTrigger>
-                  <Button variant="ghost">
-                    <Icon name="mdi:information-outline" class="h-4 w-4" />
-                  </Button>
-                </HoverCardTrigger>
-                <HoverCardContent side="right" align="start">
-                  <p class="text-sm">Cari dokumen dengan memilih penapis yang sesuai.</p>
-                </HoverCardContent>
-              </HoverCard>
-            </div>
-            <div class="flex flex-col space-y-4 h-full">
-              <div>
-                <label for="archiveCawangan" class="block text-sm font-medium text-gray-700">Cawangan JKR / Negeri</label>
-                <select id="archiveCawangan" name="archiveCawangan" v-model="selectedCawangan" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md cursor-pointer">
-                  <option disabled value="">Pilih Cawangan </option>
-                  <option v-for="c in cawangan" :key="c.id" :value="c.id">{{ c.name }}</option>
-                </select>
+    <div class="flex flex-col h-screen">
+      <!-- Navigation Bar (like Windows Explorer address bar) -->
+      <div v-if="showNavbar" class="bg-gray-100 border-b p-2 flex items-center space-x-2">
+        <Button variant="ghost" class="p-1" @click="goBack" :disabled="history.back.length === 0">
+          <Icon name="mdi:arrow-left" class="h-5 w-5" :class="{'text-gray-400': history.back.length === 0}" />
+        </Button>
+        <Button variant="ghost" class="p-1" @click="goForward" :disabled="history.forward.length === 0">
+          <Icon name="mdi:arrow-right" class="h-5 w-5" :class="{'text-gray-400': history.forward.length === 0}" />
+        </Button>
+        <Button variant="ghost" class="p-1" @click="goUp" :disabled="!selectedCawangan">
+          <Icon name="mdi:arrow-up" class="h-5 w-5" :class="{'text-gray-400': !selectedCawangan}" />
+        </Button>
+        <div class="flex-1 flex items-center bg-white border rounded px-2 py-1">
+          <Icon name="mdi:folder-outline" class="h-4 w-4 mr-2 text-gray-500" />
+          <span class="text-sm truncate">
+            {{ selectedProject ? 
+              `${cawangan.find(c => c.id === selectedCawangan)?.name} > ${filteredUnits.find(u => u.id === selectedUnit)?.name} > ${filteredProjects.find(p => p.id === selectedProject)?.name}` : 
+              selectedUnit ? 
+                `${cawangan.find(c => c.id === selectedCawangan)?.name} > ${filteredUnits.find(u => u.id === selectedUnit)?.name}` : 
+                selectedCawangan ? 
+                  cawangan.find(c => c.id === selectedCawangan)?.name : 
+                  'Dokumen' 
+            }}
+          </span>
+        </div>
+        <div class="relative">
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Cari..."
+            class="input input-bordered w-48 md:w-64 text-sm py-1 px-2 pl-8 flex-shrink-0"
+          />
+          <Icon name="mdi:magnify" class="h-4 w-4 absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500" />
+        </div>
+      </div>
+      
+      <!-- Main Content Area -->
+      <div class="flex flex-1 overflow-hidden">
+        <!-- Left Sidebar (like Windows Explorer navigation pane) -->
+        <div class="w-1/4 border-r bg-gray-50 overflow-y-auto">
+          <div class="p-2">
+            <div class="mb-2">
+              <div class="flex items-center p-2 bg-blue-50 rounded">
+                <Icon name="mdi:folder-multiple" class="h-5 w-5 mr-2 text-blue-600" />
+                <span class="font-medium truncate">Document Explorer</span>
               </div>
-              <div>
-                <label for="units" class="block text-sm font-medium text-gray-700">Bahagian / Unit</label>
-                <select id="units" name="units" v-model="selectedUnit" :disabled="!selectedCawangan" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" :class="{'cursor-pointer': selectedCawangan}">
-                  <option disabled value="">Pilih bahagian / unit</option>
-                  <option v-for="unit in filteredUnits" :key="unit.id" :value="unit.id">{{ unit.name }}</option>
-                </select>
-              </div>
-              <div>
-                <label for="projects" class="block text-sm font-medium text-gray-700">Projek</label>
-                <select id="projects" name="projects" v-model="selectedProject" :disabled="!selectedUnit" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" :class="{'cursor-pointer': selectedUnit}">
-                  <option disabled value="">Pilih projek</option>
-                  <option v-for="project in filteredProjects" :key="project.id" :value="project.id">{{ project.name }}</option>
-                </select>
-              </div>
-              <div v-if="filteredDisciplines.length > 0">
-                <label for="disciplines" class="block text-sm font-medium text-gray-700">Disiplin</label>
-                <select id="disciplines" name="disciplines" v-model="selectedDiscipline" :disabled="!selectedProject" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" :class="{'cursor-pointer': selectedProject}">
-                  <option disabled value="">Pilih disiplin</option>
-                  <option v-for="discipline in filteredDisciplines" :key="discipline.id" :value="discipline.id">{{ discipline.name }}</option>
-                </select>
-              </div>
-
-              <div v-if="selectedDocument" class="mt-2 p-4 border rounded bg-gray-50">
-                <div class="flex items-center space-x-1 mb-2">
-                  <Icon name="mdi:document" class="h-4 w-4" />
-                  <p class="text-xs font-semibold">Metadata Dokumen</p>
-                </div>
-                <p><strong>Tajuk:</strong> {{ selectedDocument.tajuk }}</p>
-                <p><strong>Perkara:</strong> {{ selectedDocument.perkara }}</p>
-                <p><strong>Fulltext:</strong> {{ selectedDocument.fulltext }}</p>
-              </div>
-
             </div>
             
-          </CardContent>
-        </Card>
-      </div>
+            <!-- Public Cabinet Section -->
+            <div class="mb-2">
+              <div class="flex items-center px-2 py-1">
+                <Icon name="mdi:folder-open-outline" class="h-4 w-4 mr-2 text-green-600" />
+                <span class="text-sm font-medium truncate">Public Cabinet</span>
+              </div>
+              
+              <div class="tree-view pl-2">
+                <ul class="space-y-1">
+                  <li class="tree-item">
+                    <div 
+                      class="flex items-center py-1 px-2 rounded hover:bg-gray-200 cursor-pointer"
+                      :class="{'bg-blue-100': selectedCawangan === 'public'}"
+                      @click="selectNode('cawangan', 'public')"
+                    >
+                      <button @click.stop="toggleNode('cawangan', 'public')" class="mr-1 w-5 text-center">
+                        <Icon 
+                          :name="expandedNodes.cawangan['public'] ? 'mdi:chevron-down' : 'mdi:chevron-right'" 
+                          class="h-4 w-4" 
+                        />
+                      </button>
+                      <Icon :name="expandedNodes.cawangan['public'] ? 'mdi:folder-open' : 'mdi:folder'" class="h-4 w-4 mr-1 text-green-500" />
+                      <span class="text-sm truncate">Public Cabinet</span>
+                    </div>
+                    
+                    <!-- Public Cabinet Units -->
+                    <ul v-if="expandedNodes.cawangan['public']" class="pl-6 space-y-1 mt-1">
+                      <li v-for="cabinet in publicCabinet.cabinets" :key="`cabinet-${cabinet.id}`" class="tree-item">
+                        <div 
+                          class="flex items-center py-1 px-2 rounded hover:bg-gray-200 cursor-pointer"
+                          :class="{'bg-blue-100': selectedUnit === cabinet.id && selectedCawangan === 'public'}"
+                          @click="selectNode('unit', cabinet.id, 'public')"
+                        >
+                          <Icon name="mdi:folder" class="h-4 w-4 mr-1 text-blue-500" />
+                          <span class="text-sm truncate">{{ cabinet.name }}</span>
+                          <Badge 
+                            v-if="cabinet.documents.length > 0" 
+                            variant="secondary" 
+                            class="ml-2"
+                          >
+                            {{ cabinet.documents.length }}
+                          </Badge>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <!-- Assigned Cabinets Section -->
+            <div class="mb-2">
+              <div class="flex items-center px-2 py-1">
+                <Icon name="mdi:folder-network" class="h-4 w-4 mr-2 text-blue-600" />
+                <span class="text-sm font-medium truncate">Assigned Cabinets</span>
+              </div>
+            </div>
+            
+            <div class="tree-view pl-2">
+              <ul class="space-y-1">
+                <li v-for="c in cawangan" :key="`cawangan-${c.id}`" class="tree-item">
+                  <div 
+                    class="flex items-center py-1 px-2 rounded hover:bg-gray-200 cursor-pointer"
+                    :class="{'bg-blue-100': selectedCawangan === c.id}"
+                    @click="selectNode('cawangan', c.id)"
+                  >
+                    <button @click.stop="toggleNode('cawangan', c.id)" class="mr-1 w-5 text-center">
+                      <Icon 
+                        :name="expandedNodes.cawangan[c.id] ? 'mdi:chevron-down' : 'mdi:chevron-right'" 
+                        class="h-4 w-4" 
+                      />
+                    </button>
+                    <Icon :name="expandedNodes.cawangan[c.id] ? 'mdi:folder-open' : 'mdi:folder'" class="h-4 w-4 mr-1 text-yellow-500" />
+                    <span class="text-sm truncate">{{ c.name }}</span>
+                  </div>
+                  
+                  <!-- Units -->
+                  <ul v-if="expandedNodes.cawangan[c.id]" class="pl-6 space-y-1 mt-1">
+                    <li v-for="unit in c.units" :key="`unit-${unit.id}`" class="tree-item">
+                      <div 
+                        class="flex items-center py-1 px-2 rounded hover:bg-gray-200 cursor-pointer"
+                        :class="{'bg-blue-100': selectedUnit === unit.id && selectedCawangan === c.id}"
+                        @click="selectNode('unit', unit.id, c.id)"
+                      >
+                        <button @click.stop="toggleNode('unit', unit.id)" class="mr-1 w-5 text-center">
+                          <Icon 
+                            :name="expandedNodes.units[unit.id] ? 'mdi:chevron-down' : 'mdi:chevron-right'" 
+                            class="h-4 w-4" 
+                          />
+                        </button>
+                        <Icon :name="expandedNodes.units[unit.id] ? 'mdi:folder-open' : 'mdi:folder'" class="h-4 w-4 mr-1 text-blue-500" />
+                        <span class="text-sm truncate">{{ unit.name }}</span>
+                      </div>
+                      
+                      <!-- Projects -->
+                      <ul v-if="expandedNodes.units[unit.id]" class="pl-6 space-y-1 mt-1">
+                        <li v-for="project in unit.projects" :key="`project-${project.id}`" class="tree-item">
+                          <div 
+                            class="flex items-center py-1 px-2 rounded hover:bg-gray-200 cursor-pointer"
+                            :class="{'bg-blue-100': selectedProject === project.id && selectedUnit === unit.id && selectedCawangan === c.id}"
+                            @click="selectNode('project', project.id, unit.id, c.id)"
+                          >
+                            <button v-if="project.hasDiscipline" @click.stop="toggleNode('project', project.id)" class="mr-1 w-5 text-center">
+                              <Icon 
+                                :name="expandedNodes.projects[project.id] ? 'mdi:chevron-down' : 'mdi:chevron-right'" 
+                                class="h-4 w-4" 
+                              />
+                            </button>
+                            <span v-else class="mr-1 w-5"></span>
+                            <Icon :name="expandedNodes.projects[project.id] ? 'mdi:folder-open' : 'mdi:folder'" class="h-4 w-4 mr-1 text-green-500" />
+                            <span class="text-sm truncate">{{ project.name }}</span>
+                          </div>
+                          
+                          <!-- Disciplines -->
+                          <ul v-if="project.hasDiscipline && expandedNodes.projects[project.id]" class="pl-6 space-y-1 mt-1">
+                            <li v-for="discipline in c.disciplines" :key="`discipline-${discipline.id}`" class="tree-item">
+                              <div 
+                                class="flex items-center py-1 px-2 rounded hover:bg-gray-200 cursor-pointer"
+                                :class="{'bg-blue-100': selectedDiscipline === discipline.id && selectedProject === project.id}"
+                                @click="selectNode('discipline', discipline.id, project.id, unit.id)"
+                              >
+                                <span class="mr-1 w-5"></span>
+                                <Icon name="mdi:tag" class="h-4 w-4 mr-1 text-purple-500" />
+                                <span class="text-sm truncate">{{ discipline.name }}</span>
+                              </div>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Main Content and Details Panel -->
+        <div class="flex-1 flex">
+          <!-- Right Content Area (like Windows Explorer file list) -->
+          <div class="flex-1 flex flex-col">
+            <!-- Toolbar -->
+            <div class="bg-gray-100 border-b p-2 flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  class="text-xs"
+                  :class="{'bg-blue-100': viewType === 'list'}"
+                  @click="setViewType('list')"
+                >
+                  <Icon name="mdi:view-list" class="h-4 w-4 mr-1" />
+                  <span class="hidden sm:inline">List View</span>
+                </Button>
 
-      <!-- Main Content (80%) -->
-      <div class="w-4/5 h-[calc(100vh-200px)]">
-        <Card class="h-full">
-          <CardContent>
-            <div class="flex justify-between items-center mb-4 overflow-y-auto">
-              <input
-                v-model="searchQuery"
-                type="text"
-                placeholder="Cari..."
-                class="input input-bordered w-full max-w-lg text-sm py-1 px-2 mt-4"
-              />
-              <div class="flex space-x-2 mt-4">
-                <Button @click="toggleSort" class="btn btn-secondary text-white text-sm py-1 px-2">
-                  <Icon name="mdi:sort" class="h-4 w-4" />
+              </div>
+              <div class="flex items-center space-x-2">
+                <Button @click="toggleSort" variant="ghost" size="sm" class="text-xs">
+                  <Icon :name="sortAscending ? 'mdi:sort-ascending' : 'mdi:sort-descending'" class="h-4 w-4 mr-1" />
+                  <span class="hidden sm:inline">Sort</span>
+                </Button>
+                <Button v-if="!showDetails" @click="toggleDetails" variant="ghost" size="sm" class="text-xs">
+                  <Icon name="mdi:chevron-left" class="h-4 w-4 mr-1" />
+                  <span class="hidden sm:inline">Open Panel</span>
                 </Button>
               </div>
             </div>
-            <div class="divide-y divide-border overflow-y-auto h-[calc(100vh-300px)] bg-gray-100">
-              <div
-                v-for="document in filteredDocuments"
-                :key="document.fileName"
-                class="py-3 flex items-center justify-between cursor-pointer ml-4"
-                @click="selectDocument(document)"
-              >
-                <div class="flex items-center">
-                  <Icon :name="`mdi:file-${document.fileType.toLowerCase() === 'presentation' ? 'powerpoint' : document.fileType.toLowerCase() === 'spreadsheet' ? 'excel' : document.fileType.toLowerCase()}`" class="h-6 w-6 mr-2" />
-                  <div>
-                    <p class="font-medium">{{ document.fileName }}</p>
-                    <p class="text-sm text-muted-foreground">{{ document.fileSize }} - {{ document.fileType }}</p>
+            
+            <!-- Column Headers (like Windows Explorer) -->
+            <div class="bg-gray-50 border-b flex text-xs font-medium text-gray-600 py-2">
+              <div class="w-3/5 px-4 truncate">Nama</div>
+              <div class="w-1/5 px-2 truncate">Jenis</div>
+              <div class="w-1/5 px-2 truncate">Saiz</div>
+            </div>
+            
+            <!-- File List -->
+            <div class="flex-1 overflow-y-auto bg-white">
+              <div v-if="filteredDocuments.length === 0 && searchQuery" class="py-8 text-center text-gray-500">
+                <Icon name="mdi:magnify-off" class="h-12 w-12 mx-auto mb-2" />
+                <p class="px-4">No documents found for search "{{ searchQuery }}".</p>
+              </div>
+              <div v-else-if="filteredDocuments.length === 0" class="py-8 text-center text-gray-500">
+                <Icon name="mdi:folder-open-outline" class="h-12 w-12 mx-auto mb-2" />
+                <p class="px-4">No documents found. Please select a category from the left menu.</p>
+              </div>
+              
+              <!-- List View -->
+              <template v-if="viewType === 'list'">
+                <div
+                  v-for="document in filteredDocuments"
+                  :key="document.id"
+                  class="flex items-center border-b hover:bg-blue-50 cursor-pointer"
+                  :class="{'bg-blue-100': selectedDocument && selectedDocument.fileName === document.fileName}"
+                  @click="selectDocument(document)"
+                >
+                  <div class="w-3/5 px-4 py-2 flex items-center">
+                    <Icon 
+                      :name="`mdi:file-${document.fileType.toLowerCase() === 'presentation' ? 'powerpoint' : 
+                             document.fileType.toLowerCase() === 'spreadsheet' ? 'excel' : 
+                             document.fileType.toLowerCase() === 'word' ? 'word' : 
+                             document.fileType.toLowerCase()}`" 
+                      class="h-5 w-5 mr-2 text-blue-600 flex-shrink-0" 
+                    />
+                    <span class="truncate">{{ document.fileName }}</span>
+                    <Badge 
+                      v-if="document.isPublic" 
+                      variant="success" 
+                      class="ml-2"
+                    >
+                      Public
+                    </Badge>
+                    <Badge 
+                      v-if="document.isTemplate" 
+                      variant="info" 
+                      class="ml-2"
+                    >
+                      Template
+                    </Badge>
+                  </div>
+                  <div class="w-1/5 px-2 py-2 text-sm text-gray-600 truncate">{{ document.fileType }}</div>
+                  <div class="w-1/5 px-2 py-2 text-sm text-gray-600 truncate">{{ document.fileSize }}</div>
+                </div>
+              </template>
+              
+
+              
+              <!-- Details View -->
+              <template v-else>
+                <div
+                  v-for="document in filteredDocuments"
+                  :key="document.id"
+                  class="border-b hover:bg-blue-50 cursor-pointer p-3"
+                  :class="{'bg-blue-100': selectedDocument && selectedDocument.fileName === document.fileName}"
+                  @click="selectDocument(document)"
+                >
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <Icon :name="`mdi:file-${document.fileType?.toLowerCase() === 'presentation' ? 'powerpoint' : document.fileType?.toLowerCase() === 'spreadsheet' ? 'excel' : document.fileType?.toLowerCase()}`" class="h-8 w-8 mr-3 text-blue-600 flex-shrink-0" />
+                      <div class="min-w-0">
+                        <div class="font-medium truncate">{{ document.fileName }}</div>
+                        <div class="text-sm text-gray-500 truncate">
+                          {{ document.fileType }} • {{ document.fileSize }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <Badge v-if="userAccess[document.id]" variant="success" class="text-xs">Allowed Access</Badge>
+                      <Badge v-if="pendingRequests.includes(document.id)" variant="warning" class="text-xs">Pending Request</Badge>
+                      <Badge v-else variant="destructive" class="text-xs">No Access</Badge>
+                    
+                    </div>
                   </div>
                 </div>
-                <div class="flex items-center space-x-2 mr-2">
-                  <Button @click.stop="viewDocument(document.fileName)" variant="primary" class="text-sm py-1 px-2">
-                    <Icon name="mdi:eye" class="h-6 w-6" />
-                  </Button>
-                  <Button @click.stop="downloadDocument(document.fileName)" variant="primary" class="text-sm py-1 px-2">
-                    <Icon name="mdi:download" class="h-6 w-6" />
-                  </Button>
-                  <Button @click.stop="printDocument(document.fileName)" variant="primary" class="text-sm py-1 px-2">
-                    <Icon name="mdi:printer" class="h-6 w-6" />
-                  </Button>
+              </template>
+            </div>
+          </div>
+          
+          <!-- Right Details Panel -->
+          <div v-if="showDetails && selectedDocument" class="w-1/3 border-l bg-gray-50 overflow-y-auto flex flex-col">
+            <div class="p-4">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-2">
+                  <Icon :name="`mdi:file-${selectedDocument.fileType?.toLowerCase() === 'presentation' ? 'powerpoint' : selectedDocument.fileType?.toLowerCase() === 'spreadsheet' ? 'excel' : selectedDocument.fileType?.toLowerCase()}`" class="h-6 w-6 text-blue-600 flex-shrink-0" />
+                  <h3 class="font-medium truncate">{{ selectedDocument.namaFail }}</h3>
+                </div>
+                <Button variant="ghost" size="sm" @click="toggleDetails" class="p-1">
+                  <Icon name="mdi:close" class="h-4 w-4" />
+                </Button>
+              </div>
+              
+              <div class="space-y-4">
+                <div class="bg-white border rounded-md p-3">
+                  <h4 class="text-sm font-medium mb-2">Document Information</h4>
+                  <div class="grid grid-cols-1 gap-2 text-sm">
+                    <div class="flex">
+                      <div class="w-1/3 text-gray-600 truncate">Title:</div>
+                      <div class="w-2/3 truncate">{{ selectedDocument.tajuk }}</div>
+                    </div>
+                    <div class="flex">
+                      <div class="w-1/3 text-gray-600 truncate">Subject:</div>
+                      <div class="w-2/3 truncate">{{ selectedDocument.perkara }}</div>
+                    </div>
+                    <div class="flex">
+                      <div class="w-1/3 text-gray-600 truncate">State:</div>
+                      <div class="w-2/3 truncate">{{ selectedDocument.negeri }}</div>
+                    </div>
+                    <div class="flex">
+                      <div class="w-1/3 text-gray-600 truncate">Date:</div>
+                      <div class="w-2/3 truncate">{{ selectedDocument.tarikh }}</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="bg-white border rounded-md p-3">
+                  <h4 class="text-sm font-medium mb-2">Document Details</h4>
+                  <div class="grid grid-cols-1 gap-2 text-sm">
+                    <div class="flex">
+                      <div class="w-1/3 text-gray-600 truncate">File Name:</div>
+                      <div class="w-2/3 truncate">{{ selectedDocument.namaFail }}</div>
+                    </div>
+                    <div class="flex">
+                      <div class="w-1/3 text-gray-600 truncate">User:</div>
+                      <div class="w-2/3 truncate">{{ selectedDocument.user }}</div>
+                    </div>
+                    <div class="flex">
+                      <div class="w-1/3 text-gray-600 truncate">Store Date:</div>
+                      <div class="w-2/3 truncate">{{ selectedDocument.storeDate }}</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="bg-white border rounded-md p-3">
+                  <h4 class="text-sm font-medium mb-2">Full Text</h4>
+                  <div class="text-sm bg-gray-50 p-2 rounded border max-h-32 overflow-y-auto">
+                    {{ selectedDocument.fulltext }}
+                  </div>
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+            
+            <div class="p-4 border-t bg-gray-100">
+              <div class="flex justify-center space-x-2">
+                <Button variant="outline" size="sm" @click="viewDocument(selectedDocument.namaFail)">
+                  <Icon name="mdi:eye" class="h-4 w-4 mr-1" />
+                  <span class="truncate">View</span>
+                </Button>
+                <Button variant="outline" size="sm" @click="downloadDocument(selectedDocument.namaFail)">
+                  <Icon name="mdi:download" class="h-4 w-4 mr-1" />
+                  <span class="truncate">Download</span>
+                </Button>
+                <Button variant="outline" size="sm" @click="printDocument(selectedDocument.namaFail)">
+                  <Icon name="mdi:printer" class="h-4 w-4 mr-1" />
+                  <span class="truncate">Print</span>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <Modal v-model:open="isOpen" size="5xl" class="h-[calc(100vh-100px)]">
+  <!-- Document Viewer Modal -->
+  <Modal v-model:open="isOpen" size="3xl" class="h-[calc(100vh-400px)]">
     <ModalHeader>
       <div class="flex justify-between items-center w-full">
         <div>
-          <ModalTitle>Lihat Dokumen</ModalTitle>
+          <ModalTitle class="truncate">{{ selectedDocument?.namaFail || 'View Document' }}</ModalTitle>
         </div>
-        <Button variant="ghost" @click="closeModal">
-          <Icon name="mdi:close" class="h-6 w-6" />
-        </Button>
+        <div class="flex items-center space-x-2">
+          <Button variant="outline" @click="downloadDocument(selectedDocument?.namaFail)">
+            <Icon name="mdi:download" class="h-5 w-5 mr-1" />
+            <span class="truncate">Download</span>
+          </Button>
+          <Button variant="outline" @click="printDocument(selectedDocument?.namaFail)">
+            <Icon name="mdi:printer" class="h-5 w-5 mr-1" />
+            <span class="truncate">Print</span>
+          </Button>
+          <Button variant="ghost" @click="closeModal">
+            <Icon name="mdi:close" class="h-6 w-6" />
+          </Button>
+        </div>
       </div>
     </ModalHeader>
     <ModalBody>
       <div class="grid grid-cols-10 gap-4 h-full">
-        <div class="col-span-3">
-          <FormKit type="text" name="tajuk" label="Tajuk" :value="selectedDocument.value?.tajuk || 'Laporan Kewangan Pembinaan Cawangan Tebedu 2024'" disabled />
-          <FormKit type="text" name="perkara" label="Perkara" :value="selectedDocument.value?.perkara || 'Laporan melibatkan perbelanjaan pembinaan pejabat kewangan cawangan tebedu bagi tahun 2024'" disabled />
-          <FormKit type="text" name="negeri" label="Negeri" :value="selectedDocument.value?.negeri || 'Sarawak'" disabled />
-          <FormKit type="date" name="tarikh" label="Tarikh" :value="selectedDocument.value?.tarikh || '2023-01-01'" disabled />
-          <FormKit type="text" name="namaFail" label="Nama Fail" :value="selectedDocument.value?.namaFail || 'Dummy_Nama_Fail.pdf'" disabled />
-          <FormKit type="text" name="user" label="Pengguna" :value="selectedDocument.value?.user || 'Said Abdullah'" disabled />
-          <FormKit type="textarea" name="fulltext" label="Teks Penuh" :value="selectedDocument.value?.fulltext || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'" disabled />
-          <FormKit type="date" name="tarikhSimpan" label="Tarikh Simpan" :value="selectedDocument.value?.storeDate || '2023-01-10'" disabled />
+        <div class="col-span-3 overflow-y-auto">
+          <div class="bg-gray-50 p-3 rounded-md mb-3">
+            <h3 class="font-semibold mb-2">Document Information</h3>
+            <FormKit type="text" name="tajuk" label="Tajuk" :value="selectedDocument?.tajuk" disabled />
+            <FormKit type="text" name="perkara" label="Perkara" :value="selectedDocument?.perkara" disabled />
+            <FormKit type="text" name="negeri" label="Negeri" :value="selectedDocument?.negeri" disabled />
+            <FormKit type="date" name="tarikh" label="Tarikh" :value="selectedDocument?.tarikh" disabled />
+            <FormKit type="text" name="namaFail" label="Nama Fail" :value="selectedDocument?.namaFail" disabled />
+            <FormKit type="text" name="user" label="Pengguna" :value="selectedDocument?.user" disabled />
+            
+            <!-- Add badges for public/template documents -->
+            <div class="mt-2 flex gap-2">
+              <Badge v-if="selectedDocument?.isPublic" variant="success">Public Document</Badge>
+              <Badge v-if="selectedDocument?.isTemplate" variant="info">Template</Badge>
+            </div>
+          </div>
+          
+          <div class="bg-gray-50 p-3 rounded-md">
+            <h3 class="font-semibold mb-2">Full Text</h3>
+            <FormKit type="textarea" name="fulltext" :value="selectedDocument?.fulltext" disabled />
+            <FormKit type="date" name="tarikhSimpan" label="Tarikh Simpan" :value="selectedDocument?.storeDate" disabled />
+          </div>
         </div>
         <div class="col-span-7">
-          <iframe :src="googleDocsViewerUrl" width="100%" class="h-full"></iframe>
+          <iframe 
+            :src="selectedDocument?.viewerUrl || googleDocsViewerUrl" 
+            width="100%" 
+            class="h-full border rounded-md"
+          ></iframe>
         </div>
       </div>
     </ModalBody>
   </Modal>
 </template>
+
+<style scoped>
+.tree-item {
+  transition: all 0.2s;
+}
+</style>

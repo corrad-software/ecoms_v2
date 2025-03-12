@@ -13,7 +13,7 @@
       WebViewer(
         {
           path: "/webviewer/lib", // WebViewer assets
-          licenseKey: "demo:1740318341938:61717c38030000000054ee29517d60d7b885313c0834a68bc7fc385a29",
+          licenseKey: "demo:1741050364197:614a2141030000000080772b27d2263ea9e59f4e777868bbdfb442ce4e",
           initialDoc: "/assets/pdf/Resume.pdf", // Local PDF file
         },
         this.$refs.viewer

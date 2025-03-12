@@ -20,7 +20,7 @@ onMounted(async () => {
     {
       path: '/pdftron',
       initialDoc: '/pdf/ACFrOgDnI38nHOu8yjKkBZpA5lIJ_ImGLXx67w0Ju7nVj_SGznwL7VX6MWNCJuJs7PzNwjdyoXE4_VzpZTYv0PyGE678nP4HCLGuCl35awoknybqVSrcBVcmbcPvVyBSY4Mr7DvEbrN4nRs9Wwt9.pdf',
-      licenseKey: 'demo:1740318341938:61717c38030000000054ee29517d60d7b885313c0834a68bc7fc385a29',
+      licenseKey: 'demo:1741050364197:614a2141030000000080772b27d2263ea9e59f4e777868bbdfb442ce4e',
       enableFilePicker: true,
       fullAPI: false,
       enableRedaction: true, // Enable redaction tools

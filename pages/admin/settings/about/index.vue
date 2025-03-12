@@ -1,10 +1,9 @@
 <script setup>
 definePageMeta({
   layout: "admin",
-  title: "Drawer Management",
+  title: "About System",
 });
 
-const layoutStore = useLayoutStore();
 const { getAdminNavigation } = useNavigation();
 
 // Get settings navigation items
@@ -20,6 +19,76 @@ const settingsNavigation = computed(() => {
 // Set active state for current route
 const route = useRoute();
 const isActiveRoute = (path) => route.path === path;
+
+// System information
+const systemInfo = {
+  name: "JKR ECOMS v2.0",
+  version: "1.0.0",
+  releaseDate: "March 06, 2025",
+  lastUpdated: "March 06, 2025",
+  developer: "Datascience Sdn Bhd",
+  supportEmail: "support@datascience.com.my",
+  supportPhone: "+60 3-1234 5678"
+};
+
+
+// System requirements
+const systemRequirements = {
+  browser: ["Chrome 88+", "Firefox 85+", "Safari 14+", "Edge 88+"],
+  resolution: "Minimum 1366 x 768",
+  internet: "Broadband connection (minimum 1Mbps)",
+  devices: "Desktop, Laptop, Tablet, Mobile Phone"
+};
+
+// Release notes
+const releaseNotes = [
+  {
+    version: "1.0.0",
+    date: "January 15, 2023",
+    notes: [
+      "Initial system release",
+      "Core claiming functionality",
+      "User management and access control",
+      "Basic reporting features"
+    ]
+  },
+  {
+    version: "1.0.1",
+    date: "March 22, 2023",
+    notes: [
+      "Bug fixes for approval workflow",
+      "Improved document upload performance",
+      "Enhanced search functionality"
+    ]
+  },
+  {
+    version: "1.0.2",
+    date: "June 10, 2023",
+    notes: [
+      "Added export to Excel feature",
+      "Implemented batch processing for claims",
+      "UI/UX improvements for mobile devices",
+      "Performance optimizations"
+    ]
+  }
+];
+
+// Contact information
+const contactInfo = {
+  support: {
+    email: "support@datascience.com.my",
+    phone: "+60 3-1234 5678",
+    hours: "Monday to Friday, 9:00 AM - 5:00 PM MYT"
+  },
+  office: {
+    address: "Level 15, Menara JKR, Jalan Sultan Ismail, 50250 Kuala Lumpur, Malaysia",
+    phone: "+60 3-8765 4321",
+    fax: "+60 3-8765 4322"
+  }
+};
+
+// Active tab
+const activeTab = ref("about");
 
 // Font options
 const fonts = [
@@ -74,7 +143,30 @@ const layoutOptions = [
   },
 ];
 
+const directionOptions = [
+  {
+    id: "ltr",
+    title: "Left to Right (LTR)",
+    description: "Default layout direction",
+    icon: "mdi:format-horizontal-align-left",
+  },
+  {
+    id: "rtl",
+    title: "Right to Left (RTL)",
+    description: "For RTL languages support",
+    icon: "mdi:format-horizontal-align-right",
+  },
+];
 
+const handleLayoutChange = (layoutId) => {
+  if (layoutStore.sidebarLayout !== layoutId) {
+    layoutStore.toggleSidebarLayout();
+  }
+};
+
+const handleDirectionChange = () => {
+  layoutStore.toggleDirection();
+};
 
 const drawers = ref([
   { id: 1, name: "JKR Bahagian Kewangan Cawangan Batu Kawan", role: "Owner", accessType: ["view", "edit", "download", "upload", "print", "delete"] },
@@ -226,8 +318,6 @@ const filteredCabinetDrawers = computed(() => {
   return cabinet ? drawers.value.filter(drawer => cabinet.drawers.includes(drawer.id)) : [];
 });
 
-const activeTab = ref("cabinet");
-
 const newDrawer = ref({ id: null, name: "", accessType: [] });
 
 const showAddDrawerModal = ref(false);
@@ -256,9 +346,9 @@ const addDrawer = () => {
 <template>
   <div>
     <div class="mb-6">
-      <h1 class="text-2xl font-semibold">General Settings</h1>
+      <h1 class="text-2xl font-semibold">About System</h1>
       <p class="text-gray-600">
-        Manage settings for multiple level of hiearchial structure.
+        Information about the JKR Claims Management System, features, and support
       </p>
     </div>
 
@@ -266,103 +356,182 @@ const addDrawer = () => {
 
       <!-- Settings Content -->
       <div class="flex-1">
-        <!-- Combined Settings Card -->
+        <!-- About System Card -->
         <Card>
           <CardHeader>
-            <CardTitle>Cabinet Management</CardTitle>
-            <CardDescription>Manage cabinets and assign drawers</CardDescription>
+            <CardTitle>{{ systemInfo.name }}</CardTitle>
+            <CardDescription>Version {{ systemInfo.version }} - Last Updated: {{ systemInfo.lastUpdated }}</CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs v-model="activeTab">
               <TabsList>
-                <TabsTrigger value="cabinet">Cabinet</TabsTrigger>
-                <TabsTrigger value="manageDrawers">Access Control</TabsTrigger>
+                <TabsTrigger value="about">About</TabsTrigger>
+                <TabsTrigger value="requirements">Requirements</TabsTrigger>
+                <TabsTrigger value="releaseNotes">Release Notes</TabsTrigger>
+                <TabsTrigger value="contact">Contact</TabsTrigger>
               </TabsList>
-              <TabsContent value="cabinet">
-                <div class="space-y-8 mt-4">
-                  <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-lg font-medium">Cabinets</h3>
-                    <div class="flex space-x-2">
-                      <Button @click="openAddCabinetModal" class="inline-flex items-center px-2 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2">
-                        <Icon name="mdi:plus"></Icon>
-                      </Button>
-                      <Button @click="toggleDeleteButtons" class="inline-flex items-center px-2 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2">
-                        <Icon name="mdi:minus"></Icon>
-                      </Button>
+              
+              <!-- About Tab -->
+              <TabsContent value="about">
+                <div class="space-y-6 mt-4">
+                  <div class="flex flex-col md:flex-row gap-6 items-center">
+                    <div class="md:w-1/3 flex justify-center">
+                      <img src="\assets\image\jkr_logo.png" alt="JKR Logo" class="h-48 object-contain" />
+                    </div>
+                    <div class="md:w-2/3">
+                      <h3 class="text-xl font-medium mb-3">JKR Claims Management System</h3>
+                      <p class="text-gray-700 mb-4">
+                        The JKR Claims Management System is a comprehensive solution designed specifically for Jabatan Kerja Raya Malaysia to streamline and automate the claims processing workflow across all departments and branches nationwide.
+                      </p>
+                      <p class="text-gray-700 mb-4">
+                        This system enables efficient management of financial claims, approval processes, and document handling while maintaining strict access controls and audit trails for compliance and transparency.
+                      </p>
+                      <div class="grid grid-cols-2 gap-4 mt-6">
+                        <div>
+                          <p class="text-sm text-gray-500">Developed by</p>
+                          <p class="font-medium">{{ systemInfo.developer }}</p>
+                        </div>
+                        <div>
+                          <p class="text-sm text-gray-500">Initial Release</p>
+                          <p class="font-medium">{{ systemInfo.releaseDate }}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-
-                  <div class="overflow-y-auto max-h-96">
-                    <table class="min-w-full divide-y divide-gray-200">
-                      <thead class="bg-gray-50">
-                        <tr>
-                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cabinet Name</th>
-                          <th scope="col" class="relative px-6 py-3">
-                            <span class="sr-only"><Icon name="mdi:delete"></Icon></span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-for="(cabinet, index) in cabinets" :key="index">
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ cabinet.name }}</td>
-                          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <Button v-if="showDeleteButtons" @click="confirmDeleteCabinet(index, cabinet.name)" variant="danger">
-                              <Icon name="mdi:trash-can"></Icon>
-                            </Button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                </div>
+              </TabsContent>            
+           <!-- Requirements Tab -->
+              <TabsContent value="requirements">
+                <div class="space-y-6 mt-4">
+                  <div class="bg-muted/50 rounded-lg p-6">
+                    <h3 class="text-lg font-medium mb-4">System Requirements</h3>
+                    
+                    <div class="space-y-4">
+                      <div>
+                        <h4 class="font-medium flex items-center gap-2">
+                          <Icon name="mdi:web" class="w-5 h-5" />
+                          Supported Browsers
+                        </h4>
+                        <ul class="mt-2 ml-6 list-disc text-gray-700">
+                          <li v-for="(browser, index) in systemRequirements.browser" :key="index">
+                            {{ browser }}
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      <div>
+                        <h4 class="font-medium flex items-center gap-2">
+                          <Icon name="mdi:monitor" class="w-5 h-5" />
+                          Display Resolution
+                        </h4>
+                        <p class="mt-2 ml-6 text-gray-700">{{ systemRequirements.resolution }}</p>
+                      </div>
+                      
+                      <div>
+                        <h4 class="font-medium flex items-center gap-2">
+                          <Icon name="mdi:wifi" class="w-5 h-5" />
+                          Internet Connection
+                        </h4>
+                        <p class="mt-2 ml-6 text-gray-700">{{ systemRequirements.internet }}</p>
+                      </div>
+                      
+                      <div>
+                        <h4 class="font-medium flex items-center gap-2">
+                          <Icon name="mdi:devices" class="w-5 h-5" />
+                          Compatible Devices
+                        </h4>
+                        <p class="mt-2 ml-6 text-gray-700">{{ systemRequirements.devices }}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </TabsContent>
-              <TabsContent value="manageDrawers">
-                <div class="space-y-8">
-                  <div>
-                    <label for="cabinet" class="block text-sm font-medium text-gray-700">Select Cabinet</label>
-                    <select id="cabinet" v-model="selectedCabinet" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                      <option disabled value="">Select a cabinet</option>
-                      <option v-for="cabinet in cabinets" :key="cabinet.id" :value="cabinet.id">{{ cabinet.name }}</option>
-                    </select>
-                  </div>
-
-                  <!-- Drawers Table for Selected Cabinet -->
-                  <div v-if="selectedCabinet">
+              
+              <!-- Release Notes Tab -->
+              <TabsContent value="releaseNotes">
+                <div class="space-y-6 mt-4">
+                  <div v-for="(release, index) in releaseNotes" :key="index" class="border-b pb-4 last:border-b-0">
                     <div class="flex justify-between items-center mb-2">
-                      <h3 class="text-lg font-medium">Drawers in Cabinet</h3>
-                      <div class="flex gap-x-1">
-                        <Button @click="openAddDrawerModal" class="inline-flex items-center px-2 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2">
-                          <Icon name="mdi:plus"></Icon>
-                        </Button>
-                        <Button @click="toggleDeleteButtons" class="inline-flex items-center px-2 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white  focus:outline-none focus:ring-2 focus:ring-offset-2"><Icon name="mdi:minus"></Icon></Button>
+                      <h3 class="font-medium">Version {{ release.version }}</h3>
+                      <span class="text-sm text-gray-500">{{ release.date }}</span>
+                    </div>
+                    <ul class="ml-6 list-disc text-gray-700">
+                      <li v-for="(note, noteIndex) in release.notes" :key="noteIndex" class="mt-1">
+                        {{ note }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </TabsContent>
+              
+              <!-- Contact Tab -->
+              <TabsContent value="contact">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                  <div class="border rounded-lg p-6">
+                    <h3 class="text-lg font-medium mb-4 flex items-center gap-2">
+                      <Icon name="mdi:headset" class="w-5 h-5" />
+                      Technical Support
+                    </h3>
+                    <div class="space-y-3">
+                      <div class="flex items-start gap-3">
+                        <Icon name="mdi:email" class="w-5 h-5 mt-0.5 text-gray-600" />
+                        <div>
+                          <p class="text-sm text-gray-500">Email</p>
+                          <p>{{ contactInfo.support.email }}</p>
+                        </div>
+                      </div>
+                      <div class="flex items-start gap-3">
+                        <Icon name="mdi:phone" class="w-5 h-5 mt-0.5 text-gray-600" />
+                        <div>
+                          <p class="text-sm text-gray-500">Phone</p>
+                          <p>{{ contactInfo.support.phone }}</p>
+                        </div>
+                      </div>
+                      <div class="flex items-start gap-3">
+                        <Icon name="mdi:clock" class="w-5 h-5 mt-0.5 text-gray-600" />
+                        <div>
+                          <p class="text-sm text-gray-500">Support Hours</p>
+                          <p>{{ contactInfo.support.hours }}</p>
+                        </div>
                       </div>
                     </div>
-                    <table class="min-w-full divide-y divide-gray-200">
-                      <thead class="bg-gray-50">
-                        <tr>
-                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Drawer Name</th>
-                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Access Type</th>
-                          <th scope="col" class="relative px-6 py-3">
-                            <span class="sr-only"><Icon name ="mdi:delete"></Icon></span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-for="(drawer, index) in filteredCabinetDrawers" :key="index">
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ drawer.name }}</td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ drawer.accessType.join(', ') }}</td>
-                          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <Button v-if="showDeleteButtons" @click="confirmDeleteUser(drawer.username)" variant="danger"><Icon name="mdi:trash-can"></Icon></Button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                  </div>
+                  
+                  <div class="border rounded-lg p-6">
+                    <h3 class="text-lg font-medium mb-4 flex items-center gap-2">
+                      <Icon name="mdi:office-building" class="w-5 h-5" />
+                      Office Information
+                    </h3>
+                    <div class="space-y-3">
+                      <div class="flex items-start gap-3">
+                        <Icon name="mdi:map-marker" class="w-5 h-5 mt-0.5 text-gray-600" />
+                        <div>
+                          <p class="text-sm text-gray-500">Address</p>
+                          <p>{{ contactInfo.office.address }}</p>
+                        </div>
+                      </div>
+                      <div class="flex items-start gap-3">
+                        <Icon name="mdi:phone" class="w-5 h-5 mt-0.5 text-gray-600" />
+                        <div>
+                          <p class="text-sm text-gray-500">Phone</p>
+                          <p>{{ contactInfo.office.phone }}</p>
+                        </div>
+                      </div>
+                      <div class="flex items-start gap-3">
+                        <Icon name="mdi:fax" class="w-5 h-5 mt-0.5 text-gray-600" />
+                        <div>
+                          <p class="text-sm text-gray-500">Fax</p>
+                          <p>{{ contactInfo.office.fax }}</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </TabsContent>
             </Tabs>
           </CardContent>
-          <CardFooter>
+          <CardFooter class="flex justify-between">
+            <p class="text-sm text-gray-500">© 2023 JKR Claims Management System. All rights reserved.</p>
           </CardFooter>
         </Card>
       </div>

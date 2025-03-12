@@ -241,24 +241,6 @@ const activeTab = ref("group");
     </div>
 
     <div class="flex flex-col lg:flex-row gap-8">
-      <!-- Settings Sidebar -->
-      <div class="lg:w-56">
-        <nav class="flex flex-col space-y-1">
-          <NuxtLink
-            v-for="item in settingsNavigation"
-            :key="item.name"
-            :to="item.path"
-            class="flex items-center gap-3 px-3 py-2 rounded-md transition-colors relative"
-            :class="[isActiveRoute(item.path) ? 'bg-accent text-foreground font-medium' : 'text-muted-foreground hover:text-foreground hover:bg-accent/50']"
-          >
-            <div class="flex items-center gap-3 flex-1">
-              <Icon :name="item.icon" class="w-4 h-4" />
-              {{ item.name }}
-            </div>
-          </NuxtLink>
-        </nav>
-      </div>
-
       <!-- Settings Content -->
       <div class="flex-1">
         <!-- Combined Settings Card -->

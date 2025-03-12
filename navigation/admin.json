@@ -5,11 +5,11 @@
       "title": "SUPER ADMINISTRATOR",
       "items": [
         {
-          "name": "Repositori",
+          "name": "Cabinet",
           "icon": "mdi:source-repository", 
           "children": [
             {
-              "name": "Carian Dokumen",
+              "name": "Find Document",
               "path": "/repository/document-explorer"
             },
             {
@@ -23,21 +23,25 @@
           "icon": "material-symbols:approval-delegation-rounded", 
           "children": [
             {
-              "name": "Permohonan PAP",
+              "name": "PAP Catalogue",
+              "path": "/repository/approval/catalogue"
+            },
+            {
+              "name": "PAP Application",
               "path": "/repository/approval/borang-permohonan"
             },
             {
-              "name": "Senarai Permohonan",
+              "name": "List of Applications",
               "path": "/repository/approval/senarai-permohonan"
             },
             {
-              "name": "Senarai Pengesahan",
+              "name": "List of Confirmations",
               "path": "/repository/approval/senarai-pengesahan"
             }
           ]
         },
         {
-          "name": "Laporan",
+          "name": "Reports",
           "icon": "material-symbols:file-copy-rounded", 
           "path":  "/repository/report"
         }
@@ -52,14 +56,14 @@
           "icon": "uis:lock-access",
           "children": [
             {
-              "name": "Archive Rooms",
-              "path": "/admin/settings/access-control/archive-rooms",
-              "icon": "mdi:archive-edit"
-            },
-            {
               "name": "Cabinet",
               "path": "/admin/settings/access-control/cabinet",
               "icon": "mdi:file-cabinet"
+            },
+            {
+              "name": "Drawer",
+              "path": "/admin/settings/access-control/drawer",
+              "icon": "material-symbols:bottom-drawer-outline"
             },
             {
               "name": "Group Management",
@@ -67,8 +71,14 @@
               "icon": "material-symbols:groups"
             }
           ]
+        },
+        {
+          "name": "About System",
+          "icon": "material-symbols:info-outline", 
+          "path":  "/admin/settings/about"
         }
       ]
     }
   ]
 }
+

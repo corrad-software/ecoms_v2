@@ -213,10 +213,14 @@ const userAccess = ref({
   6: false,
   7: true,
   8: false,
+  9: false,
+  10: false,
+  11: false,
+  12: false,
 });
 
 // Add pending access requests
-const pendingRequests = ref([2, 6]);
+const pendingRequests = ref([2, 6, 10]);
 
 // Add tree view state
 const expandedNodes = ref({
@@ -337,15 +341,235 @@ const toggleSort = () => {
 };
 
 const documents = ref([
-  { id: 1, name: "Laporan Kewangan 2023", cawangan: 1, unit: 4, project: 7, discipline: 1, fileName: "Laporan_Kewangan_2023.pdf", fileSize: "2MB", fileType: "PDF", daysLeft: 10 },
-  { id: 1, name: "Laporan Kewangan 2023 Copy", cawangan: 1, unit: 4, project: 7, discipline: 1, fileName: "Laporan_Kewangan_2023 Copy.pdf", fileSize: "2MB", fileType: "PDF", daysLeft: 10 },
-  { id: 2, name: "Pelan Projek Jambatan Batu Kawan", cawangan: 2, unit: 1, project: 3, discipline: 2, fileName: "Pelan_Projek_Jambatan_Batu_Kawan.pdf", fileSize: "3MB", fileType: "PDF", daysLeft: 5 },
-  { id: 3, name: "Renovasi Pejabat Kewangan 2022", cawangan: 2, unit: 2, project: 2, discipline: 3, fileName: "Renovasi_Pejabat_Kewangan_2022.pdf", fileSize: "1MB", fileType: "PDF", daysLeft: 15 },
-  { id: 4, name: "Pembangunan Sistem IT 2021", cawangan: 3, unit: 7, project: 13, discipline: 4, fileName: "Pembangunan_Sistem_IT_2021.pdf", fileSize: "4MB", fileType: "PDF", daysLeft: 7 },
-  { id: 5, name: "Projek Jalan Raya Kota Bharu", cawangan: 3, unit: 8, project: 15, discipline: 5, fileName: "Projek_Jalan_Raya_Kota_Bharu.pdf", fileSize: "5MB", fileType: "PDF", daysLeft: 3 },
-  { id: 6, name: "Pelan Pembinaan Hospital Mudah Alih", cawangan: 6, unit: 16, project: 31, discipline: 1, fileName: "Pelan_Pembinaan_Hospital_Mudah_Alih.pdf", fileSize: "6MB", fileType: "PDF", daysLeft: 20 },
-  { id: 7, name: "Pelan Pembinaan Semula Sekolah Usang Bario", cawangan: 6, unit: 16, project: 32, discipline: 2, fileName: "Pelan_Pembinaan_Semula_Sekolah_Usang_Bario.pdf", fileSize: "7MB", fileType: "PDF", daysLeft: 25 },
-  // Add more documents as needed
+  { 
+    id: 1, 
+    name: "Laporan Kewangan 2023", 
+    cawangan: 1, 
+    unit: 4, 
+    project: 7, 
+    discipline: 1, 
+    fileName: "Laporan_Kewangan_2023.pdf", 
+    fileSize: "2MB", 
+    fileType: "PDF", 
+    daysLeft: 10,
+    tajuk: "Laporan Kewangan Tahunan 2023",
+    perkara: "Laporan kewangan tahunan untuk JKR Cawangan Tebedu",
+    negeri: "Sarawak",
+    tarikh: "2023-12-15",
+    user: "Ahmad Razali",
+    storeDate: "2023-12-20",
+    fulltext: "Dokumen ini mengandungi laporan kewangan tahunan JKR Cawangan Tebedu untuk tahun 2023, termasuk perbelanjaan projek, bajet operasi, dan perolehan."
+  },
+  { 
+    id: 2, 
+    name: "Pelan Projek Jambatan Batu Kawan", 
+    cawangan: 2, 
+    unit: 1, 
+    project: 3, 
+    discipline: 2, 
+    fileName: "Pelan_Projek_Jambatan_Batu_Kawan.pdf", 
+    fileSize: "3MB", 
+    fileType: "PDF", 
+    daysLeft: 5,
+    tajuk: "Pelan Pembinaan Jambatan Batu Kawan",
+    perkara: "Pelan teknikal untuk pembinaan jambatan di Batu Kawan",
+    negeri: "Penang",
+    tarikh: "2023-10-05",
+    user: "Ir. Lim Wei Ling",
+    storeDate: "2023-10-10",
+    fulltext: "Pelan teknikal terperinci untuk pembinaan jambatan di Batu Kawan, termasuk lukisan kejuruteraan, spesifikasi bahan, dan jadual pembinaan."
+  },
+  { 
+    id: 3, 
+    name: "Renovasi Pejabat Kewangan 2022", 
+    cawangan: 2, 
+    unit: 2, 
+    project: 2, 
+    discipline: 3, 
+    fileName: "Renovasi_Pejabat_Kewangan_2022.pdf", 
+    fileSize: "1MB", 
+    fileType: "PDF", 
+    daysLeft: 15,
+    tajuk: "Projek Renovasi Pejabat Kewangan Batu Kawan",
+    perkara: "Dokumen projek renovasi pejabat kewangan",
+    negeri: "Penang",
+    tarikh: "2022-08-15",
+    user: "Tan Mei Ling",
+    storeDate: "2022-08-20",
+    fulltext: "Dokumen projek untuk renovasi pejabat kewangan di JKR Batu Kawan, termasuk skop kerja, bajet, dan jadual pelaksanaan."
+  },
+  { 
+    id: 4, 
+    name: "Pembangunan Sistem IT 2021", 
+    cawangan: 3, 
+    unit: 7, 
+    project: 13, 
+    discipline: 4, 
+    fileName: "Pembangunan_Sistem_IT_2021.pdf", 
+    fileSize: "4MB", 
+    fileType: "PDF", 
+    daysLeft: 7,
+    tajuk: "Projek Pembangunan Sistem IT JKR Kota Bharu",
+    perkara: "Dokumen spesifikasi sistem IT baru",
+    negeri: "Kelantan",
+    tarikh: "2021-05-20",
+    user: "Mohd Faizal bin Abdullah",
+    storeDate: "2021-05-25",
+    fulltext: "Spesifikasi teknikal untuk pembangunan sistem IT baru di JKR Kota Bharu, termasuk keperluan sistem, reka bentuk, dan pelan pelaksanaan."
+  },
+  { 
+    id: 5, 
+    name: "Projek Jalan Raya Kota Bharu", 
+    cawangan: 3, 
+    unit: 8, 
+    project: 15, 
+    discipline: 5, 
+    fileName: "Projek_Jalan_Raya_Kota_Bharu.pdf", 
+    fileSize: "5MB", 
+    fileType: "PDF", 
+    daysLeft: 3,
+    tajuk: "Projek Pembinaan Jalan Raya Kota Bharu-Machang",
+    perkara: "Dokumen projek pembinaan jalan raya",
+    negeri: "Kelantan",
+    tarikh: "2023-02-10",
+    user: "Ir. Zulkifli bin Hassan",
+    storeDate: "2023-02-15",
+    fulltext: "Dokumen projek untuk pembinaan jalan raya dari Kota Bharu ke Machang, termasuk pelan jalan, spesifikasi teknikal, dan anggaran kos."
+  },
+  { 
+    id: 6, 
+    name: "Pelan Pembinaan Hospital Mudah Alih", 
+    cawangan: 6, 
+    unit: 16, 
+    project: 31, 
+    discipline: 1, 
+    fileName: "Pelan_Pembinaan_Hospital_Mudah_Alih.pdf", 
+    fileSize: "6MB", 
+    fileType: "PDF", 
+    daysLeft: 20,
+    tajuk: "Pelan Pre-Approved Hospital Mudah Alih",
+    perkara: "Pelan standard untuk hospital mudah alih",
+    negeri: "Federal",
+    tarikh: "2023-01-05",
+    user: "Ar. Nurul Huda binti Kamal",
+    storeDate: "2023-01-10",
+    fulltext: "Pelan pre-approved untuk pembinaan hospital mudah alih yang boleh digunakan di seluruh negara, termasuk lukisan arkitek, struktur, dan M&E."
+  },
+  { 
+    id: 7, 
+    name: "Pelan Pembinaan Semula Sekolah Usang Bario", 
+    cawangan: 6, 
+    unit: 16, 
+    project: 32, 
+    discipline: 2, 
+    fileName: "Pelan_Pembinaan_Semula_Sekolah_Usang_Bario.pdf", 
+    fileSize: "7MB", 
+    fileType: "PDF", 
+    daysLeft: 25,
+    tajuk: "Pelan Pembinaan Semula Sekolah Usang di Bario",
+    perkara: "Pelan pembinaan semula sekolah di kawasan pedalaman",
+    negeri: "Sarawak",
+    tarikh: "2023-03-20",
+    user: "Ar. James Anak Bujang",
+    storeDate: "2023-03-25",
+    fulltext: "Pelan pembinaan semula untuk sekolah usang di Bario, Sarawak, dengan mengambil kira keperluan khusus kawasan pedalaman."
+  },
+  // Documents that require access requests
+  { 
+    id: 8, 
+    name: "Laporan Audit Kewangan JKR 2023", 
+    cawangan: 1, 
+    unit: 4, 
+    project: 7, 
+    discipline: 1, 
+    fileName: "Laporan_Audit_Kewangan_JKR_2023.pdf", 
+    fileSize: "5MB", 
+    fileType: "PDF", 
+    daysLeft: 30,
+    tajuk: "Laporan Audit Kewangan JKR 2023",
+    perkara: "Laporan audit kewangan tahunan JKR",
+    negeri: "Federal",
+    tarikh: "2023-12-30",
+    user: "Jabatan Audit Negara",
+    storeDate: "2024-01-15",
+    fulltext: "Laporan audit kewangan tahunan untuk Jabatan Kerja Raya Malaysia, termasuk penemuan audit, ketidakpatuhan, dan cadangan penambahbaikan."
+  },
+  { 
+    id: 9, 
+    name: "Dokumen Tender Projek Lebuh Raya Pan Borneo", 
+    cawangan: 1, 
+    unit: 5, 
+    project: 9, 
+    discipline: 2, 
+    fileName: "Dokumen_Tender_Lebuh_Raya_Pan_Borneo.pdf", 
+    fileSize: "12MB", 
+    fileType: "PDF", 
+    daysLeft: 45,
+    tajuk: "Dokumen Tender Projek Lebuh Raya Pan Borneo",
+    perkara: "Dokumen tender untuk projek pembinaan lebuh raya",
+    negeri: "Sarawak",
+    tarikh: "2023-11-10",
+    user: "Bahagian Perolehan JKR",
+    storeDate: "2023-11-15",
+    fulltext: "Dokumen tender lengkap untuk projek pembinaan Lebuh Raya Pan Borneo di Sarawak, termasuk spesifikasi teknikal, syarat tender, dan borang tender."
+  },
+  { 
+    id: 10, 
+    name: "Laporan Keselamatan Projek Jambatan Sultan Abdul Halim", 
+    cawangan: 2, 
+    unit: 2, 
+    project: 3, 
+    discipline: 2, 
+    fileName: "Laporan_Keselamatan_Jambatan_Sultan_Abdul_Halim.pdf", 
+    fileSize: "8MB", 
+    fileType: "PDF", 
+    daysLeft: 60,
+    tajuk: "Laporan Keselamatan Projek Jambatan Sultan Abdul Halim",
+    perkara: "Laporan keselamatan struktur jambatan",
+    negeri: "Penang",
+    tarikh: "2023-09-05",
+    user: "Ir. Dr. Wong Chee Keong",
+    storeDate: "2023-09-10",
+    fulltext: "Laporan keselamatan terperinci untuk Jambatan Sultan Abdul Halim (Jambatan Kedua Pulau Pinang), termasuk analisis struktur, pemeriksaan berkala, dan cadangan penyelenggaraan."
+  },
+  { 
+    id: 11, 
+    name: "Anggaran Kos Projek MRT3", 
+    cawangan: 3, 
+    unit: 8, 
+    project: 15, 
+    discipline: 2, 
+    fileName: "Anggaran_Kos_Projek_MRT3.xlsx", 
+    fileSize: "3MB", 
+    fileType: "Excel", 
+    daysLeft: 90,
+    tajuk: "Anggaran Kos Terperinci Projek MRT3",
+    perkara: "Dokumen anggaran kos untuk projek MRT3",
+    negeri: "Federal",
+    tarikh: "2023-10-15",
+    user: "Bahagian Kewangan JKR",
+    storeDate: "2023-10-20",
+    fulltext: "Anggaran kos terperinci untuk projek MRT3, termasuk kos pembinaan, pengambilan tanah, peralatan, dan kontingensi."
+  },
+  { 
+    id: 12, 
+    name: "Laporan Penilaian Impak Alam Sekitar Empangan Nenggiri", 
+    cawangan: 3, 
+    unit: 8, 
+    project: 16, 
+    discipline: 2, 
+    fileName: "EIA_Empangan_Nenggiri.pdf", 
+    fileSize: "15MB", 
+    fileType: "PDF", 
+    daysLeft: 120,
+    tajuk: "Laporan Penilaian Impak Alam Sekitar (EIA) Empangan Nenggiri",
+    perkara: "Laporan EIA untuk projek empangan",
+    negeri: "Kelantan",
+    tarikh: "2023-06-20",
+    user: "Jabatan Alam Sekitar",
+    storeDate: "2023-06-25",
+    fulltext: "Laporan Penilaian Impak Alam Sekitar (EIA) untuk projek pembinaan Empangan Nenggiri di Kelantan, termasuk kesan kepada ekosistem, langkah mitigasi, dan pelan pemantauan."
+  }
 ]);
 
 // Add public documents
@@ -511,6 +735,55 @@ const filteredDocuments = computed(() => {
 
 const selectedDocument = ref(null);
 
+// Add access request state
+const accessRequestModal = ref(false);
+const requestingDocument = ref(null);
+const accessRequestForm = ref({
+  accessType: 'view', // 'view', 'download', 'print', 'all'
+  justification: '',
+  duration: 7, // Default 7 days
+});
+
+// Function to open access request modal
+const openAccessRequestModal = (document) => {
+  requestingDocument.value = document;
+  accessRequestModal.value = true;
+  // Reset form
+  accessRequestForm.value = {
+    accessType: 'view',
+    justification: '',
+    duration: 7
+  };
+};
+
+// Function to submit access request
+const submitAccessRequest = () => {
+  if (!accessRequestForm.value.justification) {
+    alert('Please provide a justification for your request.');
+    return;
+  }
+  
+  // Add to pending requests
+  if (!pendingRequests.value.includes(requestingDocument.value.id)) {
+    pendingRequests.value.push(requestingDocument.value.id);
+    alert(`Access request for document "${requestingDocument.value.name}" has been submitted.`);
+    accessRequestModal.value = false;
+  } else {
+    alert('A request for this document is already pending.');
+  }
+};
+
+// Check if user has access to a document
+const hasDocumentAccess = (documentId) => {
+  return userAccess.value[documentId] === true;
+};
+
+// Check if there's a pending request for a document
+const hasPendingRequest = (documentId) => {
+  return pendingRequests.value.includes(documentId);
+};
+
+// Modify the selectDocument function to handle access control
 const selectDocument = (document) => {
   selectedDocument.value = {
     id: document.id,
@@ -527,6 +800,8 @@ const selectDocument = (document) => {
     fileSize: document.fileSize,
     isPublic: document.isPublic,
     isTemplate: document.isTemplate,
+    hasAccess: document.isPublic || document.isTemplate || hasDocumentAccess(document.id),
+    hasPendingRequest: hasPendingRequest(document.id),
     // Add a default viewer URL for public documents
     viewerUrl: document.isPublic || document.isTemplate ? 
       `https://docs.google.com/viewer?url=${encodeURIComponent(document.fileName)}&embedded=true` : 
@@ -660,6 +935,30 @@ const goToLastVisited = () => {
     selectNode('cawangan', lastVisitedCabinet.value.id);
     expandedNodes.value.cawangan[lastVisitedCabinet.value.id] = true;
   }
+};
+
+// Add a new computed property for cabinet view
+const cabinetsOnly = computed(() => {
+  return cawangan.value.map(branch => ({
+    id: branch.id,
+    name: branch.name,
+    unitCount: branch.units.length,
+    projectCount: branch.units.reduce((total, unit) => total + unit.projects.length, 0),
+    disciplineCount: branch.disciplines.length
+  }));
+});
+
+// Add a view mode state
+const viewMode = ref('explorer'); // 'explorer', 'cabinets', 'list'
+
+// Function to change view mode
+const setViewMode = (mode) => {
+  viewMode.value = mode;
+};
+
+// Function to set view type (existing function)
+const setViewType = (type) => {
+  viewType.value = type;
 };
 </script>
 
@@ -861,13 +1160,32 @@ const goToLastVisited = () => {
                   variant="ghost" 
                   size="sm" 
                   class="text-xs"
-                  :class="{'bg-blue-100': viewType === 'list'}"
-                  @click="setViewType('list')"
+                  :class="{'bg-blue-100': viewMode === 'explorer'}"
+                  @click="setViewMode('explorer')"
+                >
+                  <Icon name="mdi:folder-network" class="h-4 w-4 mr-1" />
+                  <span class="hidden sm:inline">Explorer View</span>
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  class="text-xs"
+                  :class="{'bg-blue-100': viewMode === 'cabinets'}"
+                  @click="setViewMode('cabinets')"
+                >
+                  <Icon name="mdi:view-grid" class="h-4 w-4 mr-1" />
+                  <span class="hidden sm:inline">Cabinets View</span>
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  class="text-xs"
+                  :class="{'bg-blue-100': viewMode === 'list' && viewType === 'list'}"
+                  @click="setViewMode('list'); setViewType('list')"
                 >
                   <Icon name="mdi:view-list" class="h-4 w-4 mr-1" />
                   <span class="hidden sm:inline">List View</span>
                 </Button>
-
               </div>
               <div class="flex items-center space-x-2">
                 <Button @click="toggleSort" variant="ghost" size="sm" class="text-xs">
@@ -894,13 +1212,80 @@ const goToLastVisited = () => {
                 <Icon name="mdi:magnify-off" class="h-12 w-12 mx-auto mb-2" />
                 <p class="px-4">No documents found for search "{{ searchQuery }}".</p>
               </div>
-              <div v-else-if="filteredDocuments.length === 0" class="py-8 text-center text-gray-500">
+              <div v-else-if="filteredDocuments.length === 0 && viewMode !== 'cabinets'" class="py-8 text-center text-gray-500">
                 <Icon name="mdi:folder-open-outline" class="h-12 w-12 mx-auto mb-2" />
                 <p class="px-4">No documents found. Please select a category from the left menu.</p>
               </div>
               
+              <!-- Cabinets View -->
+              <div v-if="viewMode === 'cabinets'" class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Public Cabinet Card -->
+                <div 
+                  class="border rounded-lg shadow-sm hover:shadow-md transition-shadow bg-white overflow-hidden cursor-pointer"
+                  @click="selectNode('cawangan', 'public')"
+                >
+                  <div class="p-4 bg-green-50 border-b flex items-center">
+                    <Icon name="mdi:folder-open" class="h-8 w-8 mr-3 text-green-600" />
+                    <div>
+                      <h3 class="font-medium">Public Cabinet</h3>
+                      <p class="text-sm text-gray-600">
+                        {{ publicCabinet.cabinets.length }} folders, 
+                        {{ publicCabinet.cabinets.reduce((total, cabinet) => total + cabinet.documents.length, 0) }} documents
+                      </p>
+                    </div>
+                  </div>
+                  <div class="p-3 text-sm">
+                    <div class="flex justify-between items-center py-1">
+                      <span>General Documents</span>
+                      <Badge variant="secondary">
+                        {{ publicCabinet.cabinets.find(c => c.id === 'general')?.documents.length || 0 }}
+                      </Badge>
+                    </div>
+                    <div class="flex justify-between items-center py-1">
+                      <span>Templates</span>
+                      <Badge variant="secondary">
+                        {{ publicCabinet.cabinets.find(c => c.id === 'templates')?.documents.length || 0 }}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Branch Cabinets -->
+                <div 
+                  v-for="cabinet in cabinetsOnly" 
+                  :key="`cabinet-card-${cabinet.id}`"
+                  class="border rounded-lg shadow-sm hover:shadow-md transition-shadow bg-white overflow-hidden cursor-pointer"
+                  @click="selectNode('cawangan', cabinet.id)"
+                >
+                  <div class="p-4 bg-yellow-50 border-b flex items-center">
+                    <Icon name="mdi:folder" class="h-8 w-8 mr-3 text-yellow-600" />
+                    <div>
+                      <h3 class="font-medium truncate">{{ cabinet.name }}</h3>
+                      <p class="text-sm text-gray-600">
+                        {{ cabinet.unitCount }} units, 
+                        {{ cabinet.projectCount }} projects
+                      </p>
+                    </div>
+                  </div>
+                  <div class="p-3 text-sm">
+                    <div class="flex justify-between items-center py-1">
+                      <span>Units</span>
+                      <Badge variant="secondary">{{ cabinet.unitCount }}</Badge>
+                    </div>
+                    <div class="flex justify-between items-center py-1">
+                      <span>Projects</span>
+                      <Badge variant="secondary">{{ cabinet.projectCount }}</Badge>
+                    </div>
+                    <div class="flex justify-between items-center py-1">
+                      <span>Disciplines</span>
+                      <Badge variant="secondary">{{ cabinet.disciplineCount }}</Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               <!-- List View -->
-              <template v-if="viewType === 'list'">
+              <template v-else-if="viewMode === 'list' || viewType === 'list'">
                 <div
                   v-for="document in filteredDocuments"
                   :key="document.id"
@@ -936,8 +1321,6 @@ const goToLastVisited = () => {
                   <div class="w-1/5 px-2 py-2 text-sm text-gray-600 truncate">{{ document.fileSize }}</div>
                 </div>
               </template>
-              
-
               
               <!-- Details View -->
               <template v-else>
@@ -1039,14 +1422,16 @@ const goToLastVisited = () => {
                   <Icon name="mdi:eye" class="h-4 w-4 mr-1" />
                   <span class="truncate">View</span>
                 </Button>
-                <Button variant="outline" size="sm" @click="downloadDocument(selectedDocument.namaFail)">
-                  <Icon name="mdi:download" class="h-4 w-4 mr-1" />
-                  <span class="truncate">Download</span>
-                </Button>
-                <Button variant="outline" size="sm" @click="printDocument(selectedDocument.namaFail)">
-                  <Icon name="mdi:printer" class="h-4 w-4 mr-1" />
-                  <span class="truncate">Print</span>
-                </Button>
+                <template v-if="selectedDocument?.hasAccess">
+                  <Button variant="outline" size="sm" @click="downloadDocument(selectedDocument.namaFail)">
+                    <Icon name="mdi:download" class="h-4 w-4 mr-1" />
+                    <span class="truncate">Download</span>
+                  </Button>
+                  <Button variant="outline" size="sm" @click="printDocument(selectedDocument.namaFail)">
+                    <Icon name="mdi:printer" class="h-4 w-4 mr-1" />
+                    <span class="truncate">Print</span>
+                  </Button>
+                </template>
               </div>
             </div>
           </div>
@@ -1056,30 +1441,45 @@ const goToLastVisited = () => {
   </div>
 
   <!-- Document Viewer Modal -->
-  <Modal v-model:open="isOpen" size="3xl" class="h-[calc(100vh-400px)]">
+  <Modal v-model:open="isOpen" size="3xl" class="h-auto">
     <ModalHeader>
       <div class="flex justify-between items-center w-full">
         <div>
           <ModalTitle class="truncate">{{ selectedDocument?.namaFail || 'View Document' }}</ModalTitle>
         </div>
         <div class="flex items-center space-x-2">
-          <Button variant="outline" @click="downloadDocument(selectedDocument?.namaFail)">
-            <Icon name="mdi:download" class="h-5 w-5 mr-1" />
-            <span class="truncate">Download</span>
-          </Button>
-          <Button variant="outline" @click="printDocument(selectedDocument?.namaFail)">
-            <Icon name="mdi:printer" class="h-5 w-5 mr-1" />
-            <span class="truncate">Print</span>
-          </Button>
+          <!-- Show different buttons based on access -->
+          <template v-if="selectedDocument?.hasAccess">
+            <Button variant="outline" @click="downloadDocument(selectedDocument?.namaFail)">
+              <Icon name="mdi:download" class="h-5 w-5 mr-1" />
+              <span class="truncate">Download</span>
+            </Button>
+            <Button variant="outline" @click="printDocument(selectedDocument?.namaFail)">
+              <Icon name="mdi:printer" class="h-5 w-5 mr-1" />
+              <span class="truncate">Print</span>
+            </Button>
+          </template>
+          <template v-else-if="selectedDocument?.hasPendingRequest">
+            <Button variant="outline" disabled>
+              <Icon name="mdi:clock-outline" class="h-5 w-5 mr-1" />
+              <span class="truncate">Request Pending</span>
+            </Button>
+          </template>
+          <template v-else>
+            <Button variant="primary" @click="openAccessRequestModal(selectedDocument)">
+              <Icon name="mdi:key" class="h-5 w-5 mr-1" />
+              <span class="truncate">Request Access</span>
+            </Button>
+          </template>
           <Button variant="ghost" @click="closeModal">
             <Icon name="mdi:close" class="h-6 w-6" />
           </Button>
         </div>
       </div>
     </ModalHeader>
-    <ModalBody>
+    <ModalBody class="max-h-[calc(100vh-12rem)] overflow-hidden">
       <div class="grid grid-cols-10 gap-4 h-full">
-        <div class="col-span-3 overflow-y-auto">
+        <div class="col-span-3 overflow-y-auto max-h-[calc(100vh-14rem)]">
           <div class="bg-gray-50 p-3 rounded-md mb-3">
             <h3 class="font-semibold mb-2">Document Information</h3>
             <FormKit type="text" name="tajuk" label="Tajuk" :value="selectedDocument?.tajuk" disabled />
@@ -1089,10 +1489,12 @@ const goToLastVisited = () => {
             <FormKit type="text" name="namaFail" label="Nama Fail" :value="selectedDocument?.namaFail" disabled />
             <FormKit type="text" name="user" label="Pengguna" :value="selectedDocument?.user" disabled />
             
-            <!-- Add badges for public/template documents -->
+            <!-- Add badges for document status -->
             <div class="mt-2 flex gap-2">
               <Badge v-if="selectedDocument?.isPublic" variant="success">Public Document</Badge>
               <Badge v-if="selectedDocument?.isTemplate" variant="info">Template</Badge>
+              <Badge v-if="!selectedDocument?.hasAccess && !selectedDocument?.hasPendingRequest" variant="destructive">No Access</Badge>
+              <Badge v-if="selectedDocument?.hasPendingRequest" variant="warning">Access Requested</Badge>
             </div>
           </div>
           
@@ -1101,16 +1503,181 @@ const goToLastVisited = () => {
             <FormKit type="textarea" name="fulltext" :value="selectedDocument?.fulltext" disabled />
             <FormKit type="date" name="tarikhSimpan" label="Tarikh Simpan" :value="selectedDocument?.storeDate" disabled />
           </div>
+          
+          <!-- Access Request Section (only shown for documents without access) -->
+          <div v-if="!selectedDocument?.hasAccess && !selectedDocument?.hasPendingRequest" class="bg-yellow-50 border border-yellow-200 p-3 rounded-md mt-3">
+            <h3 class="font-semibold mb-2 flex items-center text-yellow-800">
+              <Icon name="mdi:lock" class="h-5 w-5 mr-1" />
+              Access Restricted
+            </h3>
+            <p class="text-sm text-yellow-700 mb-3">
+              You don't have permission to download or print this document. Please request access by clicking the button below.
+            </p>
+            <Button variant="primary" class="w-full" @click="openAccessRequestModal(selectedDocument)">
+              <Icon name="mdi:key" class="h-5 w-5 mr-1" />
+              Request Access
+            </Button>
+          </div>
+          
+          <!-- Pending Request Section -->
+          <div v-else-if="selectedDocument?.hasPendingRequest" class="bg-blue-50 border border-blue-200 p-3 rounded-md mt-3">
+            <h3 class="font-semibold mb-2 flex items-center text-blue-800">
+              <Icon name="mdi:clock-outline" class="h-5 w-5 mr-1" />
+              Request Pending
+            </h3>
+            <p class="text-sm text-blue-700">
+              Your access request for this document is currently being reviewed. You will be notified once it's approved.
+            </p>
+          </div>
         </div>
         <div class="col-span-7">
-          <iframe 
-            :src="selectedDocument?.viewerUrl || googleDocsViewerUrl" 
-            width="100%" 
-            class="h-full border rounded-md"
-          ></iframe>
+          <!-- Show different content based on access -->
+          <template v-if="selectedDocument?.hasAccess || selectedDocument?.isPublic">
+            <iframe 
+              :src="selectedDocument?.viewerUrl || googleDocsViewerUrl" 
+              width="100%" 
+              class="h-[calc(100vh-14rem)] border rounded-md"
+            ></iframe>
+          </template>
+          <template v-else>
+            <div class="flex flex-col items-center justify-center h-[calc(100vh-14rem)] border rounded-md bg-gray-50">
+              <Icon name="mdi:lock" class="h-16 w-16 text-gray-400 mb-4" />
+              <h3 class="text-lg font-medium text-gray-700 mb-2">Document Preview Restricted</h3>
+              <p class="text-sm text-gray-600 text-center max-w-md mb-4">
+                You need to request access to view, download, or print this document.
+              </p>
+              <Button v-if="!selectedDocument?.hasPendingRequest" variant="primary" @click="openAccessRequestModal(selectedDocument)">
+                Request Access
+              </Button>
+              <Badge v-else variant="warning" class="text-sm py-1 px-3">Request Pending</Badge>
+            </div>
+          </template>
         </div>
       </div>
     </ModalBody>
+  </Modal>
+
+  <!-- Access Request Modal -->
+  <Modal v-model:open="accessRequestModal" size="md">
+    <ModalHeader>
+      <ModalTitle>Request Document Access</ModalTitle>
+    </ModalHeader>
+    <ModalBody>
+      <div v-if="requestingDocument" class="space-y-4">
+        <div class="bg-blue-50 p-3 rounded-md">
+          <h3 class="font-medium text-blue-800 mb-1">Document Information</h3>
+          <p class="text-sm"><span class="font-medium">Title:</span> {{ requestingDocument.tajuk || requestingDocument.name }}</p>
+          <p class="text-sm"><span class="font-medium">File:</span> {{ requestingDocument.fileName }}</p>
+        </div>
+        
+        <div class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium mb-1">Access Type</label>
+            <div class="grid grid-cols-2 gap-2">
+              <div 
+                class="border rounded-md p-2 cursor-pointer flex items-center"
+                :class="{'bg-blue-50 border-blue-500': accessRequestForm.accessType === 'view'}"
+                @click="accessRequestForm.accessType = 'view'"
+              >
+                <input 
+                  type="radio" 
+                  name="accessType" 
+                  value="view" 
+                  v-model="accessRequestForm.accessType"
+                  class="mr-2"
+                />
+                <div>
+                  <div class="font-medium">View Only</div>
+                  <div class="text-xs text-gray-500">Can only view the document</div>
+                </div>
+              </div>
+              <div 
+                class="border rounded-md p-2 cursor-pointer flex items-center"
+                :class="{'bg-blue-50 border-blue-500': accessRequestForm.accessType === 'download'}"
+                @click="accessRequestForm.accessType = 'download'"
+              >
+                <input 
+                  type="radio" 
+                  name="accessType" 
+                  value="download" 
+                  v-model="accessRequestForm.accessType"
+                  class="mr-2"
+                />
+                <div>
+                  <div class="font-medium">Download</div>
+                  <div class="text-xs text-gray-500">Can view and download</div>
+                </div>
+              </div>
+              <div 
+                class="border rounded-md p-2 cursor-pointer flex items-center"
+                :class="{'bg-blue-50 border-blue-500': accessRequestForm.accessType === 'print'}"
+                @click="accessRequestForm.accessType = 'print'"
+              >
+                <input 
+                  type="radio" 
+                  name="accessType" 
+                  value="print" 
+                  v-model="accessRequestForm.accessType"
+                  class="mr-2"
+                />
+                <div>
+                  <div class="font-medium">Print</div>
+                  <div class="text-xs text-gray-500">Can view and print</div>
+                </div>
+              </div>
+              <div 
+                class="border rounded-md p-2 cursor-pointer flex items-center"
+                :class="{'bg-blue-50 border-blue-500': accessRequestForm.accessType === 'all'}"
+                @click="accessRequestForm.accessType = 'all'"
+              >
+                <input 
+                  type="radio" 
+                  name="accessType" 
+                  value="all" 
+                  v-model="accessRequestForm.accessType"
+                  class="mr-2"
+                />
+                <div>
+                  <div class="font-medium">Full Access</div>
+                  <div class="text-xs text-gray-500">View, download and print</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium mb-1">Access Duration</label>
+            <select 
+              v-model="accessRequestForm.duration" 
+              class="w-full border rounded-md p-2"
+            >
+              <option value="1">1 day</option>
+              <option value="7">7 days</option>
+              <option value="30">30 days</option>
+              <option value="90">90 days</option>
+              <option value="365">1 year</option>
+              <option value="-1">Permanent</option>
+            </select>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium mb-1">Justification <span class="text-red-500">*</span></label>
+            <textarea 
+              v-model="accessRequestForm.justification"
+              class="w-full border rounded-md p-2 min-h-[100px]"
+              placeholder="Please explain why you need access to this document..."
+            ></textarea>
+            <p class="text-xs text-gray-500 mt-1">
+              Your request will be reviewed by the document owner or administrator.
+            </p>
+          </div>
+        </div>
+      </div>
+    </ModalBody>
+    <ModalFooter>
+      <Button variant="ghost" @click="accessRequestModal = false">Cancel</Button>
+      <Button variant="primary" @click="submitAccessRequest">Submit Request</Button>
+    </ModalFooter>
   </Modal>
 </template>
 

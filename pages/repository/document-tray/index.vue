@@ -91,10 +91,10 @@ onMounted(async () => {
 
 
 const recentActivity = ref([
-  { fileName: "Document1.pdf", fileSize: "2 MB", fileType: "PDF", daysLeft: 5, metadata: { tajuk: "Tajuk 1", perkara: "Perkara 1", negeri: "Negeri 1", tarikh: "2023-01-01", nama: "John Doe", fulltext: "Fulltext 1", storeDate: "2023-01-10", namaFail: "Document1.pdf", user: "User1" } },
-  { fileName: "Image1.png", fileSize: "1.5 MB", fileType: "Image", daysLeft: 3, metadata: { tajuk: "Tajuk 2", perkara: "Perkara 2", negeri: "Negeri 2", tarikh: "2023-02-01", nama: "Jane Smith", fulltext: "Fulltext 2", storeDate: "2023-02-05", namaFail: "Image1.png", user: "User2" } },
-  { fileName: "Presentation.pptx", fileSize: "5 MB", fileType: "Presentation", daysLeft: 7, metadata: { tajuk: "Tajuk 3", perkara: "Perkara 3", negeri: "Negeri 3", tarikh: "2023-03-01", nama: "Alice Johnson", fulltext: "Fulltext 3", storeDate: "2023-03-15", namaFail: "Presentation.pptx", user: "User3" } },
-  { fileName: "Spreadsheet.xlsx", fileSize: "3 MB", fileType: "Spreadsheet", daysLeft: 2, metadata: { tajuk: "Tajuk 4", perkara: "Perkara 4", negeri: "Negeri 4", tarikh: "2023-04-01", nama: "Bob Brown", fulltext: "Fulltext 4", storeDate: "2023-04-10", namaFail: "Spreadsheet.xlsx", user: "User4" } },
+  { fileName: "Document1.pdf", fileSize: "2 MB", fileType: "PDF", daysLeft: 5, metadata: { title: "Title 1", matter: "Matter 1", state: "State 1", date: "2023-01-01", name: "John Doe", fulltext: "Fulltext 1", storeDate: "2023-01-10", fileName: "Document1.pdf", user: "User1" } },
+  { fileName: "Image1.png", fileSize: "1.5 MB", fileType: "Image", daysLeft: 3, metadata: { title: "Title 2", matter: "Matter 2", state: "State 2", date: "2023-02-01", name: "Jane Smith", fulltext: "Fulltext 2", storeDate: "2023-02-05", fileName: "Image1.png", user: "User2" } },
+  { fileName: "Presentation.pptx", fileSize: "5 MB", fileType: "Presentation", daysLeft: 7, metadata: { title: "Title 3", matter: "Matter 3", state: "State 3", date: "2023-03-01", name: "Alice Johnson", fulltext: "Fulltext 3", storeDate: "2023-03-15", fileName: "Presentation.pptx", user: "User3" } },
+  { fileName: "Spreadsheet.xlsx", fileSize: "3 MB", fileType: "Spreadsheet", daysLeft: 2, metadata: { title: "Title 4", matter: "Matter 4", state: "State 4", date: "2023-04-01", name: "Bob Brown", fulltext: "Fulltext 4", storeDate: "2023-04-10", fileName: "Spreadsheet.xlsx", user: "User4" } },
 ]);
 
 const googleDocsViewerUrl = "https://docs.google.com/viewer?url=https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf&embedded=true";
@@ -132,10 +132,10 @@ const transferToCabinet = (fileName) => {
 };
 
 const buttonTooltips = {
-  toggleView: "Tukar antara paparan grid dan senarai",
-  sortData: "Susun dokumen mengikut nama",
-  addData: "Tambah dokumen baru",
-  transferToCabinet: "Pindahkan ke kabinet"
+  toggleView: "Toggle between grid and list view",
+  sortData: "Sort documents by name",
+  addData: "Add new document",
+  transferToCabinet: "Transfer to cabinet"
 };
 
 const selectedDocument = ref(null);
@@ -161,14 +161,14 @@ const addDocument = () => {
     fileType: "Document", // You can adjust this value as needed
     daysLeft: 10, // You can adjust this value as needed
     metadata: {
-      tajuk: formData.value.tajuk,
-      perkara: formData.value.perkara,
-      negeri: formData.value.negeri,
-      tarikh: format(new Date(formData.value.tarikh), 'dd/MM/yyyy'),
-      nama: formData.value.user,
+      title: formData.value.title,
+      matter: formData.value.matter,
+      state: formData.value.state,
+      date: format(new Date(formData.value.date), 'dd/MM/yyyy'),
+      name: formData.value.user,
       fulltext: formData.value.fulltext,
-      storeDate: format(new Date(formData.value.tarikhSimpan), 'dd/MM/yyyy'),
-      namaFail: formData.value.namaFail,
+      storeDate: format(new Date(formData.value.storeDate), 'dd/MM/yyyy'),
+      fileName: formData.value.fileName,
       user: formData.value.user
     }
   });
@@ -177,14 +177,14 @@ const addDocument = () => {
 
 const formData = ref({
   documentName: '',
-  tajuk: '',
-  perkara: '',
-  negeri: '',
-  tarikh: '',
-  namaFail: '',
+  title: '',
+  matter: '',
+  state: '',
+  date: '',
+  fileName: '',
   user: '',
   fulltext: '',
-  tarikhSimpan: ''
+  storeDate: ''
 });
 
 const statesInMalaysia = [
@@ -192,10 +192,10 @@ const statesInMalaysia = [
 ];
 
 const cabinetActivity = ref([
-  { fileName: "ArchivedDocument1.pdf", fileSize: "2 MB", fileType: "PDF", metadata: { tajuk: "Tajuk A", perkara: "Perkara A", negeri: "Negeri A", tarikh: "2022-01-01", nama: "John Doe", fulltext: "Fulltext A", storeDate: "2022-01-10", namaFail: "ArchivedDocument1.pdf", user: "UserA" } },
-  { fileName: "ArchivedImage1.png", fileSize: "1.5 MB", fileType: "Image", metadata: { tajuk: "Tajuk B", perkara: "Perkara B", negeri: "Negeri B", tarikh: "2022-02-01", nama: "Jane Smith", fulltext: "Fulltext B", storeDate: "2022-02-05", namaFail: "ArchivedImage1.png", user: "UserB" } },
-  { fileName: "ArchivedPresentation.pptx", fileSize: "5 MB", fileType: "Presentation", metadata: { tajuk: "Tajuk C", perkara: "Perkara C", negeri: "Negeri C", tarikh: "2022-03-01", nama: "Alice Johnson", fulltext: "Fulltext C", storeDate: "2022-03-15", namaFail: "ArchivedPresentation.pptx", user: "UserC" } },
-  { fileName: "ArchivedSpreadsheet.xlsx", fileSize: "3 MB", fileType: "Spreadsheet", metadata: { tajuk: "Tajuk D", perkara: "Perkara D", negeri: "Negeri D", tarikh: "2022-04-01", nama: "Bob Brown", fulltext: "Fulltext D", storeDate: "2022-04-10", namaFail: "ArchivedSpreadsheet.xlsx", user: "UserD" } },
+  { fileName: "ArchivedDocument1.pdf", fileSize: "2 MB", fileType: "PDF", metadata: { title: "Title A", matter: "Matter A", state: "State A", date: "2022-01-01", name: "John Doe", fulltext: "Fulltext A", storeDate: "2022-01-10", fileName: "ArchivedDocument1.pdf", user: "UserA" } },
+  { fileName: "ArchivedImage1.png", fileSize: "1.5 MB", fileType: "Image", metadata: { title: "Title B", matter: "Matter B", state: "State B", date: "2022-02-01", name: "Jane Smith", fulltext: "Fulltext B", storeDate: "2022-02-05", fileName: "ArchivedImage1.png", user: "UserB" } },
+  { fileName: "ArchivedPresentation.pptx", fileSize: "5 MB", fileType: "Presentation", metadata: { title: "Title C", matter: "Matter C", state: "State C", date: "2022-03-01", name: "Alice Johnson", fulltext: "Fulltext C", storeDate: "2022-03-15", fileName: "ArchivedPresentation.pptx", user: "UserC" } },
+  { fileName: "ArchivedSpreadsheet.xlsx", fileSize: "3 MB", fileType: "Spreadsheet", metadata: { title: "Title D", matter: "Matter D", state: "State D", date: "2022-04-01", name: "Bob Brown", fulltext: "Fulltext D", storeDate: "2022-04-10", fileName: "ArchivedSpreadsheet.xlsx", user: "UserD" } },
 ]);
 
 const removeFromCabinet = (fileName) => {
@@ -233,7 +233,7 @@ const filteredCabinetActivity = computed(() => {
 
 const totalFiles = computed(() => recentActivity.value.length);
 const filesNeedingAction = computed(() => recentActivity.value.filter(activity => activity.daysLeft <= 5).length);
-const trayClearanceDate = ref('31/12/2023'); // Contoh tarikh, sesuaikan mengikut keperluan
+const trayClearanceDate = ref('31/12/2023'); // Example date, adjust as needed
 
 </script>
 
@@ -246,14 +246,14 @@ const trayClearanceDate = ref('31/12/2023'); // Contoh tarikh, sesuaikan mengiku
           <Card class="flex items-center justify-between p-2">
             <div class="flex items-center space-x-2">
               <Icon name="mdi:file-document-outline" class="h-6 w-6 text-primary" />
-              <p class="text-sm font-semibold">Jumlah Fail Yang Tinggal</p>
+              <p class="text-sm font-semibold">File Left</p>
             </div>
             <p class="text-lg">{{ totalFiles }}</p>
           </Card>
           <Card class="flex items-center justify-between p-2">
             <div class="flex items-center space-x-2">
               <Icon name="mdi:calendar-clock" class="h-6 w-6 text-info" />
-              <p class="text-sm font-semibold">Tarikh Pembersihan Seterusnya</p>
+              <p class="text-sm font-semibold">Next Cleaning Date</p>
             </div>
             <p class="text-lg">{{ trayClearanceDate }}</p>
           </Card>
@@ -270,7 +270,7 @@ const trayClearanceDate = ref('31/12/2023'); // Contoh tarikh, sesuaikan mengiku
                   </Button>
                 </HoverCardTrigger>
                 <HoverCardContent side="right" align="start">
-                  <p class="text-sm">Dokumen yang belum disusun diletakkan di sini.</p>
+                  <p class="text-sm">Documents that have not been organized are placed here.</p>
                 </HoverCardContent>
               </HoverCard>
             </div>
@@ -280,7 +280,7 @@ const trayClearanceDate = ref('31/12/2023'); // Contoh tarikh, sesuaikan mengiku
               <input
                 v-model="searchQuery"
                 type="text"
-                placeholder="Cari..."
+                placeholder="Search..."
                 class="input input-bordered w-full max-w-xs text-sm py-1 px-2"
               />
               <div class="flex space-x-2">
@@ -308,7 +308,7 @@ const trayClearanceDate = ref('31/12/2023'); // Contoh tarikh, sesuaikan mengiku
                   <p class="text-xs text-muted-foreground">{{ activity.fileSize }} - {{ activity.fileType }}</p>
                 </div>
                 <div class="flex items-center space-x-2">
-                  <Badge class="text-xs">{{ activity.daysLeft }} hari lagi</Badge>
+                  <Badge class="text-xs">{{ activity.daysLeft }} days left</Badge>
                   <Button @click.stop="transferToCabinet(activity.fileName)" variant="ghost" class="text-xs py-1 px-2">
                     <Icon name="mdi:folder-move" class="h-4 w-4 text-default" />
                   </Button>
@@ -328,7 +328,7 @@ const trayClearanceDate = ref('31/12/2023'); // Contoh tarikh, sesuaikan mengiku
                   <p class="text-xs text-muted-foreground">{{ activity.fileSize }} - {{ activity.fileType }}</p>
                 </div>
                 <div class="flex items-center space-x-2">
-                  <Badge class="text-xs">{{ activity.daysLeft }} hari lagi</Badge>
+                  <Badge class="text-xs">{{ activity.daysLeft }} days left</Badge>
                   <Button @click.stop="transferToCabinet(activity.fileName)" variant="ghost" class="text-xs py-1 px-2">
                     <Icon name="mdi:folder-move" class="h-4 w-4 text-info" />
                   </Button>
@@ -355,7 +355,7 @@ const trayClearanceDate = ref('31/12/2023'); // Contoh tarikh, sesuaikan mengiku
       <Card class="flex-grow h-full">
         <CardHeader class="flex flex-row justify-between">
           <div class="flex items-center space-x-2">
-            <CardTitle>Kabinet</CardTitle>
+            <CardTitle>Cabinet</CardTitle>
             <HoverCard>
               <HoverCardTrigger>
                 <Button variant="ghost">
@@ -363,7 +363,7 @@ const trayClearanceDate = ref('31/12/2023'); // Contoh tarikh, sesuaikan mengiku
                 </Button>
               </HoverCardTrigger>
               <HoverCardContent side="right" align="start">
-                <p class="text-sm">Dokumen dalam kabinet disimpan di sini.</p>
+                <p class="text-sm">Documents in the cabinet are stored here.</p>
               </HoverCardContent>
             </HoverCard>
           </div>
@@ -371,14 +371,14 @@ const trayClearanceDate = ref('31/12/2023'); // Contoh tarikh, sesuaikan mengiku
         <CardContent>
           <div class="flex flex-col space-y-2 mb-4 overflow-y-auto">
             <select v-model="selectedCabinet" class="select select-bordered w-full max-w-xs text-sm py-1 px-2">
-              <option disabled value="Select a Cabinet">Pilih Kabinet</option>
+              <option disabled value="Select a Cabinet">Select Cabinet</option>
               <option v-for="cabinet in cabinets" :key="cabinet.id" :value="cabinet.name">{{ cabinet.name }}</option>
             </select>
             <div class="flex space-x-2">
               <input
                 v-model="cabinetSearchQuery"
                 type="text"
-                placeholder="Cari..."
+                placeholder="Search..."
                 class="input input-bordered w-full max-w-xs text-sm py-1 px-2"
               />
               <Button @click="sortData" class="btn btn-secondary text-white text-sm py-1 px-2">
@@ -411,37 +411,113 @@ const trayClearanceDate = ref('31/12/2023'); // Contoh tarikh, sesuaikan mengiku
       </Card>
     </div>
   </div>
-  <Modal v-model:open="isOpen" size="5xl" class="h-3/4">
+  <Modal v-model:open="isOpen" size="5xl" class="max-h-[90vh] overflow-hidden">
     <ModalHeader>
       <div class="flex justify-between items-center w-full">
         <div>
-          <ModalTitle>Tambah Dokumen Baru</ModalTitle>
-          <ModalDescription>Isi butiran di bawah untuk menambah dokumen baru.</ModalDescription>
+          <ModalTitle>Add New Document</ModalTitle>
+          <ModalDescription>Fill in the details below to add a new document.</ModalDescription>
         </div>
         <Button variant="ghost" @click="closeModal">
           <Icon name="mdi:close" class="h-6 w-6" />
         </Button>
       </div>
     </ModalHeader>
-    <ModalBody>
-      <div class="grid grid-cols-1 lg:grid-cols-10 gap-4 h-full">
-        <div class="col-span-1 lg:col-span-3">
-            <FormKit type="file" name="documentName" label="Nama Dokumen" validation="required" />
-            <FormKit type="text" name="tajuk" label="Tajuk" validation="required" />
-            <FormKit type="text" name="perkara" label="Perkara" validation="required" />
-            <FormKit type="select" name="negeri" label="Negeri" :options="statesInMalaysia" validation="required" />
-            <FormKit type="date" name="tarikh" label="Tarikh" validation="required" />
-            <FormKit type="text" name="namaFail" label="Nama Fail" validation="required" />
-            <FormKit type="text" name="user" label="Pengguna" validation="required" />
-            <FormKit type="textarea" name="fulltext" label="Teks Penuh" validation="required" />
-            <FormKit type="date" name="tarikhSimpan" label="Tarikh Simpan" validation="required" />
-            <div class="flex justify-end space-x-2 mt-4">
-              <Button variant="outline" @click="closeModal">Batal</Button>
-              <Button @click="addDocument">Tambah Dokumen</Button>
+    <ModalBody class="overflow-y-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
+        <!-- Form Section -->
+        <div class="space-y-4">
+          <div class="grid grid-cols-1 gap-4">
+            <FormKit
+              type="file"
+              name="documentName"
+              label="Document"
+              validation="required"
+              help="Upload your document file"
+            />
+            
+            <div class="grid grid-cols-2 gap-4">
+              <FormKit
+                type="text"
+                name="title"
+                label="Title"
+                validation="required"
+                placeholder="Enter document title"
+              />
+              <FormKit
+                type="text"
+                name="matter"
+                label="Matter"
+                validation="required"
+                placeholder="Enter matter"
+              />
             </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <FormKit
+                type="select"
+                name="state"
+                label="State"
+                :options="statesInMalaysia"
+                validation="required"
+                placeholder="Select state"
+              />
+              <FormKit
+                type="date"
+                name="date"
+                label="Date"
+                validation="required"
+              />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <FormKit
+                type="text"
+                name="fileName"
+                label="File Name"
+                validation="required"
+                placeholder="Enter file name"
+              />
+              <FormKit
+                type="text"
+                name="user"
+                label="User"
+                validation="required"
+                placeholder="Enter user name"
+              />
+            </div>
+
+            <FormKit
+              type="textarea"
+              name="fulltext"
+              label="Full Text"
+              validation="required"
+              placeholder="Enter full text"
+              rows="3"
+            />
+
+            <FormKit
+              type="date"
+              name="storeDate"
+              label="Store Date"
+              validation="required"
+            />
+
+            <div class="flex justify-end space-x-2 mt-4">
+              <Button variant="outline" @click="closeModal">Cancel</Button>
+              <Button @click="addDocument">Add Document</Button>
+            </div>
+          </div>
         </div>
-        <div class="col-span-1 lg:col-span-7">
-          <iframe :src="googleDocsViewerUrl" width="100%" class="h-full min-h-[300px] lg:min-h-[500px]"></iframe>
+
+        <!-- Preview Section -->
+        <div class="h-[600px] border rounded-lg overflow-hidden">
+          <iframe 
+            :src="googleDocsViewerUrl" 
+            width="100%" 
+            height="100%" 
+            class="border-0"
+          ></iframe>
         </div>
       </div>
     </ModalBody>

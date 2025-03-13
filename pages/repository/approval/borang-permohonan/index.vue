@@ -4,7 +4,7 @@ definePageMeta({
   layout: "admin",
 });
 
-const sections = ref(['A. Tajuk Projek', 'B. Butiran Pemohon dan Pengakuan Pemohon']);
+const sections = ref(['A. Project Title', 'B. Applicant Details and Applicant Acknowledgment']);
 const currentSection = ref(0);
 
 const nextSection = () => {
@@ -26,42 +26,42 @@ const submitForm = () => {
 };
 
 const kementerianOptions = [
-  'Kementerian Pendidikan Malaysia',
-  'Kementerian Kesihatan Malaysia',
-  'Kementerian Dalam Negeri',
-  'Kementerian Pertahanan Malaysia',
-  'Kementerian Kewangan Malaysia',
+  'Ministry of Education Malaysia',
+  'Ministry of Health Malaysia',
+  'Ministry of Home Affairs',
+  'Ministry of Defence Malaysia',
+  'Ministry of Finance Malaysia',
   // Add more ministries as needed
 ];
 
 const jenisAksessOptions = [
-  'Lihat Sahaja',
-  'Lihat dan Muat Turun',
+  'View Only',
+  'View and Download',
 ];
 
 const tempohAksessOptions = [
-  'Sehingga 3 Bulan',
-  'Sehingga 6 Bulan',
+  'Up to 3 Months',
+  'Up to 6 Months',
 ];
 
 const syaratPemohonOptions = [
-  'HODT (IP JKR & Negeri)',
+  'HODT (IP JKR & State)',
   'HODT',
-  'Pengarah (IP JKR & Negeri)',
-  'Ketua Bahagian Unit (IP JKR & Negeri)',
-  'Pegawai Kader',
+  'Director (IP JKR & State)',
+  'Head of Unit (IP JKR & State)',
+  'Officer Cadre',
 ];
 
 const jenisKategoriOptions = [
-  'Kategori 1',
-  'Kategori 2',
-  'Kategori 3',
+  'Category 1',
+  'Category 2',
+  'Category 3',
 ];
 
 const kategoriBangunanOptions = [
-  'Bangunan 1',
-  'Bangunan 2',
-  'Bangunan 3',
+  'Building 1',
+  'Building 2',
+  'Building 3',
 ];
 
 const kategoriPAPOptions = [
@@ -71,17 +71,17 @@ const kategoriPAPOptions = [
 ];
 
 const jenisRekaBentukOptions = [
-  'Reka Bentuk 1',
-  'Reka Bentuk 2',
-  'Reka Bentuk 3',
+  'Design 1',
+  'Design 2',
+  'Design 3',
 ];
 
 const disiplinOptions = [
-  'Arkitek',
-  'Elektrik',
-  'Struktur',
-  'Ukur Bahan',
-  'Mekanikal'
+  'Architect',
+  'Electrical',
+  'Structural',
+  'Quantity Surveying',
+  'Mechanical'
 ];
 
 const pemohonData = ref({
@@ -93,7 +93,7 @@ const pemohonData = ref({
 });
 
 const pengakuanText = computed(() => {
-  return `Bahawanya saya ${pemohonData.value.nama} telah mengakui bahawa kami telah mematuhi semua syarat-syarat permohonan yang telah ditetapkan oleh pihak urusetia PAP eCOMs, Cawangan Arkitek, Ibu Pejabat JKR, Malaysia`;
+  return `I, ${pemohonData.value.nama}, acknowledge that I have complied with all the application requirements set by the PAP eCOMs secretariat, Architecture Branch, JKR Headquarters, Malaysia`;
 });
 
 const refreshPage = () => {
@@ -104,7 +104,7 @@ const refreshPage = () => {
 <template>
   <div class="p-6">
     <div class="mb-6">
-      <h1 class="text-2xl font-semibold">Borang Permohonan Pre-Approval Plan</h1>
+      <h1 class="text-2xl font-semibold">Pre-Approval Plan Application Form</h1>
     </div>
 
     <!-- Section Indicator -->
@@ -124,51 +124,51 @@ const refreshPage = () => {
     <Card>
       <CardContent class="p-6">
         <div v-if="currentSection === 0" class="mb-4">
-          <h2 class="text-xl font-semibold my-4">A. Tajuk Projek</h2>
-          <FormKit type="text" label="Tajuk Projek" placeholder="Contoh : CADANGAN MEMBINA KLINIK KESIHATAN DI MUAR, JOHOR" class="w-full mb-4" help="Sila isikan nama projek dengan perkataan yang lengkap" />
-          <FormKit type="file" accept=".pdf" help="Fail perlu dikemukakan dalam format .pdf" validation="required" label="Surat Perlaksanaan" class="w-full mb-4" multiple />
-          <FormKit type="select" label="Kementerian" :options="kementerianOptions" class="w-full mb-4" />
-          <FormKit type="select" label="Syarat Pemohon" :options="syaratPemohonOptions" class="w-full mb-4" />
+          <h2 class="text-xl font-semibold my-4">A. Project Title</h2>
+          <FormKit type="text" label="Project Title" placeholder="Example: PROPOSAL TO BUILD A HEALTH CLINIC IN MUAR, JOHOR" class="w-full mb-4" help="Please enter the project name in full words" />
+          <FormKit type="file" accept=".pdf" help="File needs to be in .pdf format" validation="required" label="Commencement Letter" class="w-full mb-4" multiple />
+          <FormKit type="select" label="Ministry" :options="kementerianOptions" class="w-full mb-4" />
+          <FormKit type="select" label="Applicant Requirements" :options="syaratPemohonOptions" class="w-full mb-4" />
           
-          <h3 class="text-lg font-semibold my-4">Permohonan Aksess</h3>
+          <h3 class="text-lg font-semibold my-4">Access Request</h3>
           <div class="grid grid-cols-2 gap-4 border border-gray-200 p-4 rounded-lg">
-            <FormKit type="select" label="Jenis Aksess" :options="jenisAksessOptions" class="w-full mb-4" />
-            <FormKit type="select" label="Tempoh Aksess" :options="tempohAksessOptions" class="w-full mb-4" />
+            <FormKit type="select" label="Access Type" :options="jenisAksessOptions" class="w-full mb-4" />
+            <FormKit type="select" label="Access Duration" :options="tempohAksessOptions" class="w-full mb-4" />
           </div>
         </div>
 
         <div v-if="currentSection === 1" class="mb-4">
-          <h2 class="text-xl font-semibold my-4">B. Butiran Pemohon dan Pengakuan Pemohon</h2>
-          <h3 class="text-lg font-semibold my-4">Butiran Pemohon</h3>
+          <h2 class="text-xl font-semibold my-4">B. Applicant Details and Applicant Acknowledgment</h2>
+          <h3 class="text-lg font-semibold my-4">Applicant Details</h3>
           <div class="border border-gray-200 p-6 rounded-lg">
             <div class="grid grid-cols-2 gap-4 mb-4">
-              <FormKit type="text" label="Nama" v-model="pemohonData.nama" />
+              <FormKit type="text" label="Name" v-model="pemohonData.nama" />
               <FormKit type="text" label="IC" v-model="pemohonData.ic" />
             </div>
             <div class="grid grid-cols-2 gap-4 mb-4">
-              <FormKit type="text" label="Gred" v-model="pemohonData.gred" />
-              <FormKit type="text" label="Tempat Bertugas" v-model="pemohonData.tempatBertugas" />
+              <FormKit type="text" label="Grade" v-model="pemohonData.gred" />
+              <FormKit type="text" label="Place of Duty" v-model="pemohonData.tempatBertugas" />
             </div>
-            <FormKit type="email" label="Emel" v-model="pemohonData.emel" class="w-full mb-4" />
+            <FormKit type="email" label="Email" v-model="pemohonData.emel" class="w-full mb-4" />
           </div>
           
           <h3 class="text-lg font-semibold my-4">Pre-Approved Plan</h3>
           <div class="border border-gray-200 p-6 rounded-lg">
             <div class="grid grid-cols-4 gap-4 mb-4">
-              <FormKit type="select" label="Jenis Kategori" :options="jenisKategoriOptions" class="w-full mb-4" />
-              <FormKit type="select" label="Kategori Bangunan" :options="kategoriBangunanOptions" class="w-full mb-4" />
-              <FormKit type="select" label="Kategori PAP" :options="kategoriPAPOptions" class="w-full mb-4" />
-              <FormKit type="select" label="Jenis Reka Bentuk" :options="jenisRekaBentukOptions" class="w-full mb-4" />
+              <FormKit type="select" label="Category Type" :options="jenisKategoriOptions" class="w-full mb-4" />
+              <FormKit type="select" label="Building Category" :options="kategoriBangunanOptions" class="w-full mb-4" />
+              <FormKit type="select" label="PAP Category" :options="kategoriPAPOptions" class="w-full mb-4" />
+              <FormKit type="select" label="Design Type" :options="jenisRekaBentukOptions" class="w-full mb-4" />
             </div>
             <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700">Disiplin</label>
+              <label class="block text-sm font-medium text-gray-700">Discipline</label>
               <div class="flex space-x-4 border border-gray-200 p-4 rounded-lg ">
                 <FormKit type="checkbox" v-for="option in disiplinOptions" :key="option" :label="option" class="mt-4"/>
               </div>
             </div>
           </div>
 
-          <h2 class="text-lg font-semibold my-4">C. Pengakuan Pemohon</h2>
+          <h2 class="text-lg font-semibold my-4">C. Applicant Acknowledgment</h2>
           <div class="border border-gray-200 p-6 rounded-lg">
             <FormKit type="checkbox" :label="pengakuanText" class="mb-4" />
           </div>

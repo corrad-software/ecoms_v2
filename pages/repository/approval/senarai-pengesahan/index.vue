@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-semibold">Senarai Pengesahan Pengguna Pre-Approval Plan</h1>
+      <h1 class="text-2xl font-semibold">User Pre-Approval Plan Confirmation List</h1>
     </div>
     <div class="grid grid-cols-1 gap-4 mb-6">
       <div v-if="activeTab === 'branchAdmin'" class="bg-white p-2 rounded shadow cursor-pointer flex items-center" @click="filterRequests('new')">
@@ -9,7 +9,7 @@
           <Icon name="mdi:new-box" class="h-6 w-6" />
         </div>
         <div>
-          <p class="text-lg font-semibold">Baharu</p>
+          <p class="text-lg font-semibold">New</p>
           <p class="text-xl">{{ newRequestsCount }}</p>
         </div>
       </div>
@@ -18,7 +18,7 @@
           <Icon name="mdi:clock-outline" class="h-6 w-6" />
         </div>
         <div>
-          <p class="text-lg font-semibold">Menunggu</p>
+          <p class="text-lg font-semibold">Pending</p>
           <p class="text-xl">{{ pendingRequestsCount }}</p>
         </div>
       </div>
@@ -38,10 +38,10 @@
           </DropdownTrigger>
           <DropdownContent>
             <DropdownItem @click="filterRequests('all')">All</DropdownItem>
-            <DropdownItem @click="filterRequests('accessPeriod3')">Tempoh Akses: 3 bulan</DropdownItem>
-            <DropdownItem @click="filterRequests('accessPeriod6')">Tempoh Akses: 6 bulan</DropdownItem>
-            <DropdownItem @click="filterRequests('remainingDaysTiada')">Baki Tempoh: Tiada</DropdownItem>
-            <DropdownItem @click="filterRequests('remainingDaysLuput')">Baki Tempoh: Luput</DropdownItem>
+            <DropdownItem @click="filterRequests('accessPeriod3')">Access Period: 3 months</DropdownItem>
+            <DropdownItem @click="filterRequests('accessPeriod6')">Access Period: 6 months</DropdownItem>
+            <DropdownItem @click="filterRequests('remainingDaysTiada')">Remaining Period: None</DropdownItem>
+            <DropdownItem @click="filterRequests('remainingDaysLuput')">Remaining Period: Expired</DropdownItem>
           </DropdownContent>
         </Dropdown>
       </div>
@@ -62,7 +62,7 @@
               <TableHeader>
                 <TableRow>
                   <TableHead @click="sortTable('name')">
-                    Nama
+                    Name
                     <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
                   </TableHead>
                   <TableHead class="w-[100px]" @click="sortTable('email')">
@@ -70,24 +70,24 @@
                     <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
                   </TableHead>
                   <TableHead class="w-[150px]" @click="sortTable('status')">
-                    Status Permohonan
+                    Application Status
                     <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
                   </TableHead>
-                  <TableHead>Komen</TableHead>
+                  <TableHead>Comments</TableHead>
                   <TableHead class="w-[100px]" @click="sortTable('requestDate')">
-                    Tarikh Permohonan
+                    Application Date
                     <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
                   </TableHead>
                   <TableHead class="w-[100px]" @click="sortTable('updatedAt')">
-                    Tarikh Kemaskini
+                    Update Date
                     <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
                   </TableHead>
-                  <TableHead class="w-[100px]">Tempoh Akses</TableHead>
+                  <TableHead class="w-[100px]">Access Period</TableHead>
                   <TableHead class="w-[100px]" @click="sortTable('remainingDays')">
-                    Baki Tempoh
+                    Remaining Period
                     <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
                   </TableHead>
-                  <TableHead class="text-right sticky right-0 ">Tindakan</TableHead>
+                  <TableHead class="text-right sticky right-0">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -107,22 +107,22 @@
                   <TableCell>{{ calculateRemainingDays(request.updatedAt, request.accessPeriod) }}</TableCell>
                   <TableCell class=" space-x-2 sticky right-0">
                     <Button variant="outline" size="sm" @click="viewDetails(request)"><Icon name="material-symbols:multimodal-hand-eye" class="mr-2"></Icon>Lihat</Button>
-                    <template v-if="getStatusLabel(request) === 'Menunggu'">
-                      <Button variant="outline" size="sm" @click="handleApproveRequest" class="hover:bg-green-500 hover:text-white"> <Icon name="material-symbols:check-box-outline" class="mr-2" ></Icon>Lulus</Button>
-                      <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Tolak</Button>
+                    <template v-if="getStatusLabel(request) === 'Pending'">
+                      <Button variant="outline" size="sm" @click="handleApproveRequest" class="hover:bg-green-500 hover:text-white"> <Icon name="material-symbols:check-box-outline" class="mr-2" ></Icon>Approve</Button>
+                      <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Reject</Button>
                     </template>
-                    <template v-if="getStatusLabel(request) === 'Diluluskan'">
-                      <Button variant="outline" size="sm" @click="handleBlockRequest" class="hover:bg-yellow-500 hover:text-white"> <Icon name="material-symbols:block" class="mr-2"></Icon>Sekat</Button>
+                    <template v-if="getStatusLabel(request) === 'Approved'">
+                      <Button variant="outline" size="sm" @click="handleBlockRequest" class="hover:bg-yellow-500 hover:text-white"> <Icon name="material-symbols:block" class="mr-2"></Icon>Block</Button>
                     </template>
-                    <template v-if="getStatusLabel(request) === 'Ditolak'">
-                      <Button variant="outline" size="sm" @click="handleSendRejectionEmail" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-alert" class="mr-2"></Icon>Hantar Email</Button>
+                    <template v-if="getStatusLabel(request) === 'Rejected'">
+                      <Button variant="outline" size="sm" @click="handleSendRejectionEmail" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-alert" class="mr-2"></Icon>Send Email</Button>
                     </template>
-                    <template v-if="getStatusLabel(request) === 'Ditutup'">
-                      <Button variant="outline" size="sm" @click="handleReopenRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-check" class="mr-2"></Icon>Buka Permohonan</Button>
+                    <template v-if="getStatusLabel(request) === 'Closed'">
+                      <Button variant="outline" size="sm" @click="handleReopenRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-check" class="mr-2"></Icon>Reopen Application</Button>
                     </template>
-                    <template v-if="getStatusLabel(request) === 'Baharu'">
-                      <Button variant="outline" size="sm" @click="handleConfirmRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:check-circle" class="mr-2"></Icon>Sahkan</Button>
-                      <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Tolak</Button>
+                    <template v-if="getStatusLabel(request) === 'New'">
+                      <Button variant="outline" size="sm" @click="handleConfirmRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:check-circle" class="mr-2"></Icon>Confirm</Button>
+                      <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Reject</Button>
                     </template>
                   </TableCell>
                 </TableRow>
@@ -136,7 +136,7 @@
               <TableHeader>
                 <TableRow>
                   <TableHead @click="sortTable('name')">
-                    Nama
+                    Name
                     <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
                   </TableHead>
                   <TableHead class="w-[100px]" @click="sortTable('email')">
@@ -144,24 +144,24 @@
                     <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
                   </TableHead>
                   <TableHead class="w-[150px]" @click="sortTable('status')">
-                    Status Permohonan
+                    Application Status
                     <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
                   </TableHead>
-                  <TableHead>Komen</TableHead>
+                  <TableHead>Comments</TableHead>
                   <TableHead class="w-[100px]" @click="sortTable('requestDate')">
-                    Tarikh Permohonan
+                    Application Date
                     <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
                   </TableHead>
                   <TableHead class="w-[100px]" @click="sortTable('updatedAt')">
-                    Tarikh Kemaskini
+                    Update Date
                     <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
                   </TableHead>
-                  <TableHead class="w-[100px]">Tempoh Akses</TableHead>
+                  <TableHead class="w-[100px]">Access Period</TableHead>
                   <TableHead class="w-[100px]" @click="sortTable('remainingDays')">
-                    Baki Tempoh
+                    Remaining Period
                     <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
                   </TableHead>
-                  <TableHead class="text-right sticky right-0 ">Tindakan</TableHead>
+                  <TableHead class="text-right sticky right-0">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -181,22 +181,22 @@
                   <TableCell>{{ calculateRemainingDays(request.updatedAt, request.accessPeriod) }}</TableCell>
                   <TableCell class=" space-x-2 sticky right-0">
                     <Button variant="outline" size="sm" @click="viewDetails(request)"><Icon name="material-symbols:multimodal-hand-eye" class="mr-2"></Icon>Lihat</Button>
-                    <template v-if="getStatusLabel(request) === 'Menunggu'">
-                      <Button variant="outline" size="sm" @click="handleApproveRequest" class="hover:bg-green-500 hover:text-white"> <Icon name="material-symbols:check-box-outline" class="mr-2" ></Icon>Lulus</Button>
-                      <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Tolak</Button>
+                    <template v-if="getStatusLabel(request) === 'Pending'">
+                      <Button variant="outline" size="sm" @click="handleApproveRequest" class="hover:bg-green-500 hover:text-white"> <Icon name="material-symbols:check-box-outline" class="mr-2" ></Icon>Approve</Button>
+                      <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Reject</Button>
                     </template>
-                    <template v-if="getStatusLabel(request) === 'Diluluskan'">
-                      <Button variant="outline" size="sm" @click="handleBlockRequest" class="hover:bg-yellow-500 hover:text-white"> <Icon name="material-symbols:block" class="mr-2"></Icon>Sekat</Button>
+                    <template v-if="getStatusLabel(request) === 'Approved'">
+                      <Button variant="outline" size="sm" @click="handleBlockRequest" class="hover:bg-yellow-500 hover:text-white"> <Icon name="material-symbols:block" class="mr-2"></Icon>Block</Button>
                     </template>
-                    <template v-if="getStatusLabel(request) === 'Ditolak'">
-                      <Button variant="outline" size="sm" @click="handleSendRejectionEmail" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-alert" class="mr-2"></Icon>Hantar Email</Button>
+                    <template v-if="getStatusLabel(request) === 'Rejected'">
+                      <Button variant="outline" size="sm" @click="handleSendRejectionEmail" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-alert" class="mr-2"></Icon>Send Email</Button>
                     </template>
-                    <template v-if="getStatusLabel(request) === 'Ditutup'">
-                      <Button variant="outline" size="sm" @click="handleReopenRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-check" class="mr-2"></Icon>Buka Permohonan</Button>
+                    <template v-if="getStatusLabel(request) === 'Closed'">
+                      <Button variant="outline" size="sm" @click="handleReopenRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-check" class="mr-2"></Icon>Reopen Application</Button>
                     </template>
-                    <template v-if="getStatusLabel(request) === 'Baharu'">
-                      <Button variant="outline" size="sm" @click="handleConfirmRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:check-circle" class="mr-2"></Icon>Sahkan</Button>
-                      <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Tolak</Button>
+                    <template v-if="getStatusLabel(request) === 'New'">
+                      <Button variant="outline" size="sm" @click="handleConfirmRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:check-circle" class="mr-2"></Icon>Confirm</Button>
+                      <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Reject</Button>
                     </template>
                   </TableCell>
                 </TableRow>
@@ -270,51 +270,51 @@
         <div class="mb-6">
           <h2 class="text-lg font-semibold border-b pb-2">Project Section</h2>
           <div class="mt-2 grid grid-cols-2 gap-4">
-            <p><strong>Tajuk Projek:</strong> {{ selectedRequest.projectTitle }}</p>
-            <p><strong>Kementerian:</strong> {{ selectedRequest.ministry }}</p>
-            <p><strong>Syarat Pemohon:</strong> {{ selectedRequest.applicantRequirements }}</p>
-            <p><strong>Permohonan Aksess & Tempoh Aksess:</strong> {{ selectedRequest.accessRequest }} & {{ selectedRequest.accessPeriod }} bulan</p>
+            <p><strong>Project Title:</strong> {{ selectedRequest.projectTitle }}</p>
+            <p><strong>Ministry:</strong> {{ selectedRequest.ministry }}</p>
+            <p><strong>Applicant Requirements:</strong> {{ selectedRequest.applicantRequirements }}</p>
+            <p><strong>Access Request & Access Period:</strong> {{ selectedRequest.accessRequest }} & {{ selectedRequest.accessPeriod }} months</p>
           </div>
         </div>
         <div class="mb-6">
           <h2 class="text-lg font-semibold border-b pb-2">Applicant's Section</h2>
           <div class="mt-2 grid grid-cols-2 gap-4">
-            <p><strong>Nama:</strong> {{ selectedRequest.name }}</p>
+            <p><strong>Name:</strong> {{ selectedRequest.name }}</p>
             <p><strong>IC:</strong> {{ selectedRequest.ic }}</p>
-            <p><strong>Gred:</strong> {{ selectedRequest.grade }}</p>
-            <p><strong>Tempat Bertugas:</strong> {{ selectedRequest.workplace }}</p>
-            <p><strong>Emel:</strong> {{ selectedRequest.email }}</p>
+            <p><strong>Grade:</strong> {{ selectedRequest.grade }}</p>
+            <p><strong>Workplace:</strong> {{ selectedRequest.workplace }}</p>
+            <p><strong>Email:</strong> {{ selectedRequest.email }}</p>
           </div>
         </div>
         <div>
           <h2 class="text-lg font-semibold border-b pb-2">Request Section</h2>
           <div class="mt-2 grid grid-cols-2 gap-4">
-            <p><strong>Jenis Kategori:</strong> {{ selectedRequest.categoryType }}</p>
-            <p><strong>Kategori Bangunan:</strong> {{ selectedRequest.buildingCategory }}</p>
-            <p><strong>Kategori PAP:</strong> {{ selectedRequest.papCategory }}</p>
-            <p><strong>Jenis Reka Bentuk:</strong> {{ selectedRequest.designType }}</p>
-            <p><strong>Disiplin:</strong> {{ selectedRequest.discipline }}</p>
+            <p><strong>Category Type:</strong> {{ selectedRequest.categoryType }}</p>
+            <p><strong>Building Category:</strong> {{ selectedRequest.buildingCategory }}</p>
+            <p><strong>PAP Category:</strong> {{ selectedRequest.papCategory }}</p>
+            <p><strong>Design Type:</strong> {{ selectedRequest.designType }}</p>
+            <p><strong>Discipline:</strong> {{ selectedRequest.discipline }}</p>
           </div>
         </div>
       </ModalBody>
       <ModalFooter class="bg-gray-100 rounded-b-lg flex justify-end p-4 space-x-2">
         <Button @click="isDetailsModalOpen = false" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Close</Button>
-        <template v-if="getStatusLabel(selectedRequest) === 'Menunggu'">
-          <Button variant="outline" size="sm" @click="handleApproveRequest" class="hover:bg-green-500 hover:text-white"> <Icon name="material-symbols:check-box-outline" class="mr-2" ></Icon>Lulus</Button>
-          <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Tolak</Button>
+        <template v-if="getStatusLabel(selectedRequest) === 'Pending'">
+          <Button variant="outline" size="sm" @click="handleApproveRequest" class="hover:bg-green-500 hover:text-white"> <Icon name="material-symbols:check-box-outline" class="mr-2" ></Icon>Approve</Button>
+          <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Reject</Button>
         </template>
-        <template v-if="getStatusLabel(selectedRequest) === 'Diluluskan'">
-          <Button variant="outline" size="sm" @click="handleBlockRequest" class="hover:bg-yellow-500 hover:text-white"> <Icon name="material-symbols:block" class="mr-2"></Icon>Sekat</Button>
+        <template v-if="getStatusLabel(selectedRequest) === 'Approved'">
+          <Button variant="outline" size="sm" @click="handleBlockRequest" class="hover:bg-yellow-500 hover:text-white"> <Icon name="material-symbols:block" class="mr-2"></Icon>Block</Button>
         </template>
-        <template v-if="getStatusLabel(selectedRequest) === 'Ditolak'">
-          <Button variant="outline" size="sm" @click="handleSendRejectionEmail" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-alert" class="mr-2"></Icon>Hantar Email</Button>
+        <template v-if="getStatusLabel(selectedRequest) === 'Rejected'">
+          <Button variant="outline" size="sm" @click="handleSendRejectionEmail" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-alert" class="mr-2"></Icon>Send Email</Button>
         </template>
-        <template v-if="getStatusLabel(selectedRequest) === 'Ditutup'">
-          <Button variant="outline" size="sm" @click="handleReopenRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-check" class="mr-2"></Icon>Buka Permohonan</Button>
+        <template v-if="getStatusLabel(selectedRequest) === 'Closed'">
+          <Button variant="outline" size="sm" @click="handleReopenRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:email-check" class="mr-2"></Icon>Reopen Application</Button>
         </template>
-        <template v-if="getStatusLabel(selectedRequest) === 'Baharu'">
-          <Button variant="outline" size="sm" @click="handleConfirmRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:check-circle" class="mr-2"></Icon>Sahkan</Button>
-          <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Tolak</Button>
+        <template v-if="getStatusLabel(selectedRequest) === 'New'">
+          <Button variant="outline" size="sm" @click="handleConfirmRequest" class="hover:bg-blue-500 hover:text-white"> <Icon name="mdi:check-circle" class="mr-2"></Icon>Confirm</Button>
+          <Button variant="outline" size="sm" @click="handleRejectRequest" class="hover:bg-red-500 hover:text-white"> <Icon name="icon-park-outline:reject" class="mr-2"></Icon>Reject</Button>
         </template>
       </ModalFooter>
     </Modal>
@@ -336,7 +336,7 @@ const requests = ref([
     name: 'Ahmad bin Ali',
     email: 'ahmad.ali@jkr.gov.my',
     status: 'New',
-    comment: 'Permohonan baru diterima',
+    comment: 'New application received',
     requestDate: '2023-10-01',
     updatedAt: 'Tiada',
     accessPeriod: 3,
@@ -357,7 +357,7 @@ const requests = ref([
     name: 'Siti binti Abu',
     email: 'siti.abu@jkr.gov.my',
     status: 'Approved',
-    comment: 'Permohonan berjaya dikemaskini',
+    comment: 'Application successfully updated',
     requestDate: '2023-09-25',
     updatedAt: '2025-10-01',
     accessPeriod: 6,
@@ -378,7 +378,7 @@ const requests = ref([
     name: 'Ali bin Abu',
     email: 'ali.abu@jkr.gov.my',
     status: 'Rejected',
-    comment: 'Permohonan ditolak',
+    comment: 'Application rejected',
     requestDate: '2023-09-20',
     updatedAt: '2025-09-25',
     accessPeriod: 3,
@@ -399,7 +399,7 @@ const requests = ref([
     name: 'Fatimah binti Ali',
     email: 'fatimah.ali@jkr.gov.my',
     status: 'Pending',
-    comment: 'Menunggu kelulusan',
+    comment: 'Waiting for approval',
     requestDate: '2023-09-15',
     updatedAt: 'Tiada',
     accessPeriod: 6,
@@ -420,7 +420,7 @@ const requests = ref([
     name: 'Abu bin Ahmad',
     email: 'abu.ahmad@jkr.gov.my',
     status: 'Pending',
-    comment: 'Menunggu kelulusan',
+    comment: 'Waiting for approval',
     requestDate: '2023-09-10',
     updatedAt: 'Tiada',
     accessPeriod: 3,
@@ -441,7 +441,7 @@ const requests = ref([
     name: 'Ali bin Siti',
     email: 'ali.siti@jkr.gov.my',
     status: 'Approved',
-    comment: 'Permohonan berjaya dikemaskini',
+    comment: 'Application successfully updated',
     requestDate: '2023-09-05',
     updatedAt: '2025-10-02',
     accessPeriod: 6,
@@ -462,7 +462,7 @@ const requests = ref([
     name: 'Siti binti Ali',
     email: 'siti.ali@jkr.gov.my',
     status: 'Rejected',
-    comment: 'Permohonan ditolak',
+    comment: 'Application rejected',
     requestDate: '2023-09-01',
     updatedAt: '2025-09-30',
     accessPeriod: 3,
@@ -483,7 +483,7 @@ const requests = ref([
     name: 'Ahmad bin Abu',
     email: 'ahmad.abu@jkr.gov.my',
     status: 'Approved',
-    comment: 'Permohonan berjaya dikemaskini',
+    comment: 'Application successfully updated',
     requestDate: '2023-08-25',
     updatedAt: '2025-07-01',
     accessPeriod: 3,
@@ -504,7 +504,7 @@ const requests = ref([
     name: 'Aisyah binti Ali',
     email: 'aisyah.ali@jkr.gov.my',
     status: 'Approved',
-    comment: 'Permohonan berjaya dikemaskini',
+    comment: 'Application successfully updated',
     requestDate: '2023-08-15',
     updatedAt: '2023-08-15',
     accessPeriod: 6,
@@ -525,7 +525,7 @@ const requests = ref([
     name: 'Muhammad bin Sulaiman',
     email: 'muhammad.sulaiman@jkr.gov.my',
     status: 'Approved',
-    comment: 'Permohonan berjaya dikemaskini',
+    comment: 'Application successfully updated',
     requestDate: '2023-08-10',
     updatedAt: '2023-09-20',
     accessPeriod: 3,
@@ -546,7 +546,7 @@ const requests = ref([
     name: 'Nurul binti Hassan',
     email: 'nurul.hassan@jkr.gov.my',
     status: 'Approved',
-    comment: 'Permohonan berjaya dikemaskini',
+    comment: 'Application successfully updated',
     requestDate: '2023-08-05',
     updatedAt: '2024-09-25',
     accessPeriod: 6,
@@ -567,7 +567,7 @@ const requests = ref([
     name: 'Hafiz bin Rahman',
     email: 'hafiz.rahman@jkr.gov.my',
     status: 'Approved',
-    comment: 'Permohonan berjaya dikemaskini',
+    comment: 'Application successfully updated',
     requestDate: '2023-08-01',
     updatedAt: '2025-10-05',
     accessPeriod: 3,
@@ -588,14 +588,14 @@ const requests = ref([
 
 const totalRequests = computed(() => requests.value.length);
 const newRequestsCount = computed(() => requests.value.filter(request => request.status === 'New').length);
-const approvedRequestsCount = computed(() => requests.value.filter(request => request.status === 'Approved' && calculateRemainingDays(request.updatedAt, request.accessPeriod) !== 'Luput').length);
+const approvedRequestsCount = computed(() => requests.value.filter(request => request.status === 'Approved' && calculateRemainingDays(request.updatedAt, request.accessPeriod) !== 'Expired').length);
 const pendingRequestsCount = computed(() => requests.value.filter(request => request.status === 'Pending').length);
 const rejectedRequestsCount = computed(() => requests.value.filter(request => request.status === 'Rejected').length);
-const closedRequestsCount = computed(() => requests.value.filter(request => calculateRemainingDays(request.updatedAt, request.accessPeriod) === 'Luput').length);
+const closedRequestsCount = computed(() => requests.value.filter(request => calculateRemainingDays(request.updatedAt, request.accessPeriod) === 'Expired').length);
 const almostExpiredRequestsCount = computed(() => requests.value.filter(request => {
   const remainingDays = calculateRemainingDays(request.updatedAt, request.accessPeriod);
   const totalDays = request.accessPeriod * 30; // Approximate days in a month
-  return remainingDays !== 'Luput' && remainingDays !== 'Tiada' && remainingDays <= totalDays * 0.1;
+  return remainingDays !== 'Expired' && remainingDays !== 'Tiada' && remainingDays <= totalDays * 0.1;
 }).length);
 
 const currentDate = computed(() => {
@@ -612,12 +612,12 @@ const filteredRequests = computed(() => {
   let filtered = [...requests.value];
   if (filter.value !== 'all') {
     if (filter.value === 'closed') {
-      filtered = filtered.filter(request => calculateRemainingDays(request.updatedAt, request.accessPeriod) === 'Luput');
+      filtered = filtered.filter(request => calculateRemainingDays(request.updatedAt, request.accessPeriod) === 'Expired');
     } else if (filter.value === 'almostExpired') {
       filtered = filtered.filter(request => {
         const remainingDays = calculateRemainingDays(request.updatedAt, request.accessPeriod);
         const totalDays = request.accessPeriod * 30; // Approximate days in a month
-        return remainingDays !== 'Luput' && remainingDays !== 'Tiada' && remainingDays <= totalDays * 0.1;
+        return remainingDays !== 'Expired' && remainingDays !== 'Tiada' && remainingDays <= totalDays * 0.1;
       });
     } else if (filter.value === 'accessPeriod3') {
       filtered = filtered.filter(request => request.accessPeriod === 3);
@@ -626,7 +626,7 @@ const filteredRequests = computed(() => {
     } else if (filter.value === 'remainingDaysTiada') {
       filtered = filtered.filter(request => calculateRemainingDays(request.updatedAt, request.accessPeriod) === 'Tiada');
     } else if (filter.value === 'remainingDaysLuput') {
-      filtered = filtered.filter(request => calculateRemainingDays(request.updatedAt, request.accessPeriod) === 'Luput');
+      filtered = filtered.filter(request => calculateRemainingDays(request.updatedAt, request.accessPeriod) === 'Expired');
     } else {
       filtered = filtered.filter(request => request.status.toLowerCase() === filter.value);
     }
@@ -816,7 +816,7 @@ function exportToPDF() {
 
 function getBadgeVariant(status, request) {
   const remainingDays = calculateRemainingDays(request.updatedAt, request.accessPeriod);
-  if (status === 'Approved' && remainingDays !== 'Luput') {
+  if (status === 'Approved' && remainingDays !== 'Expired') {
     return 'success';
   } else if (status === 'Pending') {
     return 'warning';
@@ -824,7 +824,7 @@ function getBadgeVariant(status, request) {
     return 'danger';
   } else if (status === 'New') {
     return 'info';
-  } else if (remainingDays === 'Luput') {
+  } else if (remainingDays === 'Expired') {
     return 'default';
   }
   return 'default';
@@ -847,28 +847,28 @@ function getBadgeIcon(status) {
 
 function getStatusLabel(request) {
   const remainingDays = calculateRemainingDays(request.updatedAt, request.accessPeriod);
-  if (request.status === 'Approved' && remainingDays !== 'Luput') {
-    return 'Diluluskan';
+  if (request.status === 'Approved' && remainingDays !== 'Expired') {
+    return 'Approved';
   } else if (request.status === 'Pending') {
-    return 'Menunggu';
+    return 'Pending';
   } else if (request.status === 'Rejected') {
-    return 'Ditolak';
+    return 'Rejected';
   } else if (request.status === 'New') {
-    return 'Baharu';
-  } else if (remainingDays === 'Luput') {
-    return 'Ditutup';
+    return 'New';
+  } else if (remainingDays === 'Expired') {
+    return 'Closed';
   }
   return request.status;
 }
 
 function calculateRemainingDays(updatedAt, accessPeriod) {
-  if (updatedAt === 'Tiada') return 'Tiada';
+  if (updatedAt === 'Tiada') return 'None';
   const updatedDate = new Date(updatedAt);
   const expiryDate = new Date(updatedDate.setMonth(updatedDate.getMonth() + accessPeriod));
   const today = new Date();
   const remainingTime = expiryDate - today;
   const remainingDays = Math.ceil(remainingTime / (1000 * 60 * 60 * 24));
-  return remainingDays > 0 ? remainingDays : 'Luput';
+  return remainingDays > 0 ? remainingDays : 'Expired';
 }
 
 function setItemsPerPage(option) {

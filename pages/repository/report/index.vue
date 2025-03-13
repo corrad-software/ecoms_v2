@@ -3,7 +3,7 @@
     
     <div>
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-semibold">Laporan</h1>
+            <h1 class="text-2xl font-semibold">Report</h1>
         </div>
       
         <div class="flex justify-between space-x-2">
@@ -21,16 +21,16 @@
                     </DropdownTrigger>
                     <DropdownContent>
                     <DropdownItem @click="filterRequests('all')">All</DropdownItem>
-                    <DropdownItem @click="filterRequests('new')">Baharu</DropdownItem>
-                    <DropdownItem @click="filterRequests('approved')">Diluluskan</DropdownItem>
-                    <DropdownItem @click="filterRequests('pending')">Menunggu</DropdownItem>
-                    <DropdownItem @click="filterRequests('rejected')">Ditolak</DropdownItem>
-                    <DropdownItem @click="filterRequests('closed')">Ditutup</DropdownItem>
-                    <DropdownItem @click="filterRequests('almostExpired')">Hampir Tamat</DropdownItem>
-                    <DropdownItem @click="filterRequests('accessPeriod3')">Tempoh Akses: 3 bulan</DropdownItem>
-                    <DropdownItem @click="filterRequests('accessPeriod6')">Tempoh Akses: 6 bulan</DropdownItem>
-                    <DropdownItem @click="filterRequests('remainingDaysTiada')">Baki Tempoh: Tiada</DropdownItem>
-                    <DropdownItem @click="filterRequests('remainingDaysLuput')">Baki Tempoh: Luput</DropdownItem>
+                    <DropdownItem @click="filterRequests('new')">New</DropdownItem>
+                    <DropdownItem @click="filterRequests('approved')">Approved</DropdownItem>
+                    <DropdownItem @click="filterRequests('pending')">Pending</DropdownItem>
+                    <DropdownItem @click="filterRequests('rejected')">Rejected</DropdownItem>
+                    <DropdownItem @click="filterRequests('closed')">Closed</DropdownItem>
+                    <DropdownItem @click="filterRequests('almostExpired')">Almost Expired</DropdownItem>
+                    <DropdownItem @click="filterRequests('accessPeriod3')">Access Period: 3 months</DropdownItem>
+                    <DropdownItem @click="filterRequests('accessPeriod6')">Access Period: 6 months</DropdownItem>
+                    <DropdownItem @click="filterRequests('remainingDaysTiada')">Remaining Days: None</DropdownItem>
+                    <DropdownItem @click="filterRequests('remainingDaysLuput')">Remaining Days: Expired</DropdownItem>
                     </DropdownContent>
                 </Dropdown>
 
@@ -77,7 +77,7 @@
           <TableHeader>
             <TableRow>
               <TableHead @click="sortTable('name')">
-                Nama
+                Name
                 <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
               </TableHead>
               <TableHead class="w-[100px]" @click="sortTable('email')">
@@ -85,21 +85,21 @@
                 <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
               </TableHead>
               <TableHead class="w-[150px]" @click="sortTable('status')">
-                Status Permohonan
+                Application Status
                 <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
               </TableHead>
-              <TableHead>Komen</TableHead>
+              <TableHead>Comment</TableHead>
               <TableHead class="w-[100px]" @click="sortTable('requestDate')">
-                Tarikh Permohonan
+                Request Date
                 <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
               </TableHead>
               <TableHead class="w-[100px]" @click="sortTable('updatedAt')">
-                Tarikh Kemaskini
+                Update Date
                 <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
               </TableHead>
-              <TableHead class="w-[100px]">Tempoh Akses</TableHead>
+              <TableHead class="w-[100px]">Access Period</TableHead>
               <TableHead class="w-[100px]" @click="sortTable('remainingDays')">
-                Baki Tempoh
+                Remaining Days
                 <Icon name="mdi:sort" class="ml-1 h-4 w-4" />
               </TableHead>
               <!-- <TableHead class="text-right sticky right-0 ">Tindakan</TableHead> -->
@@ -117,8 +117,8 @@
               </TableCell>
               <TableCell>{{ request.comment }}</TableCell>
               <TableCell>{{ request.requestDate }}</TableCell>
-              <TableCell>{{ request.status === 'Pending' ? 'Tiada' : request.updatedAt }}</TableCell>
-              <TableCell>{{ request.accessPeriod }} bulan</TableCell>
+              <TableCell>{{ request.status === 'Pending' ? 'None' : request.updatedAt }}</TableCell>
+              <TableCell>{{ request.accessPeriod }} months</TableCell>
               <TableCell>{{ calculateRemainingDays(request.updatedAt, request.accessPeriod) }}</TableCell>
               <!-- <TableCell class=" space-x-2 sticky right-0">
                 <Button variant="outline" size="sm" @click="viewDetails(request)"><Icon name="material-symbols:multimodal-hand-eye" class="mr-2"></Icon>Lihat</Button>
@@ -169,13 +169,13 @@
 
       <Modal v-model:open="isDateRangeModalOpen">
         <ModalHeader>
-          <ModalTitle>Pilih tarikh permohonan</ModalTitle>
+          <ModalTitle>Select Request Date</ModalTitle>
         </ModalHeader>
         <ModalBody>
           <VueDatePicker 
             v-model="dateRange" 
             range 
-            placeholder="Tarikh permohonan"
+            placeholder="Request Date"
             class="text-sm h-full border rounded p-1 w-full"
           />
         </ModalBody>
@@ -225,30 +225,30 @@
           <div class="mb-6">
             <h2 class="text-lg font-semibold border-b pb-2">Project Section</h2>
             <div class="mt-2 grid grid-cols-2 gap-4">
-              <p><strong>Tajuk Projek:</strong> {{ selectedRequest.projectTitle }}</p>
-              <p><strong>Kementerian:</strong> {{ selectedRequest.ministry }}</p>
-              <p><strong>Syarat Pemohon:</strong> {{ selectedRequest.applicantRequirements }}</p>
-              <p><strong>Permohonan Aksess & Tempoh Aksess:</strong> {{ selectedRequest.accessRequest }} & {{ selectedRequest.accessPeriod }} bulan</p>
+              <p><strong>Project Title:</strong> {{ selectedRequest.projectTitle }}</p>
+              <p><strong>Ministry:</strong> {{ selectedRequest.ministry }}</p>
+              <p><strong>Applicant Requirements:</strong> {{ selectedRequest.applicantRequirements }}</p>
+              <p><strong>Access Request & Access Period:</strong> {{ selectedRequest.accessRequest }} & {{ selectedRequest.accessPeriod }} months</p>
             </div>
           </div>
           <div class="mb-6">
             <h2 class="text-lg font-semibold border-b pb-2">Applicant's Section</h2>
             <div class="mt-2 grid grid-cols-2 gap-4">
-              <p><strong>Nama:</strong> {{ selectedRequest.name }}</p>
+              <p><strong>Name:</strong> {{ selectedRequest.name }}</p>
               <p><strong>IC:</strong> {{ selectedRequest.ic }}</p>
-              <p><strong>Gred:</strong> {{ selectedRequest.grade }}</p>
-              <p><strong>Tempat Bertugas:</strong> {{ selectedRequest.workplace }}</p>
-              <p><strong>Emel:</strong> {{ selectedRequest.email }}</p>
+              <p><strong>Grade:</strong> {{ selectedRequest.grade }}</p>
+              <p><strong>Place of Duty:</strong> {{ selectedRequest.workplace }}</p>
+              <p><strong>Email:</strong> {{ selectedRequest.email }}</p>
             </div>
           </div>
           <div>
             <h2 class="text-lg font-semibold border-b pb-2">Request Section</h2>
             <div class="mt-2 grid grid-cols-2 gap-4">
-              <p><strong>Jenis Kategori:</strong> {{ selectedRequest.categoryType }}</p>
-              <p><strong>Kategori Bangunan:</strong> {{ selectedRequest.buildingCategory }}</p>
-              <p><strong>Kategori PAP:</strong> {{ selectedRequest.papCategory }}</p>
-              <p><strong>Jenis Reka Bentuk:</strong> {{ selectedRequest.designType }}</p>
-              <p><strong>Disiplin:</strong> {{ selectedRequest.discipline }}</p>
+              <p><strong>Category Type:</strong> {{ selectedRequest.categoryType }}</p>
+              <p><strong>Building Category:</strong> {{ selectedRequest.buildingCategory }}</p>
+              <p><strong>PAP Category:</strong> {{ selectedRequest.papCategory }}</p>
+              <p><strong>Design Type:</strong> {{ selectedRequest.designType }}</p>
+              <p><strong>Discipline:</strong> {{ selectedRequest.discipline }}</p>
             </div>
           </div>
         </ModalBody>
@@ -306,22 +306,22 @@
       name: 'Ahmad bin Ali',
       email: 'ahmad.ali@jkr.gov.my',
       status: 'New',
-      comment: 'Permohonan baru diterima',
+      comment: 'New application received',
       requestDate: '2023-10-01',
-      updatedAt: 'Tiada',
+      updatedAt: 'None',
       accessPeriod: 3,
-      projectTitle: 'Projek Pembinaan Sekolah',
-      ministry: 'Kementerian Pendidikan',
-      applicantRequirements: 'Pegawai Kerajaan',
-      accessRequest: 'Akses penuh',
+      projectTitle: 'Construction Project of School',
+      ministry: 'Ministry of Education',
+      applicantRequirements: 'Government Officer',
+      accessRequest: 'Full access',
       ic: '800101-01-1234',
-      grade: 'Gred 41',
+      grade: 'Grade 41',
       workplace: 'JKR Kuala Lumpur',
-      categoryType: 'Bangunan',
-      buildingCategory: 'Sekolah',
+      categoryType: 'Building',
+      buildingCategory: 'School',
       papCategory: 'PAP A',
-      designType: 'Reka Bentuk Moden',
-      discipline: 'Arkitek'
+      designType: 'Modern Design',
+      discipline: 'Architect'
     },
     {
       name: 'Siti binti Abu',
@@ -832,15 +832,15 @@
   function getStatusLabel(request) {
     const remainingDays = calculateRemainingDays(request.updatedAt, request.accessPeriod);
     if (request.status === 'Approved' && remainingDays !== 'Luput') {
-      return 'Diluluskan';
+      return 'Approved';
     } else if (request.status === 'Pending') {
-      return 'Menunggu';
+      return 'Pending';
     } else if (request.status === 'Rejected') {
-      return 'Ditolak';
+      return 'Rejected';
     } else if (request.status === 'New') {
-      return 'Baharu';
+      return 'New';
     } else if (remainingDays === 'Luput') {
-      return 'Ditutup';
+      return 'Closed';
     }
     return request.status;
   }

@@ -31,11 +31,11 @@
               "path": "/repository/approval/borang-permohonan"
             },
             {
-              "name": "List of Applications",
+              "name": "PAP Comitee Approval",
               "path": "/repository/approval/senarai-permohonan"
             },
             {
-              "name": "List of Confirmations",
+              "name": "BTM Approval",
               "path": "/repository/approval/senarai-pengesahan"
             }
           ]

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-semibold">User Pre-Approval Plan Application List</h1>
+      <h1 class="text-2xl font-semibold">PAP Committee Approval List</h1>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
       <div class="bg-white p-2 rounded shadow cursor-pointer flex items-center" @click="filterRequests('new')">

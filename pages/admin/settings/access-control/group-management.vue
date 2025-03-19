@@ -229,6 +229,31 @@ const filteredGroupUsers = computed(() => {
 
 const activeTab = ref("group");
 
+// Add search functionality
+const groupSearchQuery = ref("");
+const userSearchQuery = ref("");
+
+// Filtered groups based on search
+const filteredGroups = computed(() => {
+  const query = groupSearchQuery.value.toLowerCase();
+  if (!query) return groups.value;
+  return groups.value.filter(group => 
+    group.name.toLowerCase().includes(query)
+  );
+});
+
+// Filtered users based on search
+const filteredUsers = computed(() => {
+  if (!selectedGroup.value) return [];
+  const query = userSearchQuery.value.toLowerCase();
+  const groupUsers = filteredGroupUsers.value;
+  if (!query) return groupUsers;
+  return groupUsers.filter(user => 
+    user.username.toLowerCase().includes(query) ||
+    user.role.toLowerCase().includes(query)
+  );
+});
+
 </script>
 
 <template>
@@ -269,6 +294,19 @@ const activeTab = ref("group");
                     </div>
                   </div>
 
+                  <!-- Add search bar for groups -->
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Icon name="mdi:magnify" class="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      type="text"
+                      v-model="groupSearchQuery"
+                      placeholder="Search groups..."
+                      class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
+                  </div>
+
                   <div class="overflow-y-auto max-h-96">
                     <table class="min-w-full divide-y divide-gray-200">
                       <thead class="bg-gray-50">
@@ -280,7 +318,7 @@ const activeTab = ref("group");
                         </tr>
                       </thead>
                       <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-for="(group, index) in groups" :key="index">
+                        <tr v-for="(group, index) in filteredGroups" :key="index">
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ group.name }}</td>
                           <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <Button v-if="showDeleteButtons" @click="confirmDeleteGroup(index)" variant="danger">
@@ -312,6 +350,20 @@ const activeTab = ref("group");
                         <Button @click="toggleDeleteButtons" class="inline-flex items-center px-2 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white  focus:outline-none focus:ring-2 focus:ring-offset-2"><Icon name="mdi:minus"></Icon></Button>
                       </div>
                     </div>
+
+                    <!-- Add search bar for users -->
+                    <div class="relative mb-4">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Icon name="mdi:magnify" class="h-5 w-5 text-gray-400" />
+                      </div>
+                      <input
+                        type="text"
+                        v-model="userSearchQuery"
+                        placeholder="Search users..."
+                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      />
+                    </div>
+
                     <table class="min-w-full divide-y divide-gray-200">
                       <thead class="bg-gray-50">
                         <tr>
@@ -319,12 +371,12 @@ const activeTab = ref("group");
                           <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
                           <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Access Type</th>
                           <th scope="col" class="relative px-6 py-3">
-                            <span class="sr-only"><Icon name ="mdi:delete"></Icon></span>
+                            <span class="sr-only"><Icon name="mdi:delete"></Icon></span>
                           </th>
                         </tr>
                       </thead>
                       <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-for="(user, index) in filteredGroupUsers" :key="index">
+                        <tr v-for="(user, index) in filteredUsers" :key="index">
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.username }}</td>
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.role }}</td>
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.accessType.join(', ') }}</td>

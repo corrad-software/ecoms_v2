@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-semibold">User Pre-Approval Plan Confirmation List</h1>
+      <h1 class="text-2xl font-semibold">BTM User Approval List</h1>
     </div>
     <div class="grid grid-cols-1 gap-4 mb-6">
       <div v-if="activeTab === 'branchAdmin'" class="bg-white p-2 rounded shadow cursor-pointer flex items-center" @click="filterRequests('new')">

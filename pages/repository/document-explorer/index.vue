@@ -200,6 +200,33 @@ const cawangan = ref([
       { id: 5, name: "Ukur Bahan" },
     ],
   },
+  {
+    id: 7,
+    name: "JKR Cawangan Putrajaya",
+    units: [
+      {
+        id: 17,
+        name: "JKR Bahagian Kewangan Cawangan Putrajaya",
+        projects: [
+          { id: 33, name: "Pembinaan Kompleks JKR Putrajaya", hasDiscipline: true },
+          { id: 34, name: "Naik Taraf Pejabat JKR Putrajaya", hasDiscipline: false },
+        ],
+      },
+      {
+        id: 18,
+        name: "JKR Bahagian Kejuruteraan Awam Cawangan Putrajaya",
+        projects: [
+          { id: 35, name: "Projek Jalan Putrajaya-KLIA", hasDiscipline: true },
+          { id: 36, name: "Pembinaan Jambatan Putrajaya", hasDiscipline: false },
+        ],
+      }
+    ],
+    disciplines: [
+      { id: 1, name: "Kewangan" },
+      { id: 2, name: "Kejuruteraan Awam" },
+      { id: 3, name: "Teknologi Maklumat" },
+    ],
+  }
 ]);
 
 // Add user access control data
@@ -240,8 +267,79 @@ const toggleNode = (type, id) => {
   }
 };
 
+// Add cabinet access control data
+const cabinetAccess = ref({
+  // Format: cabinetId: hasAccess (boolean)
+  1: true,   // Tebedu - has access
+  2: false,  // Batu Kawan - no access, pending
+  3: true,   // Kota Bharu - has access
+  4: false,  // Kuala Terengganu - no access, pending
+  5: true,   // Ipoh - has access
+  6: false,  // Arkitek - no access, pending
+  7: false,  // Putrajaya - no access, not requested yet
+});
+
+// Add pending cabinet access requests
+const pendingCabinetRequests = ref([2, 4, 6]); // Notice cabinet 7 is not in pending requests
+
+// Add cabinet access request state
+const cabinetAccessRequestModal = ref(false);
+const requestingCabinet = ref(null);
+const cabinetAccessRequestForm = ref({
+  accessType: 'view', // 'view', 'download', 'print', 'all'
+  justification: '',
+  duration: 7, // Default 7 days
+});
+
+// Function to open cabinet access request modal
+const openCabinetAccessRequestModal = (cabinet) => {
+  requestingCabinet.value = cabinet;
+  cabinetAccessRequestModal.value = true;
+  // Reset form
+  cabinetAccessRequestForm.value = {
+    accessType: 'view',
+    justification: '',
+    duration: 7
+  };
+};
+
+// Function to submit cabinet access request
+const submitCabinetAccessRequest = () => {
+  if (!cabinetAccessRequestForm.value.justification) {
+    alert('Please provide a justification for your request.');
+    return;
+  }
+  
+  // Add to pending requests
+  if (!pendingCabinetRequests.value.includes(requestingCabinet.value.id)) {
+    pendingCabinetRequests.value.push(requestingCabinet.value.id);
+    alert(`Access request for cabinet "${requestingCabinet.value.name}" has been submitted.`);
+    cabinetAccessRequestModal.value = false;
+  } else {
+    alert('A request for this cabinet is already pending.');
+  }
+};
+
+// Check if user has access to a cabinet
+const hasCabinetAccess = (cabinetId) => {
+  return cabinetAccess.value[cabinetId] === true;
+};
+
+// Check if there's a pending request for a cabinet
+const hasPendingCabinetRequest = (cabinetId) => {
+  return pendingCabinetRequests.value.includes(cabinetId);
+};
+
 // Modify the selectNode function to handle public cabinet
 const selectNode = (type, id, parentId = null, grandParentId = null) => {
+  // Check cabinet access before allowing selection
+  if (type === 'cawangan' && typeof id === 'number') {
+    if (!hasCabinetAccess(id)) {
+      openCabinetAccessRequestModal(cawangan.value.find(c => c.id === id));
+      return;
+    }
+  }
+
   if (type === 'cawangan') {
     selectedCawangan.value = id;
     selectedUnit.value = "";
@@ -249,7 +347,7 @@ const selectNode = (type, id, parentId = null, grandParentId = null) => {
     selectedDiscipline.value = "";
     
     // If selecting a special cabinet, expand it
-    if (id === 'public' || id === 'assigned') {
+    if (id === 'public' || id === 'private') {
       expandedNodes.value.cawangan[id] = true;
     }
   } else if (type === 'unit') {
@@ -273,7 +371,7 @@ const selectNode = (type, id, parentId = null, grandParentId = null) => {
       lastVisitedCabinet.value = {
         id: id,
         name: branch.name,
-        path: `Assigned Cabinet > ${branch.name}`
+        path: `My Cabinets > ${branch.name}`
       };
     }
   }
@@ -597,81 +695,17 @@ const lastVisitedCabinet = ref({
 
 // Add public cabinet structure
 const publicCabinet = ref({
-  id: 'public',
-  name: 'Public Cabinet',
   cabinets: [
-    {
-      id: 'general',
-      name: 'General Documents',
-      documents: [
-        { 
-          id: 101, 
-          name: "JKR Standard Operating Procedures", 
-          fileName: "JKR_SOP_2023.pdf", 
-          fileType: "PDF", 
-          fileSize: "5MB", 
-          isPublic: true,
-          tajuk: "Standard Operating Procedures JKR 2023",
-          perkara: "Prosedur operasi standard untuk semua cawangan JKR",
-          negeri: "Federal",
-          tarikh: "2023-01-01",
-          user: "Admin JKR",
-          storeDate: "2023-01-01",
-          fulltext: "Dokumen ini mengandungi prosedur operasi standard untuk semua cawangan JKR..."
-        },
-        { 
-          id: 102, 
-          name: "Construction Guidelines 2023", 
-          fileName: "Construction_Guidelines_2023.pdf", 
-          fileType: "PDF", 
-          fileSize: "3MB", 
-          isPublic: true,
-          tajuk: "Garis Panduan Pembinaan 2023",
-          perkara: "Garis panduan pembinaan untuk projek JKR",
-          negeri: "Federal",
-          tarikh: "2023-01-15",
-          user: "Admin JKR",
-          storeDate: "2023-01-15",
-          fulltext: "Garis panduan ini merangkumi aspek pembinaan untuk projek JKR..."
-        }
-      ]
-    },
-    {
-      id: 'templates',
-      name: 'Templates',
-      documents: [
-        { 
-          id: 201, 
-          name: "Project Proposal Template", 
-          fileName: "Project_Proposal_Template.docx", 
-          fileType: "Word", 
-          fileSize: "1MB", 
-          isTemplate: true,
-          tajuk: "Template Cadangan Projek",
-          perkara: "Template standard untuk cadangan projek baru",
-          negeri: "Federal",
-          tarikh: "2023-03-01",
-          user: "Admin JKR",
-          storeDate: "2023-03-01",
-          fulltext: "Template ini mengandungi format standard untuk cadangan projek baru..."
-        },
-        { 
-          id: 202, 
-          name: "Budget Planning Template", 
-          fileName: "Budget_Planning_Template.xlsx", 
-          fileType: "Excel", 
-          fileSize: "2MB", 
-          isTemplate: true,
-          tajuk: "Template Perancangan Bajet",
-          perkara: "Template standard untuk perancangan bajet",
-          negeri: "Federal",
-          tarikh: "2023-03-15",
-          user: "Admin JKR",
-          storeDate: "2023-03-15",
-          fulltext: "Template ini mengandungi format standard untuk perancangan bajet projek..."
-        }
-      ]
-    }
+    { id: 'general', name: 'General Documents', documents: [] },
+    { id: 'templates', name: 'Templates', documents: templateDocuments.value }
+  ]
+});
+
+const privateCabinet = ref({
+  cabinets: [
+    { id: 'personal', name: 'Personal Documents', documents: [] },
+    { id: 'drafts', name: 'Draft Documents', documents: [] },
+    { id: 'confidential', name: 'Confidential', documents: [] }
   ]
 });
 
@@ -960,6 +994,16 @@ const setViewMode = (mode) => {
 const setViewType = (type) => {
   viewType.value = type;
 };
+
+// Add pending request info modal state
+const pendingRequestInfoModal = ref(false);
+const selectedPendingCabinet = ref(null);
+
+// Function to show pending request info modal
+const showPendingRequestInfo = (cabinet) => {
+  selectedPendingCabinet.value = cabinet;
+  pendingRequestInfoModal.value = true;
+};
 </script>
 
 <template>
@@ -1062,90 +1106,145 @@ const setViewType = (type) => {
               </div>
             </div>
             
-            <!-- Assigned Cabinets Section -->
+            <!-- My Cabinets Section (Only show cabinets with access) -->
             <div class="mb-2">
               <div class="flex items-center px-2 py-1">
                 <Icon name="mdi:folder-network" class="h-4 w-4 mr-2 text-blue-600" />
-                <span class="text-sm font-medium truncate">Assigned Cabinets</span>
+                <span class="text-sm font-medium truncate">My Cabinets</span>
+              </div>
+              
+              <div class="tree-view pl-2">
+                <ul class="space-y-1">
+                  <li v-for="c in cawangan.filter(cab => hasCabinetAccess(cab.id))" :key="`cawangan-${c.id}`" class="tree-item">
+                    <div 
+                      class="flex items-center py-1 px-2 rounded hover:bg-gray-200 cursor-pointer"
+                      :class="{'bg-blue-100': selectedCawangan === c.id}"
+                      @click="selectNode('cawangan', c.id)"
+                    >
+                      <button @click.stop="toggleNode('cawangan', c.id)" class="mr-1 w-5 text-center">
+                        <Icon 
+                          :name="expandedNodes.cawangan[c.id] ? 'mdi:chevron-down' : 'mdi:chevron-right'" 
+                          class="h-4 w-4" 
+                        />
+                      </button>
+                      <Icon :name="expandedNodes.cawangan[c.id] ? 'mdi:folder-open' : 'mdi:folder'" class="h-4 w-4 mr-1 text-yellow-500" />
+                      <span class="text-sm truncate">{{ c.name }}</span>
+                      <div class="ml-auto">
+                        <Icon name="mdi:check-circle" class="h-4 w-4 text-green-500" title="Access Granted" />
+                      </div>
+                    </div>
+                    
+                    <!-- Units -->
+                    <ul v-if="expandedNodes.cawangan[c.id]" class="pl-6 space-y-1 mt-1">
+                      <li v-for="unit in c.units" :key="`unit-${unit.id}`" class="tree-item">
+                        <div 
+                          class="flex items-center py-1 px-2 rounded hover:bg-gray-200 cursor-pointer"
+                          :class="{'bg-blue-100': selectedUnit === unit.id && selectedCawangan === c.id}"
+                          @click="selectNode('unit', unit.id, c.id)"
+                        >
+                          <button @click.stop="toggleNode('unit', unit.id)" class="mr-1 w-5 text-center">
+                            <Icon 
+                              :name="expandedNodes.units[unit.id] ? 'mdi:chevron-down' : 'mdi:chevron-right'" 
+                              class="h-4 w-4" 
+                            />
+                          </button>
+                          <Icon :name="expandedNodes.units[unit.id] ? 'mdi:folder-open' : 'mdi:folder'" class="h-4 w-4 mr-1 text-blue-500" />
+                          <span class="text-sm truncate">{{ unit.name }}</span>
+                        </div>
+                        
+                        <!-- Projects -->
+                        <ul v-if="expandedNodes.units[unit.id]" class="pl-6 space-y-1 mt-1">
+                          <li v-for="project in unit.projects" :key="`project-${project.id}`" class="tree-item">
+                            <div 
+                              class="flex items-center py-1 px-2 rounded hover:bg-gray-200 cursor-pointer"
+                              :class="{'bg-blue-100': selectedProject === project.id && selectedUnit === unit.id && selectedCawangan === c.id}"
+                              @click="selectNode('project', project.id, unit.id, c.id)"
+                            >
+                              <button v-if="project.hasDiscipline" @click.stop="toggleNode('project', project.id)" class="mr-1 w-5 text-center">
+                                <Icon 
+                                  :name="expandedNodes.projects[project.id] ? 'mdi:chevron-down' : 'mdi:chevron-right'" 
+                                  class="h-4 w-4" 
+                                />
+                              </button>
+                              <span v-else class="mr-1 w-5"></span>
+                              <Icon :name="expandedNodes.projects[project.id] ? 'mdi:folder-open' : 'mdi:folder'" class="h-4 w-4 mr-1 text-green-500" />
+                              <span class="text-sm truncate">{{ project.name }}</span>
+                            </div>
+                            
+                            <!-- Disciplines -->
+                            <ul v-if="project.hasDiscipline && expandedNodes.projects[project.id]" class="pl-6 space-y-1 mt-1">
+                              <li v-for="discipline in c.disciplines" :key="`discipline-${discipline.id}`" class="tree-item">
+                                <div 
+                                  class="flex items-center py-1 px-2 rounded hover:bg-gray-200 cursor-pointer"
+                                  :class="{'bg-blue-100': selectedDiscipline === discipline.id && selectedProject === project.id}"
+                                  @click="selectNode('discipline', discipline.id, project.id, unit.id)"
+                                >
+                                  <span class="mr-1 w-5"></span>
+                                  <Icon name="mdi:tag" class="h-4 w-4 mr-1 text-purple-500" />
+                                  <span class="text-sm truncate">{{ discipline.name }}</span>
+                                </div>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
               </div>
             </div>
             
-            <div class="tree-view pl-2">
-              <ul class="space-y-1">
-                <li v-for="c in cawangan" :key="`cawangan-${c.id}`" class="tree-item">
-                  <div 
-                    class="flex items-center py-1 px-2 rounded hover:bg-gray-200 cursor-pointer"
-                    :class="{'bg-blue-100': selectedCawangan === c.id}"
-                    @click="selectNode('cawangan', c.id)"
-                  >
-                    <button @click.stop="toggleNode('cawangan', c.id)" class="mr-1 w-5 text-center">
-                      <Icon 
-                        :name="expandedNodes.cawangan[c.id] ? 'mdi:chevron-down' : 'mdi:chevron-right'" 
-                        class="h-4 w-4" 
-                      />
-                    </button>
-                    <Icon :name="expandedNodes.cawangan[c.id] ? 'mdi:folder-open' : 'mdi:folder'" class="h-4 w-4 mr-1 text-yellow-500" />
-                    <span class="text-sm truncate">{{ c.name }}</span>
-                  </div>
-                  
-                  <!-- Units -->
-                  <ul v-if="expandedNodes.cawangan[c.id]" class="pl-6 space-y-1 mt-1">
-                    <li v-for="unit in c.units" :key="`unit-${unit.id}`" class="tree-item">
-                      <div 
-                        class="flex items-center py-1 px-2 rounded hover:bg-gray-200 cursor-pointer"
-                        :class="{'bg-blue-100': selectedUnit === unit.id && selectedCawangan === c.id}"
-                        @click="selectNode('unit', unit.id, c.id)"
-                      >
-                        <button @click.stop="toggleNode('unit', unit.id)" class="mr-1 w-5 text-center">
-                          <Icon 
-                            :name="expandedNodes.units[unit.id] ? 'mdi:chevron-down' : 'mdi:chevron-right'" 
-                            class="h-4 w-4" 
-                          />
-                        </button>
-                        <Icon :name="expandedNodes.units[unit.id] ? 'mdi:folder-open' : 'mdi:folder'" class="h-4 w-4 mr-1 text-blue-500" />
-                        <span class="text-sm truncate">{{ unit.name }}</span>
+            <!-- Private Cabinets Section (Show cabinets without access or pending) -->
+            <div class="mb-2">
+              <div class="flex items-center px-2 py-1">
+                <Icon name="mdi:folder-lock" class="h-4 w-4 mr-2 text-purple-600" />
+                <span class="text-sm font-medium truncate">Private Cabinets</span>
+              </div>
+              <div class="tree-view pl-2">
+                <ul class="space-y-1">
+                  <li v-for="c in cawangan.filter(cab => !hasCabinetAccess(cab.id))" :key="`cawangan-${c.id}`" class="tree-item">
+                    <div 
+                      class="flex items-center py-1 px-2 rounded hover:bg-gray-200 cursor-pointer"
+                      :class="{'bg-blue-100': selectedCawangan === c.id}"
+                      @click="hasPendingCabinetRequest(c.id) ? showPendingRequestInfo(c) : selectNode('cawangan', c.id)"
+                    >
+                      <button @click.stop="toggleNode('cawangan', c.id)" class="mr-1 w-5 text-center">
+                        <Icon 
+                          :name="expandedNodes.cawangan[c.id] ? 'mdi:chevron-down' : 'mdi:chevron-right'" 
+                          class="h-4 w-4" 
+                        />
+                      </button>
+                      <Icon name="mdi:folder-lock" class="h-4 w-4 mr-1 text-gray-400" />
+                      <span class="text-sm truncate">{{ c.name }}</span>
+                      <div class="ml-auto flex items-center space-x-2">
+                        <Icon 
+                          v-if="hasPendingCabinetRequest(c.id)" 
+                          name="mdi:clock-outline" 
+                          class="h-4 w-4 text-yellow-500" 
+                          title="Request Pending"
+                        />
+                        <Icon 
+                          v-else
+                          name="mdi:lock" 
+                          class="h-4 w-4 text-red-500" 
+                          title="No Access"
+                        />
+                        <Button 
+                          v-if="!hasPendingCabinetRequest(c.id)"
+                          variant="ghost" 
+                          size="xs"
+                          class="p-1"
+                          @click.stop="openCabinetAccessRequestModal(c)"
+                        >
+                          <Icon name="mdi:key" class="h-4 w-4 text-blue-500" />
+                        </Button>
                       </div>
-                      
-                      <!-- Projects -->
-                      <ul v-if="expandedNodes.units[unit.id]" class="pl-6 space-y-1 mt-1">
-                        <li v-for="project in unit.projects" :key="`project-${project.id}`" class="tree-item">
-                          <div 
-                            class="flex items-center py-1 px-2 rounded hover:bg-gray-200 cursor-pointer"
-                            :class="{'bg-blue-100': selectedProject === project.id && selectedUnit === unit.id && selectedCawangan === c.id}"
-                            @click="selectNode('project', project.id, unit.id, c.id)"
-                          >
-                            <button v-if="project.hasDiscipline" @click.stop="toggleNode('project', project.id)" class="mr-1 w-5 text-center">
-                              <Icon 
-                                :name="expandedNodes.projects[project.id] ? 'mdi:chevron-down' : 'mdi:chevron-right'" 
-                                class="h-4 w-4" 
-                              />
-                            </button>
-                            <span v-else class="mr-1 w-5"></span>
-                            <Icon :name="expandedNodes.projects[project.id] ? 'mdi:folder-open' : 'mdi:folder'" class="h-4 w-4 mr-1 text-green-500" />
-                            <span class="text-sm truncate">{{ project.name }}</span>
-                          </div>
-                          
-                          <!-- Disciplines -->
-                          <ul v-if="project.hasDiscipline && expandedNodes.projects[project.id]" class="pl-6 space-y-1 mt-1">
-                            <li v-for="discipline in c.disciplines" :key="`discipline-${discipline.id}`" class="tree-item">
-                              <div 
-                                class="flex items-center py-1 px-2 rounded hover:bg-gray-200 cursor-pointer"
-                                :class="{'bg-blue-100': selectedDiscipline === discipline.id && selectedProject === project.id}"
-                                @click="selectNode('discipline', discipline.id, project.id, unit.id)"
-                              >
-                                <span class="mr-1 w-5"></span>
-                                <Icon name="mdi:tag" class="h-4 w-4 mr-1 text-purple-500" />
-                                <span class="text-sm truncate">{{ discipline.name }}</span>
-                              </div>
-                            </li>
-                          </ul>
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
+            
           </div>
         </div>
         
@@ -1237,48 +1336,100 @@ const setViewType = (type) => {
                   <div class="p-3 text-sm">
                     <div class="flex justify-between items-center py-1">
                       <span>General Documents</span>
-                      <Badge variant="secondary">
-                        {{ publicCabinet.cabinets.find(c => c.id === 'general')?.documents.length || 0 }}
-                      </Badge>
+                      <Icon name="mdi:file-document-multiple" class="h-4 w-4 text-gray-500" />
                     </div>
                     <div class="flex justify-between items-center py-1">
                       <span>Templates</span>
-                      <Badge variant="secondary">
-                        {{ publicCabinet.cabinets.find(c => c.id === 'templates')?.documents.length || 0 }}
-                      </Badge>
+                      <Icon name="mdi:file-document-multiple" class="h-4 w-4 text-gray-500" />
                     </div>
                   </div>
                 </div>
                 
-                <!-- Branch Cabinets -->
+                <!-- My Cabinets -->
                 <div 
-                  v-for="cabinet in cabinetsOnly" 
+                  v-for="cabinet in cabinetsOnly.filter(cab => hasCabinetAccess(cab.id))" 
                   :key="`cabinet-card-${cabinet.id}`"
                   class="border rounded-lg shadow-sm hover:shadow-md transition-shadow bg-white overflow-hidden cursor-pointer"
                   @click="selectNode('cawangan', cabinet.id)"
                 >
-                  <div class="p-4 bg-yellow-50 border-b flex items-center">
-                    <Icon name="mdi:folder" class="h-8 w-8 mr-3 text-yellow-600" />
-                    <div>
-                      <h3 class="font-medium truncate">{{ cabinet.name }}</h3>
-                      <p class="text-sm text-gray-600">
-                        {{ cabinet.unitCount }} units, 
-                        {{ cabinet.projectCount }} projects
-                      </p>
+                  <div class="p-4 bg-yellow-50 border-b flex items-center justify-between">
+                    <div class="flex items-center">
+                      <Icon name="mdi:folder" class="h-8 w-8 mr-3 text-yellow-600" />
+                      <div>
+                        <h3 class="font-medium truncate">{{ cabinet.name }}</h3>
+                        <p class="text-sm text-gray-600">
+                          {{ cabinet.unitCount }} drawers, 
+                          {{ cabinet.projectCount }} folders
+                        </p>
+                      </div>
                     </div>
+                    <Icon name="mdi:check-circle" class="h-5 w-5 text-green-500" title="Access Granted" />
                   </div>
                   <div class="p-3 text-sm">
                     <div class="flex justify-between items-center py-1">
-                      <span>Units</span>
-                      <Badge variant="secondary">{{ cabinet.unitCount }}</Badge>
+                      <span>Drawers</span>
+                      <Icon name="mdi:folder-multiple" class="h-4 w-4 text-blue-500" />
                     </div>
                     <div class="flex justify-between items-center py-1">
-                      <span>Projects</span>
-                      <Badge variant="secondary">{{ cabinet.projectCount }}</Badge>
+                      <span>Folders</span>
+                      <Icon name="mdi:folder" class="h-4 w-4 text-green-500" />
                     </div>
                     <div class="flex justify-between items-center py-1">
-                      <span>Disciplines</span>
-                      <Badge variant="secondary">{{ cabinet.disciplineCount }}</Badge>
+                      <span>Subfolders</span>
+                      <Icon name="mdi:tag-multiple" class="h-4 w-4 text-purple-500" />
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Private Cabinets -->
+                <div 
+                  v-for="cabinet in cabinetsOnly.filter(cab => !hasCabinetAccess(cab.id))" 
+                  :key="`cabinet-card-${cabinet.id}`"
+                  class="border rounded-lg shadow-sm hover:shadow-md transition-shadow bg-white overflow-hidden cursor-pointer"
+                  @click="selectNode('cawangan', cabinet.id)"
+                >
+                  <div class="p-4 bg-gray-50 border-b flex items-center justify-between">
+                    <div class="flex items-center">
+                      <Icon name="mdi:folder-lock" class="h-8 w-8 mr-3 text-gray-400" />
+                      <div>
+                        <h3 class="font-medium truncate">{{ cabinet.name }}</h3>
+                        <p class="text-sm text-gray-600">
+                          {{ cabinet.unitCount }} drawers, 
+                          {{ cabinet.projectCount }} folders
+                        </p>
+                      </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <Icon 
+                        v-if="hasPendingCabinetRequest(cabinet.id)" 
+                        name="mdi:clock-outline" 
+                        class="h-5 w-5 text-yellow-500" 
+                        title="Request Pending"
+                      />
+                      <Icon 
+                        v-else
+                        name="mdi:lock" 
+                        class="h-5 w-5 text-red-500" 
+                        title="No Access"
+                      />
+                    </div>
+                  </div>
+                  <div class="p-3">
+                    <div class="text-center">
+                      <p class="text-sm text-gray-500 mb-2">You don't have access to this cabinet</p>
+                      <Button 
+                        v-if="!hasPendingCabinetRequest(cabinet.id)"
+                        variant="outline" 
+                        class="w-full"
+                        @click.stop="openCabinetAccessRequestModal(cabinet)"
+                      >
+                        <Icon name="mdi:key" class="h-4 w-4 mr-1" />
+                        Request Access
+                      </Button>
+                      <p v-else class="text-xs text-yellow-600 flex items-center justify-center">
+                        <Icon name="mdi:clock-outline" class="h-4 w-4 mr-1" />
+                        Access request is being reviewed
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -1302,6 +1453,27 @@ const setViewType = (type) => {
                       class="h-5 w-5 mr-2 text-blue-600 flex-shrink-0" 
                     />
                     <span class="truncate">{{ document.fileName }}</span>
+                    <!-- Access Status Icons -->
+                    <div class="ml-2 flex items-center space-x-1">
+                      <Icon 
+                        v-if="!document.isPublic && !document.isTemplate && !hasDocumentAccess(document.id)"
+                        name="mdi:lock" 
+                        class="h-4 w-4 text-red-500" 
+                        title="Restricted Access"
+                      />
+                      <Icon 
+                        v-if="hasPendingRequest(document.id)"
+                        name="mdi:clock-outline" 
+                        class="h-4 w-4 text-yellow-500" 
+                        title="Access Request Pending"
+                      />
+                      <Icon 
+                        v-if="document.isPublic || document.isTemplate || hasDocumentAccess(document.id)"
+                        name="mdi:check-circle" 
+                        class="h-4 w-4 text-green-500" 
+                        title="Access Granted"
+                      />
+                    </div>
                     <Badge 
                       v-if="document.isPublic" 
                       variant="success" 
@@ -1335,17 +1507,40 @@ const setViewType = (type) => {
                     <div class="flex items-center">
                       <Icon :name="`mdi:file-${document.fileType?.toLowerCase() === 'presentation' ? 'powerpoint' : document.fileType?.toLowerCase() === 'spreadsheet' ? 'excel' : document.fileType?.toLowerCase()}`" class="h-8 w-8 mr-3 text-blue-600 flex-shrink-0" />
                       <div class="min-w-0">
-                        <div class="font-medium truncate">{{ document.fileName }}</div>
+                        <div class="font-medium truncate flex items-center">
+                          {{ document.fileName }}
+                          <!-- Access Status Icons -->
+                          <div class="ml-2 flex items-center space-x-1">
+                            <Icon 
+                              v-if="!document.isPublic && !document.isTemplate && !hasDocumentAccess(document.id)"
+                              name="mdi:lock" 
+                              class="h-4 w-4 text-red-500" 
+                              title="Restricted Access"
+                            />
+                            <Icon 
+                              v-if="hasPendingRequest(document.id)"
+                              name="mdi:clock-outline" 
+                              class="h-4 w-4 text-yellow-500" 
+                              title="Access Request Pending"
+                            />
+                            <Icon 
+                              v-if="document.isPublic || document.isTemplate || hasDocumentAccess(document.id)"
+                              name="mdi:check-circle" 
+                              class="h-4 w-4 text-green-500" 
+                              title="Access Granted"
+                            />
+                          </div>
+                        </div>
                         <div class="text-sm text-gray-500 truncate">
                           {{ document.fileType }} • {{ document.fileSize }}
                         </div>
                       </div>
                     </div>
                     <div class="flex items-center space-x-2">
-                      <Badge v-if="userAccess[document.id]" variant="success" class="text-xs">Allowed Access</Badge>
-                      <Badge v-if="pendingRequests.includes(document.id)" variant="warning" class="text-xs">Pending Request</Badge>
-                      <Badge v-else variant="destructive" class="text-xs">No Access</Badge>
-                    
+                      <Badge v-if="document.isPublic" variant="success" class="text-xs">Public</Badge>
+                      <Badge v-if="document.isTemplate" variant="info" class="text-xs">Template</Badge>
+                      <Badge v-if="!document.isPublic && !document.isTemplate && !hasDocumentAccess(document.id)" variant="destructive" class="text-xs">Restricted</Badge>
+                      <Badge v-if="hasPendingRequest(document.id)" variant="warning" class="text-xs">Pending</Badge>
                     </div>
                   </div>
                 </div>
@@ -1677,6 +1872,150 @@ const setViewType = (type) => {
     <ModalFooter>
       <Button variant="ghost" @click="accessRequestModal = false">Cancel</Button>
       <Button variant="primary" @click="submitAccessRequest">Submit Request</Button>
+    </ModalFooter>
+  </Modal>
+
+  <!-- Cabinet Access Request Modal -->
+  <Modal v-model:open="cabinetAccessRequestModal" size="md">
+    <ModalHeader>
+      <ModalTitle>Request Cabinet Access</ModalTitle>
+    </ModalHeader>
+    <ModalBody>
+      <div v-if="requestingCabinet" class="space-y-4">
+        <div class="bg-blue-50 p-3 rounded-md">
+          <h3 class="font-medium text-blue-800 mb-1">Cabinet Information</h3>
+          <p class="text-sm"><span class="font-medium">Name:</span> {{ requestingCabinet.name }}</p>
+        </div>
+        
+        <div class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium mb-1">Access Type</label>
+            <div class="grid grid-cols-2 gap-2">
+              <div 
+                class="border rounded-md p-2 cursor-pointer flex items-center"
+                :class="{'bg-blue-50 border-blue-500': cabinetAccessRequestForm.accessType === 'view'}"
+                @click="cabinetAccessRequestForm.accessType = 'view'"
+              >
+                <input 
+                  type="radio" 
+                  name="accessType" 
+                  value="view" 
+                  v-model="cabinetAccessRequestForm.accessType"
+                  class="mr-2"
+                />
+                <div>
+                  <div class="font-medium">View Only</div>
+                  <div class="text-xs text-gray-500">Can only view the cabinet</div>
+                </div>
+              </div>
+              <div 
+                class="border rounded-md p-2 cursor-pointer flex items-center"
+                :class="{'bg-blue-50 border-blue-500': cabinetAccessRequestForm.accessType === 'download'}"
+                @click="cabinetAccessRequestForm.accessType = 'download'"
+              >
+                <input 
+                  type="radio" 
+                  name="accessType" 
+                  value="download" 
+                  v-model="cabinetAccessRequestForm.accessType"
+                  class="mr-2"
+                />
+                <div>
+                  <div class="font-medium">Download</div>
+                  <div class="text-xs text-gray-500">Can view and download</div>
+                </div>
+              </div>
+              <div 
+                class="border rounded-md p-2 cursor-pointer flex items-center"
+                :class="{'bg-blue-50 border-blue-500': cabinetAccessRequestForm.accessType === 'print'}"
+                @click="cabinetAccessRequestForm.accessType = 'print'"
+              >
+                <input 
+                  type="radio" 
+                  name="accessType" 
+                  value="print" 
+                  v-model="cabinetAccessRequestForm.accessType"
+                  class="mr-2"
+                />
+                <div>
+                  <div class="font-medium">Print</div>
+                  <div class="text-xs text-gray-500">Can view and print</div>
+                </div>
+              </div>
+              <div 
+                class="border rounded-md p-2 cursor-pointer flex items-center"
+                :class="{'bg-blue-50 border-blue-500': cabinetAccessRequestForm.accessType === 'all'}"
+                @click="cabinetAccessRequestForm.accessType = 'all'"
+              >
+                <input 
+                  type="radio" 
+                  name="accessType" 
+                  value="all" 
+                  v-model="cabinetAccessRequestForm.accessType"
+                  class="mr-2"
+                />
+                <div>
+                  <div class="font-medium">Full Access</div>
+                  <div class="text-xs text-gray-500">View, download and print</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium mb-1">Access Duration</label>
+            <select 
+              v-model="cabinetAccessRequestForm.duration" 
+              class="w-full border rounded-md p-2"
+            >
+              <option value="1">1 day</option>
+              <option value="7">7 days</option>
+              <option value="30">30 days</option>
+              <option value="90">90 days</option>
+              <option value="365">1 year</option>
+              <option value="-1">Permanent</option>
+            </select>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium mb-1">Justification <span class="text-red-500">*</span></label>
+            <textarea 
+              v-model="cabinetAccessRequestForm.justification"
+              class="w-full border rounded-md p-2 min-h-[100px]"
+              placeholder="Please explain why you need access to this cabinet..."
+            ></textarea>
+            <p class="text-xs text-gray-500 mt-1">
+              Your request will be reviewed by the cabinet owner or administrator.
+            </p>
+          </div>
+        </div>
+      </div>
+    </ModalBody>
+    <ModalFooter>
+      <Button variant="ghost" @click="cabinetAccessRequestModal = false">Cancel</Button>
+      <Button variant="primary" @click="submitCabinetAccessRequest">Submit Request</Button>
+    </ModalFooter>
+  </Modal>
+
+  <!-- Pending Request Info Modal -->
+  <Modal v-model:open="pendingRequestInfoModal" size="sm">
+    <ModalHeader>
+      <ModalTitle>Access Request Status</ModalTitle>
+    </ModalHeader>
+    <ModalBody>
+      <div class="p-4 text-center">
+        <Icon name="mdi:clock-outline" class="h-12 w-12 text-yellow-500 mx-auto mb-3" />
+        <h3 class="text-lg font-medium mb-2">Request In Progress</h3>
+        <p class="text-gray-600 mb-4">
+          Your access request for "{{ selectedPendingCabinet?.name }}" is currently being reviewed by the administrators.
+        </p>
+        <div class="bg-yellow-50 border border-yellow-200 rounded p-3 text-sm text-yellow-800">
+          You will be notified once your request has been approved or rejected.
+        </div>
+      </div>
+    </ModalBody>
+    <ModalFooter>
+      <Button variant="ghost" @click="pendingRequestInfoModal = false">Close</Button>
     </ModalFooter>
   </Modal>
 </template>

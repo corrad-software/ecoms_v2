@@ -9,6 +9,14 @@ const layoutStore = useLayoutStore();
 const { getAdminNavigation } = useNavigation();
 const route = useRoute();
 
+// Cabinet management
+const cabinets = ref([
+  { id: 1, name: "JKR Cawangan Batu Kawan" },
+  { id: 2, name: "JKR Cawangan Kota Kinabalu" },
+  { id: 3, name: "JKR Cawangan Kota Marudu" },
+]);
+const selectedCabinet = ref(null);
+
 // Settings navigation items
 const settingsNavigation = computed(() => {
   const adminNav = getAdminNavigation();
@@ -76,9 +84,9 @@ const showDeleteButtons = ref(false);
 
 // Drawer management
 const drawers = ref([
-  { id: 1, name: "JKR Bahagian Kewangan Cawangan Batu Kawan", allowFolders: true },
-  { id: 2, name: "JKR Bahagian Kejuruteraan Awam Cawangan Batu Kawan", allowFolders: true },
-  { id: 3, name: "JKR Bahagian Teknologi Maklumat Cawangan Batu Kawan", allowFolders: false },
+  { id: 1, name: "JKR Bahagian Kewangan Cawangan Batu Kawan", allowFolders: true, cabinetId: 1 },
+  { id: 2, name: "JKR Bahagian Kejuruteraan Awam Cawangan Batu Kawan", allowFolders: true, cabinetId: 1 },
+  { id: 3, name: "JKR Bahagian Teknologi Maklumat Cawangan Kota Kinabalu", allowFolders: false, cabinetId: 2 },
   // ... other drawers
 ]);
 
@@ -127,7 +135,7 @@ const showEditSubfolderModal = ref(false);
 const showAddSubfolderModal = ref(false);
 
 // Form state
-const newDrawer = ref({ name: "", allowFolders: "no" });
+const newDrawer = ref({ name: "", allowFolders: "no", cabinetId: null });
 const newProject = ref({ name: "" });
 const newFolder = ref({ name: "" });
 const newGroup = ref({ name: "", drawerId: null, folderId: null, subfolderId: null });
@@ -152,7 +160,8 @@ const accessTypes = ["view", "edit", "download", "upload", "print", "delete"];
 // Form validation state
 const drawerErrors = ref({
   name: "",
-  allowFolders: ""
+  allowFolders: "",
+  cabinet: ""
 });
 
 const folderErrors = ref({
@@ -173,7 +182,8 @@ const permissionOptions = [
 const validateDrawerForm = () => {
   drawerErrors.value = {
     name: "",
-    allowFolders: ""
+    allowFolders: "",
+    cabinet: ""
   };
   
   const name = editingDrawer.value ? editDrawerData.value.name : newDrawer.value.name;
@@ -244,14 +254,18 @@ const drawerName = computed({
 });
 
 const filteredDrawers = computed(() => {
-  const query = searchQuery.value.toLowerCase();
-  if (!query) return drawers.value;
+  if (!selectedCabinet.value) return [];
   
-  return drawers.value.filter(drawer => {
+  const query = searchQuery.value.toLowerCase();
+  const cabinetDrawers = drawers.value.filter(drawer => drawer.cabinetId === selectedCabinet.value);
+  
+  if (!query) return cabinetDrawers;
+  
+  return cabinetDrawers.filter(drawer => {
     if (drawer.name.toLowerCase().includes(query)) return true;
     
-    const folders = folders.value[drawer.id] || [];
-    return folders.some(folder => 
+    const drawerFolders = folders.value[drawer.id] || [];
+    return drawerFolders.some(folder => 
       folder.name.toLowerCase().includes(query) ||
       folder.subfolders?.some(sub => sub.name.toLowerCase().includes(query))
     );
@@ -337,26 +351,31 @@ const toggleDeleteButtons = () => {
 
 // Drawer CRUD operations
 const openAddDrawerModal = () => {
-  newDrawer.value = { name: "", allowFolders: "no" };
+  newDrawer.value = { name: "", allowFolders: "no", cabinetId: null };
   editingDrawer.value = null; // Ensure we're not in edit mode
   showAddDrawerModal.value = true;
 };
 
 const addDrawer = () => {
   if (!validateDrawerForm()) return;
+  if (!selectedCabinet.value) {
+    drawerErrors.value.cabinet = "Please select a cabinet first";
+    return;
+  }
   
   const newId = Math.max(0, ...drawers.value.map(d => d.id)) + 1;
   drawers.value.push({ 
     id: newId, 
     name: newDrawer.value.name.trim(),
-    allowFolders: newDrawer.value.allowFolders === "yes"
+    allowFolders: newDrawer.value.allowFolders === "yes",
+    cabinetId: selectedCabinet.value
   });
   
   if (newDrawer.value.allowFolders === "yes") {
     folders.value[newId] = [];
   }
   
-  newDrawer.value = { name: "", allowFolders: "no" };
+  newDrawer.value = { name: "", allowFolders: "no", cabinetId: selectedCabinet.value };
   showAddDrawerModal.value = false;
   
   const toast = useToast();
@@ -764,28 +783,54 @@ const deleteFolder = () => {
                 <TabsTrigger value="accessControl">Access Control</TabsTrigger>
               </TabsList>
               <TabsContent value="drawer" class="h-[calc(100vh-200px)] overflow-hidden flex flex-col">
-                <!-- Search and Actions Bar - Fixed at top -->
-                <div class="flex items-center gap-4 bg-white z-20 p-4 border-b sticky top-0">
-                  <div class="flex-1 relative">
-                    <Icon 
-                      name="mdi:magnify" 
-                      class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"
-                    />
-                    <input
-                      v-model="searchQuery"
-                      type="text"
-                      placeholder="Search drawers, folders, or subfolders..."
-                      class="w-full pl-10 pr-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
+                <!-- Cabinet Selection -->
+                <div class="bg-white z-20 p-4 border-b sticky top-0">
+                  <div class="mb-4">
+                    <Label for="cabinetSelect">Select Cabinet</Label>
+                    <select
+                      id="cabinetSelect"
+                      v-model="selectedCabinet"
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    >
+                      <option :value="null">Select a cabinet</option>
+                      <option v-for="cabinet in cabinets" :key="cabinet.id" :value="cabinet.id">
+                        {{ cabinet.name }}
+                      </option>
+                    </select>
                   </div>
-                  <Button @click="openAddDrawerModal" class="inline-flex items-center gap-2">
-                    <Icon name="mdi:plus" />
-                    New Drawer
-                  </Button>
+
+                  <!-- Search and Actions Bar -->
+                  <div v-if="selectedCabinet" class="flex items-center gap-4">
+                    <div class="flex-1 relative">
+                      <Icon 
+                        name="mdi:magnify" 
+                        class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"
+                      />
+                      <input
+                        v-model="searchQuery"
+                        type="text"
+                        placeholder="Search drawers, folders, or subfolders..."
+                        class="w-full pl-10 pr-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    <Button @click="openAddDrawerModal" class="inline-flex items-center gap-2">
+                      <Icon name="mdi:plus" />
+                      New Drawer
+                    </Button>
+                  </div>
+                </div>
+
+                <!-- No Cabinet Selected Message -->
+                <div v-if="!selectedCabinet" class="flex-1 flex items-center justify-center">
+                  <div class="text-center text-gray-500">
+                    <Icon name="mdi:cabinet" class="w-12 h-12 mx-auto mb-4" />
+                    <p class="text-lg font-medium">Please select a cabinet</p>
+                    <p class="text-sm">Choose a cabinet to view and manage its drawers</p>
+                  </div>
                 </div>
 
                 <!-- Scrollable Content Area -->
-                <div class="flex-1 overflow-y-auto">
+                <div v-else class="flex-1 overflow-y-auto">
                   <div class="p-4 space-y-2">
                     <div 
                       v-for="drawer in filteredDrawers" 
@@ -1069,6 +1114,26 @@ const deleteFolder = () => {
       </ModalHeader>
       <ModalBody>
         <div class="space-y-4">
+          <!-- Cabinet Selection (only for new drawers) -->
+          <div v-if="!editingDrawer">
+            <Label for="drawerCabinet">Cabinet</Label>
+            <select 
+              id="drawerCabinet" 
+              v-model="newDrawer.cabinetId"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              :class="{ 'border-red-500': drawerErrors.cabinet }"
+            >
+              <option :value="null">Select a cabinet</option>
+              <option v-for="cabinet in cabinets" :key="cabinet.id" :value="cabinet.id">
+                {{ cabinet.name }}
+              </option>
+            </select>
+            <p v-if="drawerErrors.cabinet" class="mt-1 text-sm text-red-500">{{ drawerErrors.cabinet }}</p>
+            <p class="mt-1 text-sm text-gray-500">
+              Select the cabinet where this drawer will be created.
+            </p>
+          </div>
+
           <div>
             <Label for="drawerName">Drawer Name</Label>
             <Input 
@@ -1084,6 +1149,7 @@ const deleteFolder = () => {
               This will be the main identifier for your drawer.
             </p>
           </div>
+
           <div>
             <Label for="folderOption">Folder Settings</Label>
             <select 
